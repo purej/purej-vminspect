@@ -2,7 +2,7 @@
 
 body {
   background-color:white;
-  background: url(?resource=backgroundGradient.png) bottom left fixed repeat-x;
+  background: url(?resource=background.png) bottom left fixed repeat-x;
   font-family: Helvetica, Arial, sans-serif;
   font-size: 10pt;
 }
@@ -117,7 +117,7 @@ div#track {
   height: 18px;
   width: 200px;
   margin-left: 300px;
-  background: url( '?resource=scaler_slider_track.gif' ) center left repeat-x;
+  background: url( '?resource=scaler-slider-track.gif' ) center left repeat-x;
 }
 
 div#handle {

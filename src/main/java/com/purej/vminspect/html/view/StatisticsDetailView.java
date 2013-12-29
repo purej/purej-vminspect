@@ -28,7 +28,7 @@ public final class StatisticsDetailView extends AbstractStatisticsView {
     writeln("</div>");
     writeln("<div id='track' class='noPrint'>");
     writeln("<div class='selected' id='handle'>");
-    writeln("<img src='?resource=scaler_slider.gif' alt=''/>");
+    writeln("<img src='?resource=scaler-slider.gif' alt=''/>");
     writeln("</div></div>");
     writeln("<div align='center'><img class='synthese' id='img' src='?statsWidth=960&amp;statsHeight=400&amp;statsGraph=" + urlEncode(_statsName)
         + "' alt='zoom'/></div>");
