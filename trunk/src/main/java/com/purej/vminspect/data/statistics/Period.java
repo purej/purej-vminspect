@@ -10,27 +10,27 @@ public enum Period {
   /**
    * Day.
    */
-  DAY(1, "icons/calendar-day.png", "1 Day", "Day"),
+  DAY(1, "icons/calendar-day-16.png", "1 Day", "Day"),
   /**
    * Week.
    */
-  WEEK(7, "icons/calendar-week.png", "1 Week", "Week"),
+  WEEK(7, "icons/calendar-month-16.png", "1 Week", "Week"),
   /**
    * Month.
    */
-  MONTH(31, "icons/calendar-month.png", "1 Month", "Month"),
+  MONTH(31, "icons/calendar-month-16.png", "1 Month", "Month"),
   /**
    * Year.
    */
-  YEAR(366, "icons/calendar.png", "1 Year", "Year"),
+  YEAR(366, "icons/calendar-all-16.png", "1 Year", "Year"),
   /**
    * All.
    */
-  ALL(2 * 366, "icons/calendar.png", "All", "All"),
+  ALL(2 * 366, "icons/calendar-all-16.png", "All", "All"),
   /**
    * Custom.
    */
-  CUSTOM(-1, "icons/calendar.png", "Custom", "Custom");
+  CUSTOM(-1, "icons/calendar-custom-16.png", "Custom", "Custom");
 
   private final int _durationSeconds;
   private final String _iconName;
