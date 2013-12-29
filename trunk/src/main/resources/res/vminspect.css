@@ -19,19 +19,19 @@ img {border : 0px; vertical-align : middle;}
 	filter:progid:DXImageTransform.Microsoft.Shadow(color=#888888, direction=135, strength=3);
 }
 
-th {background-color:#BDDAEE; cursor:pointer;}
 table {
 	border-color:gray;
 	-moz-border-radius:5px;
 	-webkit-border-radius:5px;
 	border-radius:5px
 }
+td {font-size: 8pt;}
+table tr.header td {background-color: #BDDAEE; font-size: 10pt; font-weight:bold;}
 table tr.even td {background-color: #FFFFFF;}
 table tr.odd td {background-color: #E7F4FD;}
 table tr.evenDeadlock td {background-color: #FAB8BB;}
 table tr.oddDeadlock td {background-color: #FAB8BB;}
 table tr.highlight td {background-color: #BDDAEE;}
-td {font-size: 8pt;}
 
 table tr:last-child td:first-child {
 	-moz-border-radius-bottomleft:5px;
@@ -42,16 +42,6 @@ table tr:last-child td:last-child {
 	-moz-border-radius-bottomright:5px;
 	-webkit-border-bottom-right-radius:5px;
 	border-bottom-right-radius:5px
-}
-table thead th:first-child {
-	-moz-border-radius-topleft:5px;
-	-webkit-border-top-left-radius:5px;
-	border-top-left-radius:5px
-}
-table thead th:last-child {
-	-moz-border-radius-topright:5px;
-	-webkit-border-top-right-radius:5px;
-	border-top-right-radius:5px
 }
 
 .tooltip em {
@@ -111,7 +101,6 @@ div#menu {
   position:relative;
 }
 #menu li:hover {background-color: #BDDAEE;}
-
 
 .info {color:green;}
 .warning {color:orange; font-weight:bold;}

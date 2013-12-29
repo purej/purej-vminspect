@@ -42,8 +42,7 @@ public class MBeansMainView extends AbstractBeansView {
     writeln("</form><br/>");
 
     // Write the table:
-    SortableHtmlTable table = new SortableHtmlTable();
-    table.beginTable("MBeans", "Domain", "Type", "Properties", "Details");
+    CandyHtmlTable table = new CandyHtmlTable("MBeans", "Domain", "Type", "Properties", "Details");
     int filterMatchingCount = 0;
     for (MBeanName mbean : _mbeans) {
       if (!Utils.wildCardMatch(mbean.getDomain(), _domainFilter)) {

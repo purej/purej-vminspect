@@ -27,33 +27,24 @@ public abstract class AbstractHtmlView {
   public class HtmlTable {
     private boolean _firstRow = true;
 
-    /**
-     * Returns if first row.
-     */
-    public boolean isFirstRow() {
-      return _firstRow;
-    }
-
-    /**
-     * Sets if first row.
-     */
-    public void setFirstRow(boolean firstRow) {
+    protected HtmlTable(boolean firstRow) {
       _firstRow = firstRow;
     }
 
     /**
-     * Writes the table start tags.
+     * Creates a new instance and writes the table start tags.
      */
-    public void beginTable(String summary) throws IOException {
+    public HtmlTable(String summary) throws IOException {
+      this(true);
       write("<table summary='");
       write(summary);
       write("'>\n");
     }
 
     /**
-     * Writes new row tags.
+     * Writes new row tags including optional values.
      */
-    public void nextRow() throws IOException {
+    public void nextRow(String... values) throws IOException {
       if (_firstRow) {
         write("<tr>");
         _firstRow = false;
@@ -61,13 +52,6 @@ public abstract class AbstractHtmlView {
       else {
         write("</tr>\n<tr>");
       }
-    }
-
-    /**
-     * Writes new row tags including values.
-     */
-    public void nextRowWithValues(String... values) throws IOException {
-      nextRow();
       for (String value : values) {
         addValue(value);
       }
@@ -112,59 +96,43 @@ public abstract class AbstractHtmlView {
   }
 
   /**
-   * A HTML table that is sortable by default.
+   * A beautify HTML table with alternated colored rows.
    */
-  public class SortableHtmlTable extends HtmlTable {
+  public class CandyHtmlTable extends HtmlTable {
     private boolean _oddRow;
 
     /**
-     * Writes start tags including column names.
+     * Creates a new instance and writes start tags including column names.
      */
-    public void beginTable(String summary, String... columnNames) throws IOException {
-      write("<table class='sortable' width='100%' border='1' cellspacing='0' cellpadding='2' summary='");
+    public CandyHtmlTable(String summary, String... columnNames) throws IOException {
+      super(false);
+      write("<table width='100%' border='1' cellspacing='0' cellpadding='2' summary='");
       write(summary);
       write("'>\n");
-      write("<thead><tr>");
+      write("<tr class='header'>");
       for (int i = 0; i < columnNames.length; i++) {
-        if (columnNames[i].startsWith("#")) {
-          write("<th class='sorttable_numeric'>");
-          write(columnNames[i].substring(1));
-        }
-        else {
-          write("<th>");
-          write(columnNames[i]);
-        }
-        write("</th>");
+        write("<td>");
+        write(columnNames[i]);
+        write("</td>");
       }
     }
 
     @Override
-    public void nextRow() throws IOException {
-      nextRow("");
+    public void nextRow(String... values) throws IOException {
+      nextRowWithClz("");
+      for (String value : values) {
+        addValue(value);
+      }
     }
 
     /**
      * Writes new row tags with a CSS class-suffix.
      */
-    public void nextRow(String classSuffix) throws IOException {
-      write("</tr>");
-      if (isFirstRow()) {
-        setFirstRow(false);
-        write("</thead><tbody>\n");
-      }
+    public void nextRowWithClz(String classSuffix) throws IOException {
+      write("</tr>\n");
       String clz = _oddRow ? "odd" + classSuffix : "even" + classSuffix;
       write("<tr class='" + clz + "' onmouseover=\"this.className='highlight'\" onmouseout=\"this.className='" + clz + "'\">\n");
       _oddRow = !_oddRow;
-    }
-
-    @Override
-    public void endTable() throws IOException {
-      write("</tr>");
-      if (isFirstRow()) {
-        setFirstRow(false);
-        write("</thead><tbody>\n");
-      }
-      write("</tbody></table>\n");
     }
   }
 
@@ -294,8 +262,7 @@ public abstract class AbstractHtmlView {
   }
 
   protected static final String showHideLink(String divId, String label) {
-    return "<a href=\"javascript:showHide('" + divId + "');\"><img id='" + divId + "Img' src='?resource=bullets/plus.png' alt=''/> "
-        + label + "</a>";
+    return "<a href=\"javascript:showHide('" + divId + "');\"><img id='" + divId + "Img' src='?resource=bullets/plus.png' alt=''/> " + label + "</a>";
   }
 
   protected static final String tooltip(String label, String txt) {

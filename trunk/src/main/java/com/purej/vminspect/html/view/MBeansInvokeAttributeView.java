@@ -30,21 +30,20 @@ public class MBeansInvokeAttributeView extends AbstractBeansView {
 
     // Write the form with a table:
     writeln("<form name='mbeanAttribute' method='get' action=''><br/>");
-    HtmlTable table = new HtmlTable();
-    table.beginTable("MBean Attribute");
+    HtmlTable table = new HtmlTable("MBean Attribute");
     table.nextRow();
     table.addValue(img("icons/books-16.png", "MBean Attribute") + "<b>&nbsp;Attribute</b>");
     table.addValue("<b>" + htmlEncode(_attribute.getName()) + "</b>");
-    table.nextRowWithValues("Description", htmlEncode(_attribute.getDescription()));
-    table.nextRowWithValues("Type", htmlEncode(_attribute.getType()));
-    table.nextRowWithValues("Current Value&nbsp;&nbsp;&nbsp;&nbsp;");
+    table.nextRow("Description", htmlEncode(_attribute.getDescription()));
+    table.nextRow("Type", htmlEncode(_attribute.getType()));
+    table.nextRow("Current Value&nbsp;&nbsp;&nbsp;&nbsp;");
     write("<td>");
     writeMBeanValue(_attribute.getValue(), false);
     write("</td>");
-    table.nextRowWithValues("<br/>", "");
-    table.nextRowWithValues("New Value", "<input type='text' size='50' name='mbAtrValue' value=''/>");
-    table.nextRowWithValues("<br/>", "");
-    table.nextRowWithValues("");
+    table.nextRow("<br/>", "");
+    table.nextRow("New Value", "<input type='text' size='50' name='mbAtrValue' value=''/>");
+    table.nextRow("<br/>", "");
+    table.nextRow("");
     table.addValueRight("<input type='submit' name='mbAtrCancel' value='Cancel'/><input type='submit' name='mbAtrInvoke' value='Ok'/>");
     table.endTable();
     writeln("<input type='hidden' name='page' value='mbeans'/>");

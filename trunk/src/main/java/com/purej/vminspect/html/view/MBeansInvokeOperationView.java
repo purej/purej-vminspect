@@ -33,24 +33,23 @@ public class MBeansInvokeOperationView extends AbstractBeansView {
 
     // Write the form with a table:
     writeln("<form name='mbeanOperation' method='get' action=''><br/>");
-    HtmlTable table = new HtmlTable();
-    table.beginTable("MBean Operation");
+    HtmlTable table = new HtmlTable("MBean Operation");
     table.nextRow();
     table.addValue(img("icons/flash-16.png", "MBean Operation") + "<b>&nbsp;Operation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>");
     table.addValue("<b>" + htmlEncode(_operation.getName()) + "</b>");
-    table.nextRowWithValues("Description", htmlEncode(_operation.getDescription()));
-    table.nextRowWithValues("Impact", htmlEncode(_operation.getImpact()));
-    table.nextRowWithValues("Return Type", htmlEncode(_operation.getReturnType()));
+    table.nextRow("Description", htmlEncode(_operation.getDescription()));
+    table.nextRow("Impact", htmlEncode(_operation.getImpact()));
+    table.nextRow("Return Type", htmlEncode(_operation.getReturnType()));
     for (int i = 0; i < _operation.getParameters().length; i++) {
-      table.nextRowWithValues("<br/>", "");
+      table.nextRow("<br/>", "");
       MBeanParameter parameter = _operation.getParameters()[i];
-      table.nextRowWithValues("<b>Parameter</b>", "<b>" + parameter.getName() + "</b>");
-      table.nextRowWithValues("Description", parameter.getDescription());
-      table.nextRowWithValues("Type", parameter.getType());
-      table.nextRowWithValues("Value", "<input type='text' size='50' name='mbOpValue" + i + "' value=''/>");
+      table.nextRow("<b>Parameter</b>", "<b>" + parameter.getName() + "</b>");
+      table.nextRow("Description", parameter.getDescription());
+      table.nextRow("Type", parameter.getType());
+      table.nextRow("Value", "<input type='text' size='50' name='mbOpValue" + i + "' value=''/>");
     }
-    table.nextRowWithValues("<br/>", "");
-    table.nextRowWithValues("");
+    table.nextRow("<br/>", "");
+    table.nextRow("");
     table.addValueRight("<input type='submit' name='mbOpCancel' value='Cancel'/><input type='submit' name='mbOpInvoke' value='Ok'/>");
     table.endTable();
     writeln("<input type='hidden' name='page' value='mbeans'/>");

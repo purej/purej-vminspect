@@ -44,8 +44,7 @@ public class MBeansDetailView extends AbstractBeansView {
 
     // Write the attributes table:
     writeln("<h3>" + img("icons/books-24.png", "MBean Attributes") + "&nbsp;Attributes</h3>");
-    SortableHtmlTable table = new SortableHtmlTable();
-    table.beginTable("MBean Attributes", "Name", "Value", "Type", "Description", "Edit");
+    CandyHtmlTable table = new CandyHtmlTable("MBean Attributes", "Name", "Value", "Type", "Description", "Edit");
     for (int i = 0; i < _mbean.getAttributes().length; i++) {
       MBeanAttribute attribute = _mbean.getAttributes()[i];
       table.nextRow();
@@ -73,8 +72,7 @@ public class MBeansDetailView extends AbstractBeansView {
 
     // Write the operations table:
     writeln("<h3>" + img("icons/flash-24.png", "MBean Operations") + "&nbsp;Operations</h3>");
-    table = new SortableHtmlTable();
-    table.beginTable("MBean Operations", "Name", "Impact", "Return", "Parameters", "Description", "Invoke");
+    table = new CandyHtmlTable("MBean Operations", "Name", "Impact", "Return", "Parameters", "Description", "Invoke");
     for (int i = 0; i < _mbean.getOperations().length; i++) {
       MBeanOperation operation = _mbean.getOperations()[i];
       table.nextRow();
