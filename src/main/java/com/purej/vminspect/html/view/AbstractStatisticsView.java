@@ -41,12 +41,12 @@ public abstract class AbstractStatisticsView extends AbstractHtmlView {
       if (myPeriod == Period.CUSTOM) {
         writeln("<a href=\"javascript:showHide('customPeriod');\" ");
         writeln("title='Choice of period Customized for charts and requests statistics'>");
-        writeln("<img src='?resource=icons/calendar.png' alt='Customized' /> Customized</a>");
+        writeln(img(myPeriod.getIconName(), "Customized") + "&nbsp;Customized</a>");
       }
       else {
         String periodParam = "statsPeriod=" + myPeriod.getCode();
         String params = graphDetailName != null ? statisticsParams(detailParam, periodParam) : statisticsParams(periodParam);
-        write(lnk(params, img(myPeriod.getIconName(), "Choice of period " + myPeriod.getLabel()) + myPeriod.getLinkLabel()));
+        write(lnk(params, img(myPeriod.getIconName(), "Choice of period " + myPeriod.getLabel()) + "&nbsp;" + myPeriod.getLinkLabel()));
         write("&nbsp;&nbsp;&nbsp;");
       }
     }
