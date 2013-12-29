@@ -18,7 +18,7 @@ import com.purej.vminspect.html.response.AbstractHttpResponse;
 /**
  * The servlet that produces the VM inspection HTML report.
  * <p/>
- * Several properties can be set from outside using the servlet-config:
+ * The following servlet init parameters can be set:
  * <ul>
  * <li>vminspect.mbeans.readonly: true/false, specifies if VmInspect is allowed to edit MBean values or invoke non-info operations (default false)</li>
  * <li>vminspect.statistics.collection.frequencyMs: Number of milliseconds for the statistics collection timer (default 60'000ms)</li>
@@ -58,7 +58,7 @@ public class VmInspectServlet extends HttpServlet {
       _controller = new RequestController(_collector, mbeansReadonly);
     }
     catch (Exception e) {
-      throw new RuntimeException("Init of WebInspectServlet failed!", e);
+      throw new RuntimeException("Init of VmInspectServlet failed!", e);
     }
   }
 
