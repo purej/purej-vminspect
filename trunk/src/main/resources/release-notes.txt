@@ -6,6 +6,7 @@ Version 0.6 (29.12.2013)
 - Threads-view shows the peek-lives and totally started threads
 - Statistics will be optionally hold in-memory if no statistics-storage directory has been configured
 - checked all HTML output to be W3C-compliant
+- reduced java-script complexity, no more sorted tables
 - OperatingSystemMXBean.getSystemLoadAverage() did not work on many platforms and has been replaced by getSystemCpuLoad() 
 
 Version 0.4 (22.12.2013)
