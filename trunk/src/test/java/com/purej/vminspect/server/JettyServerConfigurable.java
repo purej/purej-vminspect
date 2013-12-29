@@ -36,17 +36,12 @@ public final class JettyServerConfigurable {
     Server server = new Server();
     server.setConnectors(new Connector[] {connector});
 
+    VmInspectServlet servlet = new VmInspectServlet();
+    servlet.init(false, Integer.parseInt(args[1]), args.length > 2 ? args[2] : null);
+    ServletHolder servletHolder = new ServletHolder(servlet);
     ServletContextHandler handler = new ServletContextHandler();
     handler.setContextPath("/inspect");
-
-    ServletHolder servletHolder = new ServletHolder(VmInspectServlet.class);
-    servletHolder.setInitParameter("vminspect.statistics.collection.frequencyMs", args[1]);
-    if (args.length > 2) {
-      servletHolder.setInitParameter("vminspect.statistics.storage.dir", args[2]);
-    }
-    servletHolder.setInitOrder(0);
     handler.addServlet(servletHolder, "/*");
-
     server.setHandler(handler);
     server.start();
 
