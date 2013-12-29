@@ -21,6 +21,11 @@
     <jettyVersion>7.6.12.v20130726</jettyVersion>
   </properties>
 
+  <scm>
+    <connection>scm:svn:http://purej-vminspect.googlecode.com/svn/trunk</connection>
+    <url>http://purej-vminspect.googlecode.com/svn/trunk</url>
+  </scm>
+
   <dependencies>
 
     <dependency>
