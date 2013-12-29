@@ -1,4 +1,4 @@
-Version 0.6 (xxx)
+Version 0.6 (29.12.2013)
 - moved to code.google.com, added licensing
 - changed to memory-display and memory-bar to also include committed memory
 - corrected MBeans wild-card search to correctly apply wildcards
