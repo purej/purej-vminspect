@@ -2,6 +2,8 @@
 package com.purej.vminspect.html;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -18,10 +20,9 @@ import com.purej.vminspect.html.response.AbstractHttpResponse;
  * <p/>
  * Several properties can be set from outside using the servlet-config:
  * <ul>
- * <li>vminspect.mbeans.readonly: true/false, specifies if VmInspect is allowed to edit MBean values (or invoke non-info operations)</li>
+ * <li>vminspect.mbeans.readonly: true/false, specifies if VmInspect is allowed to edit MBean values or invoke non-info operations (default false)</li>
  * <li>vminspect.statistics.collection.frequencyMs: Number of milliseconds for the statistics collection timer (default 60'000ms)</li>
- * <li>vminspect.statistics.storage.dir: Path where to store the statistics files</li>
- * <li>vminspect.authorization.callback: Fully qualified class name of an implementation of the {@link AuthorizationCallback} interface</li>
+ * <li>vminspect.statistics.storage.dir: Optional Path where to store the statistics files (default no storage directory)</li>
  * </ul>
  *
  * @author Stefan Mueller
@@ -30,29 +31,28 @@ public class VmInspectServlet extends HttpServlet {
   private static final Logger LOGGER = LoggerFactory.getLogger(VmInspectServlet.class);
   private static final long serialVersionUID = 1L;
 
-  // Members that get set in the init method:
-  private String _storageDir;
-  private StatisticsCollector _collector;
+  // Members that get set in the init method (Note: collector is only allowed once per VM!):
+  private static Set<VmInspectServlet> _collectorRefs = new HashSet<VmInspectServlet>();
+  private static StatisticsCollector _collector;
   private RequestController _controller;
-  private AuthorizationCallback _authorization;
 
   @Override
   public void init(ServletConfig config) {
     try {
-      // Load init parameters:
+      // Load configuration from init parameters:
       boolean mbeansReadonly = Boolean.parseBoolean(config.getInitParameter("vminspect.mbeans.readonly"));
       String value = config.getInitParameter("vminspect.statistics.collection.frequencyMs");
       int statisticsCollectionFrequencyMillis = value != null ? Integer.parseInt(value) : 60000;
-      value = config.getInitParameter("vminspect.statistics.storage.dir");
-      _storageDir = value;
-      value = config.getInitParameter("vminspect.authorization.callback");
-      if (value != null) {
-        _authorization = (AuthorizationCallback) Class.forName(value).newInstance();
-      }
+      String storageDir = config.getInitParameter("vminspect.statistics.storage.dir");
 
-      // Create the collector & start it:
-      _collector = new StatisticsCollector(_storageDir, statisticsCollectionFrequencyMillis);
-      _collector.start();
+      // Create the collector & start it (only once):
+      synchronized (VmInspectServlet.class) {
+        if (_collector == null) {
+          _collector = new StatisticsCollector(storageDir, statisticsCollectionFrequencyMillis);
+          _collector.start();
+        }
+        _collectorRefs.add(this);
+      }
 
       // Create the controller for pages:
       _controller = new RequestController(_collector, mbeansReadonly);
@@ -64,19 +64,18 @@ public class VmInspectServlet extends HttpServlet {
 
   @Override
   public void destroy() {
-    if (_collector != null) {
-      _collector.stop();
+    synchronized (VmInspectServlet.class) {
+      _collectorRefs.remove(this);
+      if (_collectorRefs.size() == 0 && _collector != null) {
+        _collector.stop();
+        _collector = null;
+      }
     }
   }
 
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     try {
-      if (_authorization != null && !_authorization.isAuthorized(request)) {
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-        return;
-      }
-
       // Create the response in memory to be able to react on exceptions:
       AbstractHttpResponse httpResponse = _controller.process(request);
 
