@@ -20,7 +20,8 @@ import com.purej.vminspect.data.SystemData;
 import com.purej.vminspect.util.Utils;
 
 /**
- * This class holds the single statistics and provides a timer to collect all configured statistics on a regular basis.
+ * This class holds the different {@link Statistics} instances and provides a timer to
+ * collect all statistics on a regular basis.
  *
  * @author Stefan Mueller
  */
@@ -61,7 +62,7 @@ public final class StatisticsCollector {
     _collectionFrequencyMillis = collectionFrequencyMillis;
 
     // Create a timer and timer tasks:
-    _timer = new Timer("PureJ WebInspect Collector Timer", true);
+    _timer = new Timer("PureJ VM Inspection Statistics Collector Timer", true);
 
     // Create the JRobin backend factory:
     try {
@@ -73,7 +74,7 @@ public final class StatisticsCollector {
         // Create the storage dir if not existing:
         File rrdFilesDir = new File(storageDir);
         if (!rrdFilesDir.exists() && !rrdFilesDir.mkdirs()) {
-          throw new RuntimeException("PureJ VM-Inspect statistics directory '" + storageDir + "' could not be created!");
+          throw new RuntimeException("Statistics storage directory '" + storageDir + "' could not be created!");
         }
         _storageDir = rrdFilesDir.getAbsolutePath();
         _rrdBackendFactory = RrdBackendFactory.getFactory(RrdNioBackendFactory.NAME);
