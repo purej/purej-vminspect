@@ -4,7 +4,6 @@ package com.purej.vminspect.html;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
@@ -27,28 +26,39 @@ import com.purej.vminspect.html.response.AbstractHttpResponse;
  *
  * @author Stefan Mueller
  */
-public class VmInspectServlet extends HttpServlet {
+public final class VmInspectServlet extends HttpServlet {
   private static final Logger LOGGER = LoggerFactory.getLogger(VmInspectServlet.class);
   private static final long serialVersionUID = 1L;
 
   // Members that get set in the init method (Note: collector is only allowed once per VM!):
-  private static Set<VmInspectServlet> _collectorRefs = new HashSet<VmInspectServlet>();
   private static StatisticsCollector _collector;
+  private static Set<VmInspectServlet> _collectorRefs = new HashSet<VmInspectServlet>();
   private RequestController _controller;
 
   @Override
-  public void init(ServletConfig config) {
-    try {
-      // Load configuration from init parameters:
-      boolean mbeansReadonly = Boolean.parseBoolean(config.getInitParameter("vminspect.mbeans.readonly"));
-      String value = config.getInitParameter("vminspect.statistics.collection.frequencyMs");
-      int statisticsCollectionFrequencyMillis = value != null ? Integer.parseInt(value) : 60000;
-      String storageDir = config.getInitParameter("vminspect.statistics.storage.dir");
+  public void init() {
+    // Load configuration from init parameters:
+    boolean mbeansReadonly = Boolean.parseBoolean(getServletConfig().getInitParameter("vminspect.mbeans.readonly"));
+    String collectionFrequency = getServletConfig().getInitParameter("vminspect.statistics.collection.frequencyMs");
+    String storageDir = getServletConfig().getInitParameter("vminspect.statistics.storage.dir");
+    init(mbeansReadonly, collectionFrequency != null ? Integer.parseInt(collectionFrequency) : 60000, storageDir);
+  }
 
-      // Create the collector & start it (only once):
+  /**
+   * Initializes this servlet instance or does nothing if already initialized.
+   * This method can be used to programmatically initialize the servlet.
+   *
+   * @param mbeansReadonly if MBeans should be accessed read-only
+   * @param statisticsCollectionFrequencyMs the statistics collection frequency in milliseconds (60'000 recommended)
+   * @param statisticsStorageDir the optional statistics storage directory
+   */
+  public void init(boolean mbeansReadonly, int statisticsCollectionFrequencyMs, String statisticsStorageDir) {
+    // Note: Do nothing if already initialized...
+    if (_controller == null) {
+      // Create the collector & start it (only once per VM):
       synchronized (VmInspectServlet.class) {
         if (_collector == null) {
-          _collector = new StatisticsCollector(storageDir, statisticsCollectionFrequencyMillis);
+          _collector = new StatisticsCollector(statisticsStorageDir, statisticsCollectionFrequencyMs);
           _collector.start();
         }
         _collectorRefs.add(this);
@@ -56,9 +66,6 @@ public class VmInspectServlet extends HttpServlet {
 
       // Create the controller for pages:
       _controller = new RequestController(_collector, mbeansReadonly);
-    }
-    catch (Exception e) {
-      throw new RuntimeException("Init of VmInspectServlet failed!", e);
     }
   }
 
