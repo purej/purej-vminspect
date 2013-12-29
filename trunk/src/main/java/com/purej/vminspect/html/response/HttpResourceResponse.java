@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Stefan Mueller
  */
 public final class HttpResourceResponse extends AbstractHttpResponse {
-  private static final String RESOURCE_PREFIX = "/com/purej/vminspect/resource/";
+  private static final String RESOURCE_PREFIX = "/res/";
   private final String _resource;
 
   /**
