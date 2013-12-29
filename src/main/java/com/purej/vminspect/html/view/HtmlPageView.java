@@ -48,7 +48,7 @@ public class HtmlPageView extends AbstractHtmlView {
     writeJavaScript();
     writeln("</head>");
     writeln("<body>");
-    writeln("<div id='title'><h2>PureJ VM Inspection " + lnk(_currentParameters, img("action_refresh.png", "Refresh")) + " </h2>");
+    writeln("<div id='title'><h2>PureJ VM Inspection " + lnk(_currentParameters, img("icons/action-refresh.png", "Refresh")) + " </h2>");
     writeln("</div><div id='menu'>");
     writeln("<ul>");
     writeln("<li>" + lnk(RequestParams.PAGE + "=statistics", img("icons/charts-24.png", "Statistics") + "Statistics") + "</li>");
