@@ -34,10 +34,9 @@ public final class ThreadsMainView extends AbstractHtmlView {
     writeln("Total started threads: " + mxBean.getTotalStartedThreadCount());
     writeln("</div><br/>");
 
-    SortableHtmlTable table = new SortableHtmlTable();
-    table.beginTable("Threads", "Thread", "Demon", "#Priority", "State", "Executing Method", "#CPU Time Ms", "#User Time Ms");
+    CandyHtmlTable table = new CandyHtmlTable("Threads", "Thread", "Demon", "Priority", "State", "Executing Method", "CPU Time Ms", "User Time Ms");
     for (ThreadData thread : _threads) {
-      table.nextRow(thread.isDeadlocked() ? "Deadlock" : "");
+      table.nextRowWithClz(thread.isDeadlocked() ? "Deadlock" : "");
       table.addValue(htmlEncode(thread.getName()));
       table.addValueCenter(thread.isDaemon() ? "Yes" : "No");
       table.addValueRight(formatNumber(thread.getPriority()));

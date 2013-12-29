@@ -158,7 +158,6 @@ public final class MBeanUtils {
         value = convertValueIfNeeded(o);
       }
       catch (Exception e) {
-        e.printStackTrace();
         value = "Exception reading attribute value: " + e.toString();
       }
     }

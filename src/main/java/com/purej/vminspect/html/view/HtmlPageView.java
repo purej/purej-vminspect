@@ -37,15 +37,9 @@ public class HtmlPageView extends AbstractHtmlView {
     writeln("<html xmlns=\"http://www.w3.org/1999/xhtml\">");
     writeln("<head>");
     writeln("<title>PureJ VM Inspection</title>");
-    writeln("<meta name='author' content='Stefan Mueller, www.purej.com'/>");
+    writeln("<meta name='author' content='Stefan Mueller, adopus consulting gmbh, Switzerland'/>");
     writeln("<link rel='stylesheet' href='?resource=vminspect.css' type='text/css'/>");
-    writeln("<script type='text/javascript' src='?resource=sorttable.js'></script>");
-    writeln("<script type='text/javascript' src='?resource=prototype.js'></script>");
-    writeln("<script type='text/javascript' src='?resource=effects.js'></script>");
-    if (_bodyView instanceof StatisticsDetailView) {
-      writeln("<script type='text/javascript' src='?resource=slider.js'></script>");
-    }
-    writeJavaScript();
+    writeln("<script type='text/javascript' src='?resource=vminspect.js'></script>");
     writeln("</head>");
     writeln("<body>");
     writeln("<div id='title'><h2>PureJ VM Inspection " + lnk(_currentParameters, img("icons/refresh-24.png", "Refresh")) + " </h2>");
@@ -66,31 +60,5 @@ public class HtmlPageView extends AbstractHtmlView {
     writeln("Powered by: <a href='http://www.adopus.com/purej' target='_blank'>adopus consulting gmbh</a>");
     writeln("</div>");
     writeln("</body></html>");
-  }
-
-  private void writeJavaScript() throws IOException {
-    writeln("<script type='text/javascript'>");
-    writeln("function showHide(id) {");
-    writeln("  if (document.getElementById(id).style.display=='none') {");
-    writeln("    if (document.getElementById(id + 'Img') != null) {");
-    writeln("      document.getElementById(id + 'Img').src='?resource=bullets/minus.png';");
-    writeln("    }");
-    writeln("    try {");
-    writeln("      Effect.SlideDown(id, { duration: 0.5 });");
-    writeln("    } catch (e) {");
-    writeln("      document.getElementById(id).style.display='inline';");
-    writeln("    }");
-    writeln("  } else {");
-    writeln("    if (document.getElementById(id + 'Img') != null) {");
-    writeln("      document.getElementById(id + 'Img').src='?resource=bullets/plus.png';");
-    writeln("    }");
-    writeln("    try {");
-    writeln("      Effect.SlideUp(id, { duration: 0.5 });");
-    writeln("    } catch (e) {");
-    writeln("      document.getElementById(id).style.display='none';");
-    writeln("    }");
-    writeln("  }");
-    writeln("}");
-    writeln("</script>");
   }
 }
