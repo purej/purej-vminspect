@@ -108,8 +108,8 @@ public class RequestController {
   private AbstractHttpResponse doStatsGraph(HttpServletRequest httpRequest, String graphName) throws IOException {
     HttpPngResponse response = new HttpPngResponse(graphName);
     Range range = CookieManager.getRange(httpRequest, response);
-    int width = Math.min(Integer.parseInt(httpRequest.getParameter(RequestParams.STATS_WIDTH_PARAMETER)), 1600);
-    int height = Math.min(Integer.parseInt(httpRequest.getParameter(RequestParams.STATS_HEIGHT_PARAMETER)), 1600);
+    int width = Math.min(Integer.parseInt(httpRequest.getParameter(RequestParams.STATS_WIDTH)), 1600);
+    int height = Math.min(Integer.parseInt(httpRequest.getParameter(RequestParams.STATS_HEIGHT)), 1600);
     Statistics stats = _collector.getStatistics(graphName);
     response.setImg(stats.createGraph(range, width, height));
     return response;
@@ -137,7 +137,9 @@ public class RequestController {
       Range range = CookieManager.getRange(request, response);
       String statsName = request.getParameter(RequestParams.STATS_DETAIL);
       if (statsName != null) {
-        view = new StatisticsDetailView(response.getOutput(), range, statsName);
+        String statsWidth = request.getParameter(RequestParams.STATS_WIDTH);
+        String statsHeight = request.getParameter(RequestParams.STATS_HEIGHT);
+        view = new StatisticsDetailView(response.getOutput(), range, statsName, Integer.parseInt(statsWidth), Integer.parseInt(statsHeight));
       }
       else {
         view = new StatisticsMainView(response.getOutput(), _collector, range);

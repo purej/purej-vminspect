@@ -29,7 +29,7 @@ public final class StatisticsMainView extends AbstractStatisticsView {
   public void render() throws IOException {
     writeln("<h3>" + img("icons/charts-24.png", "Statistics") + "&nbsp;Statistics Overview</h3>");
     writeln("<div align='center'>");
-    writeChoosePeriodLinks(null);
+    writeChoosePeriodLinks(null, -1, -1);
     writeln("<br/>");
     writeGraphs(_statistics.getStatistics());
     writeln("</div>");
@@ -41,7 +41,9 @@ public final class StatisticsMainView extends AbstractStatisticsView {
       Statistics stats = statistics.get(i);
       String params = params("statsWidth=200", "statsHeight=50", "statsGraph=" + stats.getName());
       String img = "<img class='synthese' src='?" + params + "' alt='" + stats.getLabel() + "' title='" + stats.getDescription() + "'/>";
-      writeln(lnk(statisticsParams(RequestParams.STATS_DETAIL + "=" + stats.getName()), img));
+      String statsParams = statisticsParams(RequestParams.STATS_DETAIL + "=" + stats.getName(), RequestParams.STATS_WIDTH + "=960",
+          RequestParams.STATS_HEIGHT + "=400");
+      writeln(lnk(statsParams, img));
       write("&nbsp;");
       if ((i + 1) % 3 == 0) {
         writeln("<br/><br/>");
