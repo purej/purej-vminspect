@@ -49,7 +49,7 @@ public final class ThreadsMainView extends AbstractHtmlView {
     table.endTable();
     writeln("<div align='right'>");
     String threadsDumpParam = RequestParams.PAGE + "=threadsDump";
-    writeln("<br/>" + lnk(threadsDumpParam, img("text.png", "Dump threads as text") + "&nbsp;Dump threads as text"));
+    writeln("<br/>" + lnk(threadsDumpParam, img("icons/text.png", "Dump threads as text") + "&nbsp;Dump threads as text"));
     writeln("</div>");
   }
 
