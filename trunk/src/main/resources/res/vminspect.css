@@ -113,19 +113,6 @@ div#menu {
 #menu li:hover {background-color: #BDDAEE;}
 
 
-div#track {
-  height: 18px;
-  width: 200px;
-  margin-left: 300px;
-  background: url( '?resource=scaler-slider-track.gif' ) center left repeat-x;
-}
-
-div#handle {
-  height: 18px;
-  width: 18px;
-  cursor: col-resize;
-}
-
 .info {color:green;}
 .warning {color:orange; font-weight:bold;}
 .severe {color:red; font-weight:bold;}
@@ -135,6 +122,3 @@ form {background-color:#F5F5F5;}
 div#okMsg {background-color:#99FF99;}
 div#warnMsg {background-color:#FFFF99;}
 div#errorMsg {background-color:#FF6666;}
-
-@media print { .noPrint { display: none; } }
-

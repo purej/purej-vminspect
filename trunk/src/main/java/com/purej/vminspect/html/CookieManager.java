@@ -30,7 +30,7 @@ public final class CookieManager {
    */
   public static Range getRange(HttpServletRequest req, AbstractHttpResponse resp) {
     try {
-      String period = req.getParameter(RequestParams.STATS_PERIOD_PARAMETER);
+      String period = req.getParameter(RequestParams.STATS_PERIOD);
       if (period == null) {
         String range = getCookie(req, PERIOD_COOKIE_NAME, DEFAULT_RANGE.asString());
         return Range.parse(range);

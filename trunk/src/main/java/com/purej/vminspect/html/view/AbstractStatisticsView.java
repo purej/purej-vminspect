@@ -31,10 +31,10 @@ public abstract class AbstractStatisticsView extends AbstractHtmlView {
     return builder.toString();
   }
 
-  protected void writeChoosePeriodLinks(String graphDetailName) throws IOException {
-    writeln("<div class='noPrint'>");
+  protected void writeChoosePeriodLinks(String statsDetailName, int width, int height) throws IOException {
+    writeln("<div>");
     String separator = "&nbsp;&nbsp;&nbsp;&nbsp;";
-    String detailParam = "statsDetail=" + urlEncode(graphDetailName);
+    String addParams = statsDetailName != null ? params("statsDetail=" + statsDetailName, "statsWidth=" + width, "statsHeight=" + height) : null;
     writeln(separator);
     writeln("Choice of period :&nbsp;");
     for (Period myPeriod : Period.values()) {
@@ -45,16 +45,16 @@ public abstract class AbstractStatisticsView extends AbstractHtmlView {
       }
       else {
         String periodParam = "statsPeriod=" + myPeriod.getCode();
-        String params = graphDetailName != null ? statisticsParams(detailParam, periodParam) : statisticsParams(periodParam);
+        String params = statsDetailName != null ? statisticsParams(addParams, periodParam) : statisticsParams(periodParam);
         write(lnk(params, img(myPeriod.getIconName(), "Choice of period " + myPeriod.getLabel()) + "&nbsp;" + myPeriod.getLinkLabel()));
         write("&nbsp;&nbsp;&nbsp;");
       }
     }
     writeln("</div>");
-    writeCustomPeriodDiv(graphDetailName);
+    writeCustomPeriodDiv(statsDetailName, width, height);
   }
 
-  private void writeCustomPeriodDiv(String graphDetailName) throws IOException {
+  private void writeCustomPeriodDiv(String graphDetailName, int statsWidth, int statsHeight) throws IOException {
     writeln("<div id='customPeriod' style='display: none;'>");
     writeln("<br/><br/>");
     writeln("<form name='customPeriodForm' method='get' action=''>");
@@ -73,7 +73,9 @@ public abstract class AbstractStatisticsView extends AbstractHtmlView {
     writeln("<input type='hidden' name='page' value='statistics'/>");
     writeln("<input type='hidden' name='statsPeriod' value='custom'/>");
     if (graphDetailName != null) {
-      writeln("<input type='hidden' name='statsDetail' value='" + urlEncode(graphDetailName) + "'/>");
+      writeln("<input type='hidden' name='statsDetail' value='" + graphDetailName + "'/>");
+      writeln("<input type='hidden' name='statsWidth' value='" + statsWidth + "'/>");
+      writeln("<input type='hidden' name='statsHeight' value='" + statsHeight + "'/>");
     }
     writeln("</form><br/>");
     writeln("</div>");

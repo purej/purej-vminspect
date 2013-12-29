@@ -294,7 +294,7 @@ public abstract class AbstractHtmlView {
   }
 
   protected static final String showHideLink(String divId, String label) {
-    return "<a href=\"javascript:showHide('" + divId + "');\" class='noPrint'><img id='" + divId + "Img' src='?resource=bullets/plus.png' alt=''/> "
+    return "<a href=\"javascript:showHide('" + divId + "');\"><img id='" + divId + "Img' src='?resource=bullets/plus.png' alt=''/> "
         + label + "</a>";
   }
 

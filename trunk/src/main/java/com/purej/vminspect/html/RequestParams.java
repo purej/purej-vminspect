@@ -28,11 +28,11 @@ public final class RequestParams {
 
   public static final String STATS_GRAPH = "statsGraph";
   public static final String STATS_DETAIL = "statsDetail";
-  public static final String STATS_PERIOD_PARAMETER = "statsPeriod";
+  public static final String STATS_PERIOD = "statsPeriod";
   public static final String STATS_FROM_DATE = "statsFromDate";
   public static final String STATS_TO_DATE = "statsToDate";
-  public static final String STATS_WIDTH_PARAMETER = "statsWidth";
-  public static final String STATS_HEIGHT_PARAMETER = "statsHeight";
+  public static final String STATS_WIDTH = "statsWidth";
+  public static final String STATS_HEIGHT = "statsHeight";
 
   // CHECKSTYLE:ON
 
