@@ -1,3 +1,22 @@
 ===System View===
 http://purej-vminspect.googlecode.com/svn/wiki/screenshots/system-view.gif
 
+===Threads View===
+http://purej-vminspect.googlecode.com/svn/wiki/screenshots/threads-view.gif
+
+===Statistics View===
+http://purej-vminspect.googlecode.com/svn/wiki/screenshots/statistics-view.gif
+
+===Statistics Detail View===
+http://purej-vminspect.googlecode.com/svn/wiki/screenshots/statistics-detail-view.gif
+
+===MBeans View===
+http://purej-vminspect.googlecode.com/svn/wiki/screenshots/mbeans-view.gif
+
+===MBeans Detail View===
+http://purej-vminspect.googlecode.com/svn/wiki/screenshots/mbeans-details-view.gif
+
+===MBeans Invoke Operation===
+http://purej-vminspect.googlecode.com/svn/wiki/screenshots/mbeans-invoke-operation-view.gif
+
+
