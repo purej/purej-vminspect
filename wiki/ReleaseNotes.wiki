@@ -9,6 +9,7 @@
   * Checked all HTML output to be W3C-compliant
   * Reduced java-script complexity, removed unused scripts
   * OperatingSystemMXBean.getSystemLoadAverage() did not work on many platforms and has been replaced by getSystemCpuLoad() 
+  * {{{AuthorizationCallback}}} removed again, must be implemented using a custom servlet filter if required
 
 *0.4 - 22.12.2013*
   * Added logging with slf4j
