@@ -107,7 +107,7 @@ public final class SystemMainView extends AbstractHtmlView {
   }
 
   private static String toShowLinkWithHiddenDiv(String divId, String txt) {
-    return showHideLink(divId, "Show") + "<br/>" + hiddenDiv(divId, htmlEncode(txt));
+    return showHideLink(divId, "Show") + "<br/>" + "<div id='" + divId + "' style='display: none;'>" + htmlEncode(txt) + "</div>";
   }
 
   private static String toMemoryBar(MemoryData memory) {

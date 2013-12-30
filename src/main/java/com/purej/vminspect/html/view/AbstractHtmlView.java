@@ -229,11 +229,6 @@ public abstract class AbstractHtmlView {
         .replaceAll("[\n]", "<br/>");
   }
 
-  protected static final String javascriptEncode(String text) {
-    String txt = text == null ? "" : text;
-    return txt.replace("\\", "\\\\").replace("\n", "\\n").replace("\"", "\\\"").replace("'", "\\'");
-  }
-
   /**
    * Encodes the given URL to HTML save form.
    */
@@ -255,10 +250,6 @@ public abstract class AbstractHtmlView {
       result.append(param);
     }
     return result.toString();
-  }
-
-  protected static final String hiddenDiv(String divId, String txt) {
-    return "<div id='" + divId + "' style='display: none;'>" + txt + "</div>";
   }
 
   protected static final String showHideLink(String divId, String label) {
