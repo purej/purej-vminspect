@@ -11,7 +11,7 @@ import com.purej.vminspect.data.MBeanParameter;
  *
  * @author Stefan Mueller
  */
-public class MBeansInvokeOperationView extends AbstractBeansView {
+public class MBeansInvokeOperationView extends AbstractMBeansView {
   private final MBeanData _mbean;
   private final int _mbOpIdx;
   private final MBeanOperation _operation;

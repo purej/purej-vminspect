@@ -10,7 +10,7 @@ import com.purej.vminspect.data.MBeanData;
  *
  * @author Stefan Mueller
  */
-public class MBeansInvokeAttributeView extends AbstractBeansView {
+public class MBeansInvokeAttributeView extends AbstractMBeansView {
   private final MBeanData _mbean;
   private final MBeanAttribute _attribute;
 
