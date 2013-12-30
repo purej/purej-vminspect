@@ -13,7 +13,7 @@ import com.purej.vminspect.html.RequestParams;
  *
  * @author Stefan Mueller
  */
-public class MBeansDetailView extends AbstractBeansView {
+public class MBeansDetailView extends AbstractMBeansView {
   private final MBeanData _mbean;
   private final String _okMessage;
   private final String _warnMessage;

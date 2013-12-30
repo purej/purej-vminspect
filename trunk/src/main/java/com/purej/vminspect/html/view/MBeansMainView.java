@@ -11,7 +11,7 @@ import com.purej.vminspect.util.Utils;
  *
  * @author Stefan Mueller
  */
-public class MBeansMainView extends AbstractBeansView {
+public class MBeansMainView extends AbstractMBeansView {
   private final String _domainFilter;
   private final String _typeFilter;
   private final List<MBeanName> _mbeans;

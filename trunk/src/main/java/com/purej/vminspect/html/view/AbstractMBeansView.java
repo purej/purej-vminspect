@@ -12,12 +12,12 @@ import com.purej.vminspect.html.RequestParams;
  *
  * @author Stefan Mueller
  */
-public abstract class AbstractBeansView extends AbstractHtmlView {
+public abstract class AbstractMBeansView extends AbstractHtmlView {
 
   /**
    * Creates a new instance of this view.
    */
-  public AbstractBeansView(StringBuilder output) {
+  public AbstractMBeansView(StringBuilder output) {
     super(output);
   }
 
