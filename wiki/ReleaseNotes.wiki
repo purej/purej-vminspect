@@ -1,8 +1,8 @@
 *0.6 - 29.12.2013*
   * Moved to code.google.com, added licensing
-  * Changed to memory-display and memory-bar to also include committed memory
-  * Corrected MBeans wild-card search to correctly apply wildcards
+  * System-view shows the also commited memory, memory-bar is two-colored now
   * System-view shows the CPU load and total CPU time of the VM process
+  * Corrected MBeans wild-card search to correctly apply wildcards
   * Threads-view shows the peek-lives and totally started threads
   * Statistics will be optionally hold in-memory if no statistics-storage directory has been configured
   * Statistics detail view can be zoomed in and out and the size is preserved when switching period
