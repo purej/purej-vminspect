@@ -13,7 +13,7 @@
 *0.4 - 22.12.2013*
   * Added logging with slf4j
   * MBean access can be restricted to read-only by setting the servlet-param 'vminspect.mbeans.readonly' to true
-  * AuthorizationCallback ifc that can be configured by setting the servlet-param 'vminspect.authorization.callback' to a custom class
+  * {{{AuthorizationCallback}}} ifc that can be configured by setting the servlet-param 'vminspect.authorization.callback' to a custom class
   * Lots of internal refactoring without impact to users
   * Lots of javadoc and checkstyle-rules applied
 
