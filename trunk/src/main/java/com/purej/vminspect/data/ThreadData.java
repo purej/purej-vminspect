@@ -1,36 +1,21 @@
 // Copyright (c), 2013, adopus consulting GmbH Switzerland, all rights reserved.
 package com.purej.vminspect.data;
 
-import java.io.Serializable;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import com.purej.vminspect.util.Utils;
 
 /**
  * Provides information about a single thread.
  *
  * @author Stefan Mueller
  */
-public final class ThreadData implements Serializable {
-
-  /**
-   * Comparator to sort based on name.
-   */
-  public static final Comparator<ThreadData> COMPARATOR = new Comparator<ThreadData>() {
-    @Override
-    public int compare(ThreadData o1, ThreadData o2) {
-      return Utils.compareTo(o1.getName(), o2.getName());
-    }
-  };
-
-  private static final long serialVersionUID = -1;
+public final class ThreadData {
   private final String _name;
   private final int _priority;
   private final boolean _daemon;
@@ -59,7 +44,7 @@ public final class ThreadData implements Serializable {
    */
   public static List<ThreadData> getAllThreads() {
     List<ThreadData> threads = createThreadInfos(ManagementFactory.getThreadMXBean());
-    Collections.sort(threads, ThreadData.COMPARATOR);
+    Collections.sort(threads, new ThreadDataComparator());
     return threads;
   }
 

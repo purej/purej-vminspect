@@ -1,9 +1,7 @@
 // Copyright (c), 2013, adopus consulting GmbH Switzerland, all rights reserved.
 package com.purej.vminspect.data;
 
-import java.util.Comparator;
 import javax.management.ObjectName;
-import com.purej.vminspect.util.Utils;
 
 /**
  * Represents the name of an MBean.
@@ -11,18 +9,6 @@ import com.purej.vminspect.util.Utils;
  * @author Stefan Mueller
  */
 public class MBeanName {
-
-  /**
-   * A comparator to compare {@link MBeanName} objects.
-   */
-  public static final Comparator<MBeanName> COMPARATOR = new Comparator<MBeanName>() {
-    @Override
-    public int compare(MBeanName o1, MBeanName o2) {
-      int result = Utils.compareTo(o1.getDomain(), o2.getDomain());
-      return result == 0 ? Utils.compareTo(o1.getType(), o2.getType()) : result;
-    }
-  };
-
   private final int _serverIdx;
   private final ObjectName _objectName;
   private final String _domain;

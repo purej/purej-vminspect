@@ -61,7 +61,7 @@ public final class MBeanUtils {
         result.add(new MBeanName(i, name));
       }
     }
-    Collections.sort(result, MBeanName.COMPARATOR);
+    Collections.sort(result, new MBeanNameComparator());
     return result;
   }
 
@@ -80,7 +80,7 @@ public final class MBeanUtils {
       for (int i = 0; i < attributes.length; i++) {
         attributes[i] = createAttribute(server, name, attributeInfos[i]);
       }
-      Arrays.sort(attributes, MBeanAttribute.COMPARATOR);
+      Arrays.sort(attributes, new MBeanAttributeComparator());
 
       // Create the list of operations:
       MBeanOperationInfo[] operationInfos = mbeanInfo.getOperations();
@@ -88,7 +88,7 @@ public final class MBeanUtils {
       for (int i = 0; i < operationInfos.length; i++) {
         operations[i] = createOperation(operationInfos[i]);
       }
-      Arrays.sort(operations, MBeanOperation.COMPARATOR);
+      Arrays.sort(operations, new MBeanOperationComparator());
 
       return new MBeanData(new MBeanName(mbServerIdx, name), mbeanInfo.getDescription(), attributes, operations);
     }
