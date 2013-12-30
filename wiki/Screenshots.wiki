@@ -8,7 +8,7 @@ http://purej-vminspect.googlecode.com/svn/wiki/screenshots/threads-view.gif
 http://purej-vminspect.googlecode.com/svn/wiki/screenshots/statistics-view.gif
 
 ===Statistics Detail View===
-http://purej-vminspect.googlecode.com/svn/wiki/screenshots/statistics-detail-view.gif
+http://purej-vminspect.googlecode.com/svn/wiki/screenshots/statistics-details-view.gif
 
 ===MBeans View===
 http://purej-vminspect.googlecode.com/svn/wiki/screenshots/mbeans-view.gif
@@ -18,5 +18,3 @@ http://purej-vminspect.googlecode.com/svn/wiki/screenshots/mbeans-details-view.g
 
 ===MBeans Invoke Operation===
 http://purej-vminspect.googlecode.com/svn/wiki/screenshots/mbeans-invoke-operation-view.gif
-
-
