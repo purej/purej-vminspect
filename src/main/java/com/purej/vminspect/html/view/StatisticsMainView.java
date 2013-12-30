@@ -41,7 +41,7 @@ public final class StatisticsMainView extends AbstractStatisticsView {
       Statistics stats = statistics.get(i);
       String params = params("statsWidth=200", "statsHeight=50", "statsGraph=" + stats.getName());
       String img = "<img class='synthese' src='?" + params + "' alt='" + stats.getLabel() + "' title='" + stats.getDescription() + "'/>";
-      String statsParams = statisticsParams(RequestParams.STATS_DETAIL + "=" + stats.getName(), RequestParams.STATS_WIDTH + "=960",
+      String statsParams = statisticsParams(RequestParams.STATS_DETAIL + "=" + stats.getName(), RequestParams.STATS_WIDTH + "=1000",
           RequestParams.STATS_HEIGHT + "=400");
       writeln(lnk(statsParams, img));
       write("&nbsp;");
