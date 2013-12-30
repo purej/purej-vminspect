@@ -1,7 +1,6 @@
 // Copyright (c), 2013, adopus consulting GmbH Switzerland, all rights reserved.
 package com.purej.vminspect.data;
 
-import java.io.Serializable;
 import java.lang.management.ClassLoadingMXBean;
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
@@ -19,13 +18,11 @@ import java.util.Map;
  *
  * @author Stefan Mueller
  */
-public class SystemData implements Serializable {
+public class SystemData {
   /**
    * The host name and IP address.
    */
   public static final String HOST;
-
-  private static final long serialVersionUID = -1;
 
   static {
     String hostName;
