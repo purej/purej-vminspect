@@ -24,24 +24,19 @@ public final class ThreadsDumpView extends AbstractHtmlView {
 
   @Override
   public void render() throws IOException {
-    write(formatDateTime(new Date()));
-    write("\n\n");
-    write("===== ALL THREADS DUMP =====");
-    write("\n\n");
+    write("===== THREADS DUMP (" + formatDateTime(new Date()) + ") =====\n\n");
     for (ThreadData thread : _threads) {
       write("\"");
       write(thread.getName());
-      write("\"");
-      if (thread.isDaemon()) {
-        write(" daemon");
-      }
+      write("\" daemon=");
+      write(thread.isDaemon() ? "yes" : "no");
       write(" prio=");
       write(String.valueOf(thread.getPriority()));
-      write(" ");
+      write(" state=");
       write(String.valueOf(thread.getState()));
-      final StackTraceElement[] stackTrace = thread.getStackTrace();
-      if (stackTrace != null && stackTrace.length > 0) {
-        for (final StackTraceElement element : stackTrace) {
+      StackTraceElement[] stackTrace = thread.getStackTrace();
+      if (stackTrace != null) {
+        for (StackTraceElement element : stackTrace) {
           write("\n\t");
           write(element.toString());
         }
