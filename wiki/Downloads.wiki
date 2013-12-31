@@ -9,6 +9,8 @@ Maven users can just add the following dependency to automatically download from
     </dependency>
 }}}
 
+Note: Non-Maven users need to get the [http://http://sourceforge.net/projects/jrobin JRobin] library manually (Version 1.5.9 recommended).
+
 *Version 1.0 (31.12.2013)*
 || *File* || *Size* || *Summary* ||
 ||[https://purej-vminspect.googlecode.com/svn/wiki/downloads/1.0/purej-vminspect-1.0.jar purej-vminspect-1.0.jar]||129kb||Binary||
