@@ -1,4 +1,13 @@
-The latest version is recommended. See as well the [ReleaseNotes].
+The list of stable versions to download. See as well the [ReleaseNotes].
+
+Maven users can just add the following dependency to automatically download from Maven Central:
+{{{
+    <dependency>
+      <groupId>com.purej</groupId>
+      <artifactId>purej-vminspect</artifactId>
+      <version>1.0</version>
+    </dependency>
+}}}
 
 *Version 1.0 (31.12.2013)*
 || *File* || *Size* || *Summary* ||
