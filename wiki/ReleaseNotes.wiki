@@ -1,3 +1,6 @@
+*1.0 - 31.12.2013*
+  * No programmatic changes, but switched to Sonatype-Maven repository and officially released to Maven Central
+
 *0.6 - 29.12.2013*
   * Moved to code.google.com, added licensing
   * System-view shows commited memory in addition to used/max - memory-bar became two-colored
