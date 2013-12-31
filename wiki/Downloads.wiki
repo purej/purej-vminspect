@@ -1,3 +1,5 @@
+The latest version is recommended. See as well the [ReleaseNotes].
+
 *Version 1.0 (31.12.2013)*
 || *File* || *Size* || *Summary* ||
 ||[https://purej-vminspect.googlecode.com/svn/wiki/downloads/1.0/purej-vminspect-1.0.jar purej-vminspect-1.0.jar]||129kb||Binary||
@@ -5,7 +7,7 @@
 ||[https://purej-vminspect.googlecode.com/svn/wiki/downloads/1.0/purej-vminspect-1.0-javadoc.jar purej-vminspect-1.0-javadoc.jar]||265kb||Javadoc||
 
 
-*Version 1.0 (29.12.2013)*
+*Version 0.6 (29.12.2013)*
 || *File* || *Size* || *Summary* ||
 ||[https://purej-vminspect.googlecode.com/svn/wiki/downloads/0.6/purej-vminspect-0.6.jar purej-vminspect-0.6.jar]||129kb||Binary||
 ||[https://purej-vminspect.googlecode.com/svn/wiki/downloads/0.6/purej-vminspect-0.6-sources.jar purej-vminspect-0.6-sources.jar]||96kb||Sources||
