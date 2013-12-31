@@ -1,3 +1,5 @@
+#summary Downloads
+
 The list of stable versions to download. See as well the [ReleaseNotes].
 
 Maven users can just add the following dependency to automatically download from Maven Central:
