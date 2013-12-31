@@ -9,7 +9,7 @@ Maven users can just add the following dependency to automatically download from
     </dependency>
 }}}
 
-_Note:_ *purej-vminspect* relies on *JRobin* for statistics, non-Maven users need to get the [http://sourceforge.net/projects/jrobin JRobin] library manually (Version *1.5.9* tested and recommended, this is the latest version available also in Maven Central).
+_Note:_ *purej-vminspect* relies on *JRobin* for statistics graphics, non-Maven users need to get the [http://sourceforge.net/projects/jrobin JRobin] library manually (Version *1.5.9* tested and recommended, this is the latest version available also in Maven Central).
 
 *Version 1.0 (31.12.2013)*
 || *File* || *Size* || *Summary* ||
