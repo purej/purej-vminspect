@@ -60,6 +60,20 @@ For non-webapps, VM inspection can be enabled by starting an embeddable web-serv
 
 =Configuring the !VmInspectServlet=
 The !VmInspectServlet supports the following servlet-init-parameters:
+<table>
+  <tr>
+    <td> *Property* </td>
+    <td> *Description* </td>
+    <td> *Default* </td>
+  </tr>
+  <tr>
+    <td>vminspect.mbeans.readonly</td>
+    <td>true/false, specifies if _PureJ VM Inspection_ is allowed to edit MBean values or invoke non-info operations</td>
+    <td>false</td>
+  </tr>
+</table>
+
+
 || *Property* || *Description* || *Default* ||
 ||vminspect.mbeans.readonly||true/false, specifies if _PureJ VM Inspection_ is allowed to edit MBean values or invoke non-info operations||false||
 ||vminspect.statistics.collection.frequencyMs||Number of milliseconds for the statistics collection timer||60'000||
