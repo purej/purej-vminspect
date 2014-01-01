@@ -30,7 +30,7 @@ Maven users just need to add the following dependency, it will download the requ
 
 ==Web-Applications==
 
-Add the following servlet-config to the _web.xml_:
+Add the following config to the _web.xml_:
 
 {{{
     <servlet>
