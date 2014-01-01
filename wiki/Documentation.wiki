@@ -19,11 +19,11 @@ _PureJ VM Inspect_ can be embedded in any Java / Java-EE application and provide
 Maven users just need to add the following dependency, it will download the required libraries automatically:
 
 {{{
-    <dependency>
-        <groupId>com.purej</groupId>
-        <artifactId>purej-vminspect</artifactId>
-        <version>1.0</version>
-    </dependency>
+  <dependency>
+      <groupId>com.purej</groupId>
+      <artifactId>purej-vminspect</artifactId>
+      <version>1.0</version>
+  </dependency>
 }}}
 
 =Enabling the !VmInspectServlet=
@@ -33,16 +33,16 @@ Maven users just need to add the following dependency, it will download the requ
 Add the following config to the _web.xml_:
 
 {{{
-    <servlet>
-      <servlet-name>vminspect</servlet-name>
-      <servlet-class>com.purej.vminspect.html.VmInspectServlet</servlet-class>
-      <load-on-startup>1</load-on-startup>
-    </servlet>
+  <servlet>
+    <servlet-name>vminspect</servlet-name>
+    <servlet-class>com.purej.vminspect.html.VmInspectServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
 
-    <servlet-mapping>
-      <servlet-name>vminspect</servlet-name>
-      <url-pattern>/inspect/*</url-pattern>
-    </servlet-mapping>      
+  <servlet-mapping>
+    <servlet-name>vminspect</servlet-name>
+    <url-pattern>/inspect/*</url-pattern>
+  </servlet-mapping>      
 }}}
 
 
@@ -50,12 +50,12 @@ Add the following config to the _web.xml_:
 For non-webapps, VM inspection can be enabled by starting an embeddable web-server such as for example [http://www.eclipse.org/jetty Jetty]:
 
 {{{
-    Server server = new Server(8080);
-    ServletContextHandler handler = new ServletContextHandler(server, "/inspect");
-    ServletHolder servletHolder = new ServletHolder(VmInspectServlet.class);
-    servletHolder.setInitOrder(1);
-    handler.addServlet(servletHolder, "/*");
-    server.start();
+  Server server = new Server(8080);
+  ServletContextHandler handler = new ServletContextHandler(server, "/inspect");
+  ServletHolder servletHolder = new ServletHolder(VmInspectServlet.class);
+  servletHolder.setInitOrder(1);
+  handler.addServlet(servletHolder, "/*");
+  server.start();
 }}}
 
 =Configuring the !VmInspectServlet=
@@ -70,23 +70,23 @@ The !VmInspectServlet supports the following servlet-init-parameters:
 
 *Example configuration for web-apps*
 {{{
-    <servlet>
-      <servlet-name>vminspect</servlet-name>
-      <servlet-class>com.purej.vminspect.html.VmInspectServlet</servlet-class>
-      <load-on-startup>1</load-on-startup>
-      <init-param>
-        <param-name>vminspect.mbeans.readonly</param-name>
-        <param-value>true</param-value>
-      </init-param>
-      <init-param>
-        <param-name>vminspect.statistics.storage.dir</param-name>
-        <param-value>/home/users/john/my-app-statistics</param-value>
-      </init-param>
-    </servlet>
+  <servlet>
+    <servlet-name>vminspect</servlet-name>
+    <servlet-class>com.purej.vminspect.html.VmInspectServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+    <init-param>
+      <param-name>vminspect.mbeans.readonly</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>vminspect.statistics.storage.dir</param-name>
+      <param-value>/home/users/john/my-app-statistics</param-value>
+    </init-param>
+  </servlet>
 }}}
 
 *Example configuration for non-web-apps with Jetty*
 {{{
-    servletHolder.setInitParameter("vminspect.mbeans.readonly", "true");
-    servletHolder.setInitParameter("vminspect.statistics.storage.dir", "/home/users/john/my-app-statistics");
+  servletHolder.setInitParameter("vminspect.mbeans.readonly", "true");
+  servletHolder.setInitParameter("vminspect.statistics.storage.dir", "/home/users/john/my-app-statistics");
 }}}
