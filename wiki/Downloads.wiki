@@ -1,4 +1,5 @@
 <p align="center">
+https://purej-vminspect.googlecode.com/svn/wiki/pics/purej-logo.png
 *<font size="20">PureJ VM Inspection</font><br/>
 [https://code.google.com/p/purej-vminspect/ Home] | [Documentation] | [ReleaseNotes] | [Downloads]*
 </p>
