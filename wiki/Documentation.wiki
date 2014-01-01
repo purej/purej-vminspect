@@ -15,8 +15,11 @@ JMX is a great and simple approach to manage enterprise applications in producti
 ==Requisites==
 
   * Java 1.6+
+  * purej-vminspect-[version].jar (see [Downloads])
+  * slf4j for logging (Version 1.7.5, see [http://www.slf4j.org/download.html slf4j.org])
+  * JRobin for statistics graphics (Version 1.5.9, see [http://sourceforge.net/projects/jrobin JRobin on Sourceforge])
 
-PureJ VM Inspection is available in Maven Central, so Maven users just need to add the following dependency:
+Maven users just need to add the following dependency, it will download the required libraries automatically.
 
 {{{
     <dependency>
@@ -26,60 +29,9 @@ PureJ VM Inspection is available in Maven Central, so Maven users just need to a
     </dependency>
 }}}
 
-Non Maven users need to fetch the following dependencies manually:
+==Add the VmInspectServlet to an existing web-application==
 
-
-
-If you don't use maven to fetch JMiniX's dependencies, you will need the following jars from the Apache Fundation, Noelios Restlet framework, JSon lib, JGroups and Jasypt encryption lib:
-
-{{{
- +- org.restlet:org.restlet:jar:1.1.5:compile
- +- org.restlet:org.restlet.ext.velocity:jar:1.1.5:compile
- |  \- org.apache.velocity:velocity:jar:1.5:compile
- |     \- oro:oro:jar:2.0.8:compile
- +- com.noelios.restlet:com.noelios.restlet:jar:1.1.5:compile
- +- com.noelios.restlet:com.noelios.restlet.ext.servlet:jar:1.1.5:compile
- +- commons-logging:commons-logging:jar:1.1.1:compile
- +- net.sf.json-lib:json-lib:jar:jdk15:2.2.3:compile
- |  +- commons-lang:commons-lang:jar:2.4:compile
- |  +- commons-beanutils:commons-beanutils:jar:1.7.0:compile
- |  +- commons-collections:commons-collections:jar:3.2:compile
- |  \- net.sf.ezmorph:ezmorph:jar:1.0.6:compile
- +- org.jgroups:jgroups:jar:2.12.1.3.Final:compile
- \- org.jasypt:jasypt:jar:1.8:compile
-}}}
-
-==Maven Configuration==
-
-JMiniX is published in the official [http://repo1.maven.org/maven2/org/jminix/jminix/ maven repository].
-
-Add the following dependency to your `pom.xml`:
-
-{{{
-<dependency>
-        <groupId>org.jminix</groupId>
-        <artifactId>jminix</artifactId>
-        <version>1.0.0</version>
-</dependency>
-}}}
-
-*NOTE:* You have to refer to the restlet repository since JMiniX relies on this excellent framework:
-
-Declare the repository for your project or for a parent project by updating the `pom.xml` file and adding the following code to the `<repositories>` section:
-
-{{{
-<repository>  
-    <id>maven-restlet</id>  
-    <name>Public online Restlet repository</name>  
-    <url>http://maven.restlet.org</url>  
-</repository>  
-}}}
-
-Or you can put that in the `settings.xml` file. See http://www.restlet.org/downloads/maven.
-
-==Embed the Mini-Console in your Web Application==
-
-In `web.xml` :
+Add a new servlet to the _web.xml_:
 
 {{{
 <servlet>
