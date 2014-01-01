@@ -7,11 +7,11 @@ This is a list of all stable versions available for download.
 
 Maven users just need to add the following dependency, it will download the required libraries automatically:
 {{{
-    <dependency>
-      <groupId>com.purej</groupId>
-      <artifactId>purej-vminspect</artifactId>
-      <version>1.0</version>
-    </dependency>
+  <dependency>
+    <groupId>com.purej</groupId>
+    <artifactId>purej-vminspect</artifactId>
+    <version>1.0</version>
+  </dependency>
 }}}
 
 *Note:* _PureJ VM Inspection_ relies on the following two dependencies which non-Maven users need to get manually:
