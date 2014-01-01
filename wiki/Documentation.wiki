@@ -6,14 +6,28 @@
 <wiki:toc />
 
 =Purpose=
+JMX is a great and simple approach to manage enterprise applications in production environment. Unfortunately, the JDK lacks a lightweight tool to access those information securely without the need for a complex infrastructure.
 
-JMX is the natural way to have access to technical management, e.g. for tuning, statistics, log levels, ... Unfortunately, it lacks a lightweight tool to expose mbeans and to browse them securely on any application and environment without heavy infrastructure setup. JMiniX provides such a feature.
+*PureJ VM Inspect* can be embedded in any Java / Java-EE application and provides remote JMX management features over a HTTP / web-based user-interface. 
 
 =Configuration=
 
 ==Requisites==
 
-  * Java 1.5+
+  * Java 1.6+
+
+PureJ VM Inspection is published to the Maven Central repository, so Maven users just need to add the following dependency:
+
+{{{
+    <dependency>
+        <groupId>com.purej</groupId>
+        <artifactId>purej-vminspect</artifactId>
+        <version>1.0</version>
+    </dependency>
+}}}
+
+
+
 
 If you don't use maven to fetch JMiniX's dependencies, you will need the following jars from the Apache Fundation, Noelios Restlet framework, JSon lib, JGroups and Jasypt encryption lib:
 
