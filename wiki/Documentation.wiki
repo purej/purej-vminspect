@@ -1,5 +1,5 @@
 <p align="center">
-*<font>PureJ VM Inspection</font><br/>
+*<font size="14">PureJ VM Inspection</font><br/>
 [https://code.google.com/p/purej-vminspect/ Home] | [ReleaseNotes] | [Downloads]*
 </p>
 
