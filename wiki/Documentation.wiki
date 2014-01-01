@@ -16,7 +16,7 @@ JMX is a great and simple approach to manage enterprise applications in producti
 
   * Java 1.6+
 
-PureJ VM Inspection is published to the Maven Central repository, so Maven users just need to add the following dependency:
+PureJ VM Inspection is available in Maven Central, so Maven users just need to add the following dependency:
 
 {{{
     <dependency>
@@ -26,6 +26,7 @@ PureJ VM Inspection is published to the Maven Central repository, so Maven users
     </dependency>
 }}}
 
+Non Maven users need to fetch the following dependencies manually:
 
 
 
