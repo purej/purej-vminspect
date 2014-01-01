@@ -14,7 +14,7 @@ Maven users can just add the following dependency to automatically download from
     </dependency>
 }}}
 
-_Note:_ *PureJ VM Inspection* relies on the following two dependencies which non-Maven users need to get manually:
+*Note:* _PureJ VM Inspection_ relies on the following two dependencies which non-Maven users need to get manually:
 
   * slf4j for logging (Version 1.7.5, see [http://www.slf4j.org/download.html slf4j.org])
   * JRobin for statistics graphics (Version 1.5.9, see [http://sourceforge.net/projects/jrobin JRobin on Sourceforge])
