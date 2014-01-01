@@ -14,7 +14,11 @@ Maven users can just add the following dependency to automatically download from
     </dependency>
 }}}
 
-_Note:_ *purej-vminspect* relies on *JRobin* for statistics graphics, non-Maven users need to get the [http://sourceforge.net/projects/jrobin JRobin] library manually (Version *1.5.9* tested and recommended, this is the latest version available also in Maven Central).
+_Note:_ *purej-vminspect* relies on the following two dependencies which non-Maven users need to get manually:
+
+  * slf4j for logging (Version 1.7.5, see [http://www.slf4j.org/download.html slf4j.org])
+  * JRobin for statistics graphics (Version 1.5.9, see [http://sourceforge.net/projects/jrobin JRobin on Sourceforge])
+
 
 *Version 1.0 (31.12.2013)*
 || *File* || *Size* || *Summary* ||
