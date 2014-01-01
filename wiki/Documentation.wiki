@@ -71,6 +71,16 @@ The !VmInspectServlet supports the following servlet-init-parameters:
     <td>true/false, specifies if _PureJ VM Inspection_ is allowed to edit MBean values or invoke non-info operations</td>
     <td>false</td>
   </tr>
+  <tr>
+    <td>vminspect.statistics.collection.frequencyMs</td>
+    <td>Number of milliseconds for the statistics collection timer</td>
+    <td>60000</td>
+  </tr>
+  <tr>
+    <td>vminspect.statistics.storage.dir</td>
+    <td>Optional Path where to store the statistics files. If no path is specified, the statistics will be kept in memory and lost after a VM restart</td>
+    <td>null</td>
+  </tr>
 </table>
 
 
