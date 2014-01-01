@@ -3,6 +3,7 @@ https://purej-vminspect.googlecode.com/svn/wiki/pics/purej-logo-60.png
 *<font size="20">VM Inspection</font><br/>
 [https://code.google.com/p/purej-vminspect/ Home] | [Documentation] | [ReleaseNotes] | [Downloads]*
 </p>
+
 *1.0 - 31.12.2013*
   * No programmatic changes, but switched to Sonatype-Maven repository and officially released to Maven Central
 
