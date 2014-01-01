@@ -60,7 +60,7 @@ For non-webapps, VM inspection can be enabled by starting an embeddable web-serv
 
 =Configuring the !VmInspectServlet=
 The !VmInspectServlet supports the following servlet-init-parameters:
-<table border="2">
+<table border="0">
   <tr>
     <td> *Property* </td>
     <td> *Description* </td>
