@@ -47,3 +47,21 @@ Add the following config to the _web.xml_:
 
 
 ==Non-Web-Application==
+For non-webapps, VM inspection can be enabled by starting an embeddable web-server such as for example [http://www.eclipse.org/jetty Jetty]:
+
+{{{
+    Server server = new Server(8080);
+    ServletContextHandler handler = new ServletContextHandler(server, "/inspect");
+    ServletHolder servletHolder = new ServletHolder(VmInspectServlet.class);
+    servletHolder.setInitOrder(1);
+    handler.addServlet(servletHolder, "/*");
+    server.start();
+}}}
+
+=Configuring the !VmInspectServlet=
+The !VmInspectServlet supports the following servlet-init-parameters:
+|| *Property* || *Description* ||
+||vminspect.mbeans.readonly||true/false, specifies if VmInspect is allowed to edit MBean values or invoke non-info operations (default false)||
+||vminspect.statistics.collection.frequencyMs||Number of milliseconds for the statistics collection timer (default 60'000ms)||
+||vminspect.statistics.storage.dir||Optional Path where to store the statistics files (default no storage directory)||
+
