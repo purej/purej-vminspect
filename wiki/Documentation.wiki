@@ -28,36 +28,22 @@ Maven users just need to add the following dependency, it will download the requ
     </dependency>
 }}}
 
-==Add the !VmInspectServlet to an existing web-application==
+==Adding the !VmInspectServlet to an existing web-application==
 
-Add a new servlet to the _web.xml_:
-
-{{{
-<servlet>
-    <servlet-name>JmxMiniConsoleServlet</servlet-name>
-    <servlet-class>
-        org.jminix.console.servlet.MiniConsoleServlet
-    </servlet-class>
-</servlet> 
-
-
-<servlet-mapping>
-    <servlet-name>JmxMiniConsoleServlet</servlet-name>
-    <url-pattern>/jmx/*</url-pattern>
-</servlet-mapping>      
-}}}
-
-By default, it finds the `MbeanServerConnection` by itself using the standard JMX discovery. You can add the serverConnectionProvider configuration parameter to provide your own implementation of the `ServerConnectionProvider` interface:
+Add the following servlet-config to the _web.xml_:
 
 {{{
-<servlet>
-    <servlet-name>JmxMiniConsoleServlet</servlet-name>
-    <servlet-class>
-        org.jminix.console.servlet.MiniConsoleServlet
-    </servlet-class>
-    <init-param>
-        <param-name>serverConnectionProvider</param-name>
-        <param-value>org.myorg.myproject.MyOwnServerConnectionProvider</param-value>
-    </init-param>
-</servlet> 
+    <servlet>
+      <servlet-name>vminspect</servlet-name>
+      <servlet-class>com.purej.vminspect.html.VmInspectServlet</servlet-class>
+      <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+      <servlet-name>vminspect</servlet-name>
+      <url-pattern>/inspect/*</url-pattern>
+    </servlet-mapping>      
 }}}
+
+
+==Using the !VmInspectServlet in a non-web-application==
