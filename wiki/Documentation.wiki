@@ -10,9 +10,7 @@ JMX is a great and simple approach to manage enterprise applications in producti
 
 _PureJ VM Inspect_ can be embedded in any Java / Java-EE application and provides remote JMX management features over a HTTP / web-based user-interface. 
 
-=Configuration=
-
-==Requisites==
+=Requisites=
 
   * Java 1.6+
   * slf4j for logging (Version 1.7.5, see [http://www.slf4j.org/download.html slf4j.org])
@@ -28,7 +26,9 @@ Maven users just need to add the following dependency, it will download the requ
     </dependency>
 }}}
 
-==Adding the !VmInspectServlet to an existing web-application==
+=Enabling the !VmInspectServlet=
+
+==Web-Applications==
 
 Add the following servlet-config to the _web.xml_:
 
@@ -46,4 +46,4 @@ Add the following servlet-config to the _web.xml_:
 }}}
 
 
-==Using the !VmInspectServlet in a non-web-application==
+==Non-Web-Application==
