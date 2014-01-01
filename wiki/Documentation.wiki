@@ -67,3 +67,26 @@ The !VmInspectServlet supports the following servlet-init-parameters:
 ||vminspect.statistics.storage.dir||Optional path where to store the statistics files or null if no storage required||null||
 
 *Note*: If no statistics storage-path is specified, the statistics will be kept only in memory and thus will be lost after a VM restart!
+
+*Example configuration for web-apps*
+{{{
+    <servlet>
+      <servlet-name>vminspect</servlet-name>
+      <servlet-class>com.purej.vminspect.html.VmInspectServlet</servlet-class>
+      <load-on-startup>1</load-on-startup>
+      <init-param>
+        <param-name>vminspect.mbeans.readonly</param-name>
+        <param-value>true</param-value>
+      </init-param>
+      <init-param>
+        <param-name>vminspect.statistics.storage.dir</param-name>
+        <param-value>/home/users/john/my-app-statistics</param-value>
+      </init-param>
+    </servlet>
+}}}
+
+*Example configuration for non-web-apps with Jetty*
+{{{
+    servletHolder.setInitParameter("vminspect.mbeans.readonly", "true");
+    servletHolder.setInitParameter("vminspect.statistics.storage.dir", "/home/users/john/my-app-statistics");
+}}}
