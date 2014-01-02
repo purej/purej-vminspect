@@ -53,6 +53,27 @@ public class UtilsTest {
    * Tests the named functionality.
    */
   @Test
+  public void testEncodeDecode() throws Exception {
+    Assert.assertEquals("", Utils.urlEncode(null));
+    Assert.assertEquals("", Utils.urlEncode(""));
+    Assert.assertEquals("ja%26va", Utils.urlEncode("ja&va"));
+    Assert.assertEquals("ja%3Dva", Utils.urlEncode("ja=va"));
+    Assert.assertEquals("ja%3D%22%3Bva", Utils.urlEncode("ja=\";va"));
+    Assert.assertEquals("ja+v-%3C%3Ea.*", Utils.urlEncode("ja v-<>a.*"));
+
+    Assert.assertEquals(null, Utils.urlDecode(null));
+    Assert.assertEquals("", Utils.urlDecode(""));
+    Assert.assertEquals("ja&va", Utils.urlDecode("ja%26va"));
+    Assert.assertEquals("ja=va", Utils.urlDecode("ja%3Dva"));
+    Assert.assertEquals("ja=\";va", Utils.urlDecode("ja%3D%22%3Bva"));
+    Assert.assertEquals("ja v-<>a.*", Utils.urlDecode("ja+v-%3C%3Ea.*")); // produced by encoder
+    Assert.assertEquals("ja v-<>a.*", Utils.urlDecode("ja+v-<>a.*")); // produced by html forms with get
+  }
+
+  /**
+   * Tests the named functionality.
+   */
+  @Test
   public void testWildCardMatch() throws Exception {
     String s1 = null;
     String s2 = "";
