@@ -4,10 +4,9 @@ package com.purej.vminspect.html.view;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
-import com.purej.vminspect.data.statistics.Statistics;
 import com.purej.vminspect.data.statistics.Range;
+import com.purej.vminspect.data.statistics.Statistics;
 import com.purej.vminspect.data.statistics.StatisticsCollector;
-import com.purej.vminspect.html.RequestParams;
 
 /**
  * Displays the currently existing statistics.
@@ -41,8 +40,7 @@ public final class StatisticsMainView extends AbstractStatisticsView {
       Statistics stats = statistics.get(i);
       String params = params("statsWidth=200", "statsHeight=50", "statsGraph=" + stats.getName());
       String img = "<img class='synthese' src='?" + params + "' alt='" + stats.getLabel() + "' title='" + stats.getDescription() + "'/>";
-      String statsParams = statisticsParams(RequestParams.STATS_DETAIL + "=" + stats.getName(), RequestParams.STATS_WIDTH + "=1000",
-          RequestParams.STATS_HEIGHT + "=400");
+      String statsParams = statisticsParams("statsDetail=" + stats.getName(), "statsWidth=1000", "statsHeight=400");
       writeln(lnk(statsParams, img));
       write("&nbsp;");
       if ((i + 1) % 3 == 0) {

@@ -4,7 +4,6 @@ package com.purej.vminspect.html.view;
 import java.io.IOException;
 import com.purej.vminspect.data.statistics.Period;
 import com.purej.vminspect.data.statistics.Range;
-import com.purej.vminspect.html.RequestParams;
 
 /**
  * Displays the currently existing statistics.
@@ -24,9 +23,9 @@ public abstract class AbstractStatisticsView extends AbstractHtmlView {
 
   protected static String statisticsParams(String... additionalParams) {
     StringBuilder builder = new StringBuilder();
-    builder.append(RequestParams.PAGE).append("=statistics");
+    builder.append("page=statistics");
     for (String param : additionalParams) {
-      builder.append(RequestParams.SEPARATOR).append(param);
+      builder.append(PARAMS_SEPARATOR).append(param);
     }
     return builder.toString();
   }

@@ -7,7 +7,6 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import com.purej.vminspect.html.RequestParams;
 
 /**
  * Abstract view class with some utility functions to render HTML pages.
@@ -15,6 +14,7 @@ import com.purej.vminspect.html.RequestParams;
  * @author Stefan Mueller
  */
 public abstract class AbstractHtmlView {
+  protected static final String PARAMS_SEPARATOR = "&amp;";
   private static final String NUMBER_FORMAT = "###,###";
   private static final String DECIMAL_FORMAT = "###,###.##";
   private static final String PCT_FORMAT = "##.##";
@@ -213,7 +213,7 @@ public abstract class AbstractHtmlView {
 
   protected static final String img(String img, String title) throws IOException {
     String t = title != null ? title : "";
-    return "<img src='?" + RequestParams.RESOURCE + "=" + img + "' alt='" + t + "' title='" + t + "'/>";
+    return "<img src='?resource=" + img + "' alt='" + t + "' title='" + t + "'/>";
   }
 
   protected static final String lnk(String parameters, String txt) {
@@ -245,7 +245,7 @@ public abstract class AbstractHtmlView {
     StringBuilder result = new StringBuilder();
     for (String param : params) {
       if (result.length() > 0) {
-        result.append(RequestParams.SEPARATOR);
+        result.append(PARAMS_SEPARATOR);
       }
       result.append(param);
     }

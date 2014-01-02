@@ -6,7 +6,6 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 import java.util.List;
 import com.purej.vminspect.data.ThreadData;
-import com.purej.vminspect.html.RequestParams;
 
 /**
  * Displays a list of threads as a HTML table.
@@ -47,7 +46,7 @@ public final class ThreadsMainView extends AbstractHtmlView {
     }
     table.endTable();
     writeln("<div align='right'>");
-    String threadsDumpParam = RequestParams.PAGE + "=threadsDump";
+    String threadsDumpParam = "page=threadsDump";
     writeln("<br/>" + lnk(threadsDumpParam, img("icons/text-16.png", "Dump threads as text") + "&nbsp;Dump threads as text"));
     writeln("</div>");
   }
