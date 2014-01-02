@@ -21,8 +21,8 @@ import com.purej.vminspect.http.RequestController;
 import com.purej.vminspect.util.Utils;
 
 /**
- * The servlet that produces the VM inspection HTML report. This is currently implemented against servlet-spec version 2.5 but should
- * also run with newer versions.
+ * This servlet allows PureJ VM Inspection to be used in servlet-containers / JEE containers. This servlet is implemented
+ * against servlet-spec version 2.5 but should also run with newer versions.
  * <p/>
  * The following servlet init parameters are supported (all optional):
  * <ul>
