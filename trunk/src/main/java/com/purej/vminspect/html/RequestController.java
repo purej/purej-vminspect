@@ -90,7 +90,7 @@ public class RequestController {
       // 3.) Check if thread dump:
       String page = httpRequest.getParameter(RequestParams.PAGE);
       if ("threadsDump".equals(page)) {
-        return doThreadDump(httpRequest);
+        return doThreadDump();
       }
       // 4.) All other output are HTML based:
       else {
@@ -115,7 +115,7 @@ public class RequestController {
     return response;
   }
 
-  private static AbstractHttpResponse doThreadDump(HttpServletRequest request) throws IOException {
+  private static AbstractHttpResponse doThreadDump() throws IOException {
     HttpTextResponse response = new HttpTextResponse("text/plain; charset=UTF-8");
     new ThreadsDumpView(response.getOutput(), ThreadData.getAllThreads()).render();
     return response;
