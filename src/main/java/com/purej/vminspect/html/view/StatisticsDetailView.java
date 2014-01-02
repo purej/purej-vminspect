@@ -30,13 +30,13 @@ public final class StatisticsDetailView extends AbstractStatisticsView {
     writeln("<div align='center'>");
     writeChoosePeriodLinks(_statsName, _statsWidth, _statsHeight);
     writeln("</div><br/>");
-    String params = params("statsGraph=" + _statsName, "statsWidth=" + _statsWidth, "statsHeight=" + _statsHeight);
+    String params = statisticsGraphParams(_statsName, _statsWidth, _statsHeight);
     writeln("<div align='center'>");
     writeln("<img class='synthese' id='img' src='?" + params + "' alt='zoom'/><br/><br/>");
-    String paramsOut = statisticsParams("statsDetail=" + _statsName, "statsWidth=" + (int) (_statsWidth / 1.5d), "statsHeight="
-        + (int) (_statsHeight / 1.2));
-    String paramsIn = statisticsParams("statsDetail=" + _statsName, "statsWidth=" + (int) (_statsWidth * 1.5d), "statsHeight="
-        + (int) (_statsHeight * 1.2));
+    String paramsOut = addRangeParams(statisticsPageParams("statsDetail=" + _statsName, "statsWidth=" + (int) (_statsWidth / 1.5d), "statsHeight="
+        + (int) (_statsHeight / 1.2)));
+    String paramsIn = addRangeParams(statisticsPageParams("statsDetail=" + _statsName, "statsWidth=" + (int) (_statsWidth * 1.5d), "statsHeight="
+        + (int) (_statsHeight * 1.2)));
     writeln(lnk(paramsOut, img("icons/zoom-out-24.png", "Zoom Out")));
     writeln(lnk(paramsIn, img("icons/zoom-in-24.png", "Zoom In")));
     writeln("</div>");
