@@ -12,11 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.purej.vminspect.data.statistics.StatisticsCollector;
-import com.purej.vminspect.http.HttpPngResponse;
 import com.purej.vminspect.http.HttpRequest;
-import com.purej.vminspect.http.HttpResourceResponse;
 import com.purej.vminspect.http.HttpResponse;
-import com.purej.vminspect.http.HttpTextResponse;
 import com.purej.vminspect.http.RequestController;
 import com.purej.vminspect.util.Utils;
 
@@ -104,8 +101,10 @@ public final class VmInspectServlet extends HttpServlet {
   }
 
   private static void writeHttpResponse(HttpResponse httpResponse, String requestURI, HttpServletResponse response) throws IOException {
-    // Write in correct order: a) content type, b) cookies, c) caching, d) content:
+    // a) content type:
     response.setContentType(httpResponse.getContentType());
+
+    // b) cookies:
     for (Map.Entry<String, String> entry : httpResponse.getCookies().entrySet()) {
       Cookie cookie = new Cookie(entry.getKey(), Utils.urlEncode(entry.getValue()));
       cookie.setMaxAge(30 * 24 * 60 * 60); // 30 days
@@ -113,37 +112,25 @@ public final class VmInspectServlet extends HttpServlet {
       response.addCookie(cookie);
     }
 
-    // Content depends on the response instance:
-    if (httpResponse instanceof HttpResourceResponse) {
-      HttpResourceResponse res = (HttpResourceResponse) httpResponse;
-      writeHttpResponseCache(3600, response); // resources are stable, 1 hour caching...
-      if (!res.writeTo(response.getOutputStream())) {
-        response.sendError(HttpServletResponse.SC_NOT_FOUND);
-      }
-    }
-    else if (httpResponse instanceof HttpPngResponse) {
-      HttpPngResponse png = (HttpPngResponse) httpResponse;
-      writeHttpResponseCache(0, response); // No cache for dynamic content
-      response.setContentLength(png.getImg().length);
-      response.addHeader("Content-Disposition", "inline;filename=" + png.getName());
-      response.getOutputStream().write(png.getImg());
-    }
-    else {
-      HttpTextResponse txt = (HttpTextResponse) httpResponse;
-      writeHttpResponseCache(0, response); // No cache for dynamic content
-      byte[] data = txt.getOutput().toString().getBytes("UTF-8");
-      response.getOutputStream().write(data);
-    }
-  }
-
-  private static void writeHttpResponseCache(int seconds, HttpServletResponse response) {
-    if (seconds > 0) {
-      response.addHeader("Cache-Control", "max-age=" + seconds);
+    // c) caching:
+    if (httpResponse.getCacheSeconds() > 0) {
+      response.addHeader("Cache-Control", "max-age=" + httpResponse.getCacheSeconds());
     }
     else {
       response.addHeader("Cache-Control", "no-cache");
       response.addHeader("Pragma", "no-cache");
       response.addHeader("Expires", "-1");
     }
+
+    // d) content:
+    byte[] data = httpResponse.getContentBytes();
+    if (data == null || data.length == 0) {
+      response.sendError(HttpServletResponse.SC_NOT_FOUND);
+    }
+    else {
+      response.setContentLength(data.length);
+      response.getOutputStream().write(data);
+    }
   }
+
 }
