@@ -135,7 +135,10 @@ public final class MBeanUtils {
     }
   }
 
-  private static List<MBeanServer> getMBeanServers() {
+  /**
+   * Gets the list of all MBean servers on this platform.
+   */
+  public static List<MBeanServer> getMBeanServers() {
     try {
       // Make sure platform server is created!
       ManagementFactory.getPlatformMBeanServer();
