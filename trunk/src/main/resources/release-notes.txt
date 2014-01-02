@@ -1,6 +1,7 @@
 *trunk - xxx*
   * *IMPORTANT:* Moved VmInspectServlet to package com.purej.vminspect.http.servlet
   * Cookie values are encoded/decoded to support non-http conform characters in searches
+  * StatisticsCollector ensures that there is only one instance running per VM/classloader (also if multiple servlet-instances are used)
   * Clean separation between http-handling and html-producing (eg. views)
   * Lots of internal optimisations without impact to users:
     - more unit-test
