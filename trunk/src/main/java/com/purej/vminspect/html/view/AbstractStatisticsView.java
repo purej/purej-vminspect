@@ -4,6 +4,7 @@ package com.purej.vminspect.html.view;
 import java.io.IOException;
 import com.purej.vminspect.data.statistics.Period;
 import com.purej.vminspect.data.statistics.Range;
+import com.purej.vminspect.util.Utils;
 
 /**
  * Displays the currently existing statistics.
@@ -21,13 +22,35 @@ public abstract class AbstractStatisticsView extends AbstractHtmlView {
     _range = range;
   }
 
-  protected static String statisticsParams(String... additionalParams) {
+  protected String statisticsGraphParams(String graphName, int width, int height) {
+    return addRangeParams(params("statsGraph=" + graphName, "statsWidth=" + width, "statsHeight=" + height), _range);
+  }
+
+  protected static String statisticsPageParams(String... additionalParams) {
     StringBuilder builder = new StringBuilder();
     builder.append("page=statistics");
     for (String param : additionalParams) {
       builder.append(PARAMS_SEPARATOR).append(param);
     }
     return builder.toString();
+  }
+
+  protected String addRangeParams(String otherParams) {
+    return addRangeParams(otherParams, _range);
+  }
+
+  protected static String addRangeParams(String otherParams, Range range) {
+    if (range.getPeriod() == Period.CUSTOM) {
+      if (range.getStartDate() != null && range.getEndDate() != null) {
+        String from = Utils.urlEncode(formatDate(range.getStartDate()));
+        String to = Utils.urlEncode(formatDate(range.getEndDate()));
+        return params(otherParams, "statsPeriod=custom", "statsFromDate=" + from, "statsToDate=" + to);
+      }
+      return params(otherParams, "statsPeriod=custom");
+    }
+    else {
+      return params(otherParams, "statsPeriod=" + range.getPeriod().getCode());
+    }
   }
 
   protected void writeChoosePeriodLinks(String statsDetailName, int width, int height) throws IOException {
@@ -44,7 +67,7 @@ public abstract class AbstractStatisticsView extends AbstractHtmlView {
       }
       else {
         String periodParam = "statsPeriod=" + myPeriod.getCode();
-        String params = statsDetailName != null ? statisticsParams(addParams, periodParam) : statisticsParams(periodParam);
+        String params = statsDetailName != null ? statisticsPageParams(addParams, periodParam) : statisticsPageParams(periodParam);
         write(lnk(params, img(myPeriod.getIconName(), "Choice of period " + myPeriod.getLabel()) + "&nbsp;" + myPeriod.getLinkLabel()));
         write("&nbsp;&nbsp;&nbsp;");
       }

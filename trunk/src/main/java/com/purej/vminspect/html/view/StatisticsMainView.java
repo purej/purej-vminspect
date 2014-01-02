@@ -38,9 +38,9 @@ public final class StatisticsMainView extends AbstractStatisticsView {
   private void writeGraphs(List<Statistics> statistics) throws IOException {
     for (int i = 0; i < statistics.size(); i++) {
       Statistics stats = statistics.get(i);
-      String params = params("statsWidth=200", "statsHeight=50", "statsGraph=" + stats.getName());
+      String params = statisticsGraphParams(stats.getName(), 200, 50);
       String img = "<img class='synthese' src='?" + params + "' alt='" + stats.getLabel() + "' title='" + stats.getDescription() + "'/>";
-      String statsParams = statisticsParams("statsDetail=" + stats.getName(), "statsWidth=1000", "statsHeight=400");
+      String statsParams = addRangeParams(statisticsPageParams("statsDetail=" + stats.getName(), "statsWidth=1000", "statsHeight=400"));
       writeln(lnk(statsParams, img));
       write("&nbsp;");
       if ((i + 1) % 3 == 0) {
