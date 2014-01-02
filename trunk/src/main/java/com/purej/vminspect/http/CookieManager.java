@@ -4,7 +4,7 @@ package com.purej.vminspect.http;
 import java.util.Date;
 import com.purej.vminspect.data.statistics.Period;
 import com.purej.vminspect.data.statistics.Range;
-import com.purej.vminspect.html.view.AbstractHtmlView;
+import com.purej.vminspect.util.Utils;
 
 /**
  * This class retrieves data from cookies or the request and stores them back to the response.
@@ -38,8 +38,8 @@ public final class CookieManager {
         if (p == Period.CUSTOM) {
           String from = request.getParameter(RequestParams.STATS_FROM_DATE);
           String to = request.getParameter(RequestParams.STATS_TO_DATE);
-          Date fromDate = from != null && from.length() > 0 ? AbstractHtmlView.parseDate(from) : new Date();
-          Date toDate = to != null && to.length() > 0 ? AbstractHtmlView.parseDate(to) : new Date();
+          Date fromDate = from != null && from.length() > 0 ? Utils.parseDate(from) : new Date();
+          Date toDate = to != null && to.length() > 0 ? Utils.parseDate(to) : new Date();
           range = Range.createCustomRange(fromDate, toDate);
         }
         else {
