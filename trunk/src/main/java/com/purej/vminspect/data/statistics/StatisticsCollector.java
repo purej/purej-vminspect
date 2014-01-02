@@ -50,6 +50,7 @@ public final class StatisticsCollector {
   private volatile long _lastCollectDurationMs;
   private volatile long _lastGcTimeMillis;
   private volatile long _estimatedMemorySize;
+  private volatile long _diskUsage;
 
   /**
    * Creates a new instance of this class.
@@ -168,16 +169,7 @@ public final class StatisticsCollector {
    * Returns the size of this statistics files on disk.
    */
   public long getDiskUsage() {
-    long sum = 0;
-    if (_storageDir != null) {
-      File[] files = new File(_storageDir).listFiles(RRD_FILE_FILTER);
-      if (files != null) {
-        for (File file : files) {
-          sum += file.length();
-        }
-      }
-    }
-    return sum;
+    return _diskUsage;
   }
 
   private synchronized void collect() {
@@ -185,7 +177,23 @@ public final class StatisticsCollector {
       _lastCollectTimestamp = System.currentTimeMillis();
       Runtime.getRuntime().gc(); // Free unused memory before measuring stats...
       collectData(new SystemData());
-      _estimatedMemorySize = Utils.estimateMemory(_rrdBackendFactory);
+
+      // Calculate disk usage or memory size:
+      if (_storageDir != null) {
+        long sum = 0;
+        File[] files = new File(_storageDir).listFiles(RRD_FILE_FILTER);
+        if (files != null) {
+          for (File file : files) {
+            sum += file.length();
+          }
+        }
+        _diskUsage = sum;
+      }
+      else {
+        _estimatedMemorySize = Utils.estimateMemory(_rrdBackendFactory);
+      }
+
+      // Collect done:
       _lastCollectDurationMs = System.currentTimeMillis() - _lastCollectTimestamp;
     }
     catch (Throwable t) {
