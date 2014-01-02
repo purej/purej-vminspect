@@ -245,14 +245,14 @@ public class SystemData {
   }
 
   /**
-   * Returns the boot class path that is used by the bootstrap class loader .
+   * Returns the boot class path that is used by the bootstrap class loader.
    */
   public String getCLBootClassPath() {
     return _rtb.isBootClassPathSupported() ? _rtb.getBootClassPath() : null;
   }
 
   /**
-   * Returns the boot class path that is used by the bootstrap class loader .
+   * Returns the boot class path that is used by the bootstrap class loader.
    */
   public String getCLLibraryPath() {
     return _rtb.getLibraryPath();
