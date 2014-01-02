@@ -2,6 +2,7 @@
 package com.purej.vminspect.http;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -21,7 +22,7 @@ public final class HttpResourceResponse extends HttpResponse {
    * @param resource the resource
    */
   public HttpResourceResponse(String resource) {
-    super(getContentType(resource));
+    super(getContentType(resource), 3600); // 1 hour cache for resources...
     _resource = resource.replace("..", ""); // For security reason!;
   }
 
@@ -40,6 +41,28 @@ public final class HttpResourceResponse extends HttpResponse {
     }
     else {
       throw new IllegalArgumentException("Not supported resource type '" + resource + "'!");
+    }
+  }
+
+  @Override
+  public byte[] getContentBytes() throws IOException {
+    InputStream input = HttpResourceResponse.class.getResourceAsStream(RESOURCE_PREFIX + _resource);
+    if (input == null) {
+      return null;
+    }
+    try {
+      // Transfer from input source to byte-array:
+      input = new BufferedInputStream(input);
+      ByteArrayOutputStream out = new ByteArrayOutputStream(2048);
+      byte[] bytes = new byte[2048];
+      int length;
+      while ((length = input.read(bytes)) != -1) {
+        out.write(bytes, 0, length);
+      }
+      return out.toByteArray();
+    }
+    finally {
+      input.close();
     }
   }
 

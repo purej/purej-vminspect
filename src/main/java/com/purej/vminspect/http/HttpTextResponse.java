@@ -1,6 +1,8 @@
 // Copyright (c), 2013, adopus consulting GmbH Switzerland, all rights reserved.
 package com.purej.vminspect.http;
 
+import java.io.IOException;
+
 /**
  * Http response with text content.
  *
@@ -15,7 +17,7 @@ public class HttpTextResponse extends HttpResponse {
    * @param contentType the content type
    */
   public HttpTextResponse(String contentType) {
-    super(contentType);
+    super(contentType, 0); // No cache for dynamic content...
   }
 
   /**
@@ -23,5 +25,10 @@ public class HttpTextResponse extends HttpResponse {
    */
   public StringBuilder getOutput() {
     return _output;
+  }
+
+  @Override
+  public byte[] getContentBytes() throws IOException {
+    return _output.toString().getBytes("UTF-8");
   }
 }

@@ -1,8 +1,10 @@
 // Copyright (c), 2013, adopus consulting GmbH Switzerland, all rights reserved.
 package com.purej.vminspect.http;
 
+import java.io.IOException;
+
 /**
- * Http response with a binary PNG in memory pictures.
+ * Http response with a dynamically created, binary PNG in-memory picture.
  *
  * @author Stefan Mueller
  */
@@ -14,7 +16,7 @@ public final class HttpPngResponse extends HttpResponse {
    * Creates a new instance of this class.
    */
   public HttpPngResponse(String name) {
-    super("image/png");
+    super("image/png", 0); // No cache for dynamic picture...
     _name = name;
   }
 
@@ -26,16 +28,14 @@ public final class HttpPngResponse extends HttpResponse {
   }
 
   /**
-   * Returns the image data.
-   */
-  public byte[] getImg() {
-    return _img;
-  }
-
-  /**
    * Sets the image data.
    */
   public void setImg(byte[] img) {
     _img = img;
+  }
+
+  @Override
+  public byte[] getContentBytes() throws IOException {
+    return _img;
   }
 }
