@@ -38,6 +38,20 @@ public final class Utils {
   }
 
   /**
+   * Creates an exception info string from the given throwable.
+   */
+  public static String getExceptionInfo(Throwable t) {
+    StringBuilder builder = new StringBuilder();
+    Throwable th = t;
+    while (th != null) {
+      builder.append(th.getClass()).append(": ").append(th.getMessage());
+      builder.append("\n");
+      th = th.getCause();
+    }
+    return builder.toString();
+  }
+
+  /**
    * Encodes the given value to URL save form.
    */
   public static String urlEncode(String value) {
