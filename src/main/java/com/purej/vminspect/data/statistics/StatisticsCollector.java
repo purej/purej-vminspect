@@ -6,8 +6,10 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import org.jrobin.core.RrdBackendFactory;
@@ -22,6 +24,8 @@ import com.purej.vminspect.util.Utils;
 /**
  * This class holds the different {@link Statistics} instances and provides a timer to
  * collect all statistics on a regular basis.
+ * <p/>
+ * Note: This class is a singleton and should only be created once per virtual machine!
  *
  * @author Stefan Mueller
  */
@@ -36,6 +40,11 @@ public final class StatisticsCollector {
     }
   };
 
+  // This static variables ensure only one collector instance per VM:
+  private static StatisticsCollector _instance;
+  private static Set<Object> _instanceRefs = new HashSet<Object>();
+
+  // Instance members:
   private final Map<String, Statistics> _statistics = new HashMap<String, Statistics>();
   private final List<Statistics> _orderedStatistics = new ArrayList<Statistics>();
   private final String _storageDir;
@@ -52,13 +61,7 @@ public final class StatisticsCollector {
   private volatile long _estimatedMemorySize;
   private volatile long _diskUsage;
 
-  /**
-   * Creates a new instance of this class.
-   *
-   * @param storageDir where to store the statistics files
-   * @param collectionFrequencyMillis the collection frequency in millseconds
-   */
-  public StatisticsCollector(String storageDir, int collectionFrequencyMillis) {
+  private StatisticsCollector(String storageDir, int collectionFrequencyMillis) {
     super();
     _collectionFrequencyMillis = collectionFrequencyMillis;
 
@@ -103,16 +106,40 @@ public final class StatisticsCollector {
     }
   }
 
+  /**
+   * Creates a new instance of this class.
+   *
+   * @param storageDir where to store the statistics files
+   * @param collectionFrequencyMillis the collection frequency in millseconds
+   */
+  public static synchronized StatisticsCollector getOrCreate(String storageDir, int collectionFrequencyMillis, Object ref) {
+    if (_instance == null) {
+      _instance = new StatisticsCollector(storageDir, collectionFrequencyMillis);
+      _instance.startTimer();
+    }
+    _instanceRefs.add(ref);
+    return _instance;
+  }
+
+  /**
+   * Destroys the collector instance and stops the underlying timer task if the given
+   * reference is the last reference to the collector instance.
+   */
+  public static synchronized void destroy(Object ref) {
+    _instanceRefs.remove(ref);
+    if (_instanceRefs.size() == 0 && _instance != null) {
+      _instance._timer.cancel();
+      _instance = null;
+    }
+  }
+
   private void initStatistics(String name, String label, String description, String unit) throws IOException {
     Statistics stats = new Statistics(name, label, description, unit, _storageDir, _collectionFrequencyMillis / 1000, _rrdBackendFactory);
     _statistics.put(name, stats);
     _orderedStatistics.add(stats);
   }
 
-  /**
-   * Starts collecting statistics using a timer.
-   */
-  public void start() {
+  private void startTimer() {
     // Execute a first collect to have minimal data ready:
     collect();
     _timer.schedule(new TimerTask() {
@@ -121,13 +148,6 @@ public final class StatisticsCollector {
         collect();
       }
     }, _collectionFrequencyMillis, _collectionFrequencyMillis);
-  }
-
-  /**
-   * Stops collecting statistics.
-   */
-  public void stop() {
-    _timer.cancel();
   }
 
   /**

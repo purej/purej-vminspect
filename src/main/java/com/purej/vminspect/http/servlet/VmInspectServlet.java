@@ -3,9 +3,7 @@ package com.purej.vminspect.http.servlet;
 
 import java.io.IOException;
 import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
@@ -39,9 +37,8 @@ public final class VmInspectServlet extends HttpServlet {
   private static final Logger LOGGER = LoggerFactory.getLogger(VmInspectServlet.class);
   private static final long serialVersionUID = 1L;
 
-  // Members that get set in the init method (Note: collector is only allowed once per VM!):
-  private static StatisticsCollector _collector;
-  private static Set<VmInspectServlet> _collectorRefs = new HashSet<VmInspectServlet>();
+  // Members that get set in the init method:
+  private StatisticsCollector _collector;
   private RequestController _controller;
 
   @Override
@@ -62,31 +59,14 @@ public final class VmInspectServlet extends HttpServlet {
    * @param statisticsStorageDir the optional statistics storage directory
    */
   public void init(boolean mbeansReadonly, int statisticsCollectionFrequencyMs, String statisticsStorageDir) {
-    // Note: Do nothing if already initialized...
-    if (_controller == null) {
-      // Create the collector & start it (only once per VM):
-      synchronized (VmInspectServlet.class) {
-        if (_collector == null) {
-          _collector = new StatisticsCollector(statisticsStorageDir, statisticsCollectionFrequencyMs);
-          _collector.start();
-        }
-        _collectorRefs.add(this);
-      }
-
-      // Create the controller for pages:
-      _controller = new RequestController(_collector, mbeansReadonly);
-    }
+    // Get or create collector, create controller:
+    _collector = StatisticsCollector.getOrCreate(statisticsStorageDir, statisticsCollectionFrequencyMs, this);
+    _controller = new RequestController(_collector, mbeansReadonly);
   }
 
   @Override
   public void destroy() {
-    synchronized (VmInspectServlet.class) {
-      _collectorRefs.remove(this);
-      if (_collectorRefs.size() == 0 && _collector != null) {
-        _collector.stop();
-        _collector = null;
-      }
-    }
+    StatisticsCollector.destroy(this); // Makes sure the collector is destroyed if this was the last reference...
   }
 
   @Override
