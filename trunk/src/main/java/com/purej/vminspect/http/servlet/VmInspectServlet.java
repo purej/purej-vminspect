@@ -72,56 +72,21 @@ public final class VmInspectServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     try {
-      // Create the response in memory to be able to react on exceptions:
-      HttpRequest httpRequest = toHttpRequest(request);
+      // Create the request, process it and write the response:
+      HttpRequest httpRequest = createHttpRequest(request);
       HttpResponse httpResponse = _controller.process(httpRequest);
-
-      // Write in correct order: a) content type, b) cookies, c) content, d) flush:
-      response.setContentType(httpResponse.getContentType());
-      for (Map.Entry<String, String> entry : httpResponse.getCookies().entrySet()) {
-        Cookie cookie = new Cookie(entry.getKey(), Utils.urlEncode(entry.getValue()));
-        cookie.setMaxAge(30 * 24 * 60 * 60); // 30 days
-        cookie.setPath(request.getRequestURI());
-        response.addCookie(cookie);
-      }
-
-      // Content depends on the response instance:
-      if (httpResponse instanceof HttpResourceResponse) {
-        HttpResourceResponse res = (HttpResourceResponse) httpResponse;
-        response.addHeader("Cache-Control", "max-age=3600"); // resources are stable, 1 hour caching...
-        if (!res.writeTo(response.getOutputStream())) {
-          response.sendError(HttpServletResponse.SC_NOT_FOUND);
-        }
-      }
-      else if (httpResponse instanceof HttpPngResponse) {
-        HttpPngResponse png = (HttpPngResponse) httpResponse;
-        // No cache for dynamic content:
-        response.addHeader("Cache-Control", "no-cache");
-        response.addHeader("Pragma", "no-cache");
-        response.addHeader("Expires", "-1");
-        response.setContentLength(png.getImg().length);
-        response.addHeader("Content-Disposition", "inline;filename=" + png.getName());
-        response.getOutputStream().write(png.getImg());
-      }
-      else {
-        HttpTextResponse txt = (HttpTextResponse) httpResponse;
-        // No cache for dynamic content:
-        response.addHeader("Cache-Control", "no-cache");
-        response.addHeader("Pragma", "no-cache");
-        response.addHeader("Expires", "-1");
-        byte[] data = txt.getOutput().toString().getBytes("UTF-8");
-        response.getOutputStream().write(data);
-      }
-
-      response.flushBuffer();
+      writeHttpResponse(httpResponse, request.getRequestURI(), response);
     }
     catch (Exception e) {
       LOGGER.debug("An error occurred processing get request!", e);
       response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, getExceptionInfo(e));
     }
+    finally {
+      response.flushBuffer();
+    }
   }
 
-  private static HttpRequest toHttpRequest(HttpServletRequest req) {
+  private static HttpRequest createHttpRequest(HttpServletRequest req) {
     HttpRequest request = new HttpRequest();
 
     // Add all parameters:
@@ -136,6 +101,45 @@ public final class VmInspectServlet extends HttpServlet {
     }
 
     return request;
+  }
+
+  private static void writeHttpResponse(HttpResponse httpResponse, String requestURI, HttpServletResponse response) throws IOException {
+    // Write in correct order: a) content type, b) cookies, c) content, d) flush:
+    response.setContentType(httpResponse.getContentType());
+    for (Map.Entry<String, String> entry : httpResponse.getCookies().entrySet()) {
+      Cookie cookie = new Cookie(entry.getKey(), Utils.urlEncode(entry.getValue()));
+      cookie.setMaxAge(30 * 24 * 60 * 60); // 30 days
+      cookie.setPath(requestURI);
+      response.addCookie(cookie);
+    }
+
+    // Content depends on the response instance:
+    if (httpResponse instanceof HttpResourceResponse) {
+      HttpResourceResponse res = (HttpResourceResponse) httpResponse;
+      response.addHeader("Cache-Control", "max-age=3600"); // resources are stable, 1 hour caching...
+      if (!res.writeTo(response.getOutputStream())) {
+        response.sendError(HttpServletResponse.SC_NOT_FOUND);
+      }
+    }
+    else if (httpResponse instanceof HttpPngResponse) {
+      HttpPngResponse png = (HttpPngResponse) httpResponse;
+      // No cache for dynamic content:
+      response.addHeader("Cache-Control", "no-cache");
+      response.addHeader("Pragma", "no-cache");
+      response.addHeader("Expires", "-1");
+      response.setContentLength(png.getImg().length);
+      response.addHeader("Content-Disposition", "inline;filename=" + png.getName());
+      response.getOutputStream().write(png.getImg());
+    }
+    else {
+      HttpTextResponse txt = (HttpTextResponse) httpResponse;
+      // No cache for dynamic content:
+      response.addHeader("Cache-Control", "no-cache");
+      response.addHeader("Pragma", "no-cache");
+      response.addHeader("Expires", "-1");
+      byte[] data = txt.getOutput().toString().getBytes("UTF-8");
+      response.getOutputStream().write(data);
+    }
   }
 
   private static String getExceptionInfo(Throwable t) {
