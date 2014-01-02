@@ -4,6 +4,8 @@ package com.purej.vminspect.util;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,6 +17,30 @@ import java.util.Set;
 public final class Utils {
 
   private Utils() {
+  }
+
+  /**
+   * Encodes the given value to URL save form.
+   */
+  public static String urlEncode(String value) {
+    try {
+      return value != null ? URLEncoder.encode(value, "UTF-8") : "";
+    }
+    catch (Exception e) {
+      throw new RuntimeException("Encoding '" + value + "' failed!", e);
+    }
+  }
+
+  /**
+   * Decodes the given URL save encoded value.
+   */
+  public static String urlDecode(String value) {
+    try {
+      return value != null ? URLDecoder.decode(value, "UTF-8") : value;
+    }
+    catch (Exception e) {
+      throw new RuntimeException("Decoding '" + value + "' failed!", e);
+    }
   }
 
   /**
