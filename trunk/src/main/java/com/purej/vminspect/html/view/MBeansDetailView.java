@@ -6,7 +6,6 @@ import com.purej.vminspect.data.MBeanAttribute;
 import com.purej.vminspect.data.MBeanData;
 import com.purej.vminspect.data.MBeanOperation;
 import com.purej.vminspect.data.MBeanParameter;
-import com.purej.vminspect.html.RequestParams;
 
 /**
  * Displays details about a single MBean.
@@ -59,7 +58,7 @@ public class MBeansDetailView extends AbstractMBeansView {
           table.addValueCenter(img("icons/lock-grey-16.png", "No Permission"));
         }
         else {
-          String atrIdxParam = RequestParams.MBEAN_ATTRIBUTE_NAME + "=" + attribute.getName();
+          String atrIdxParam = "mbAtrName=" + attribute.getName();
           table.addValueCenter(lnk(getMBeanNameParams(atrIdxParam), img("icons/pencil-16.png", "Edit")));
         }
       }
@@ -94,7 +93,7 @@ public class MBeansDetailView extends AbstractMBeansView {
         table.addValueCenter(img("icons/lock-grey-16.png", "No Permission"));
       }
       else {
-        String opIdxParam = RequestParams.MBEAN_OPERATION_IDX + "=" + i;
+        String opIdxParam = "mbOpIdx=" + i;
         table.addValueCenter(lnk(getMBeanNameParams(opIdxParam), img("icons/play-green-16.png", "Invoke")));
       }
     }
@@ -102,8 +101,8 @@ public class MBeansDetailView extends AbstractMBeansView {
   }
 
   private String getMBeanNameParams(String addon) {
-    String mbSrvIdx = RequestParams.MBEAN_SRV_IDX + "=" + _mbean.getName().getServerIdx();
-    String mbName = RequestParams.MBEAN_NAME + "=" + urlEncode(_mbean.getName().getObjectNameString());
+    String mbSrvIdx = "mbOpIdx=" + _mbean.getName().getServerIdx();
+    String mbName = "mbName=" + urlEncode(_mbean.getName().getObjectNameString());
     return addon != null ? mBeanParams(mbSrvIdx, mbName, addon) : mBeanParams(mbSrvIdx, mbName);
   }
 }

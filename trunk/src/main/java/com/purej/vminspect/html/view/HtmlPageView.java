@@ -3,7 +3,6 @@ package com.purej.vminspect.html.view;
 
 import java.io.IOException;
 import java.util.Date;
-import com.purej.vminspect.html.RequestParams;
 
 /**
  * Html page that renders a common header and footer and a custom part in between.
@@ -12,15 +11,15 @@ import com.purej.vminspect.html.RequestParams;
  */
 public class HtmlPageView extends AbstractHtmlView {
   private final long _startTimestamp;
-  private final String _currentParameters;
+  private final String _reloadParameters;
   private final AbstractHtmlView _bodyView;
 
   /**
    * Creates a new instance of this view.
    */
-  public HtmlPageView(StringBuilder output, String currentParameters, long startTimestamp, AbstractHtmlView bodyView) {
+  public HtmlPageView(StringBuilder output, String reloadParameters, long startTimestamp, AbstractHtmlView bodyView) {
     super(output);
-    _currentParameters = currentParameters;
+    _reloadParameters = reloadParameters;
     _startTimestamp = startTimestamp;
     _bodyView = bodyView;
   }
@@ -42,13 +41,13 @@ public class HtmlPageView extends AbstractHtmlView {
     writeln("<script type='text/javascript' src='?resource=vminspect.js'></script>");
     writeln("</head>");
     writeln("<body>");
-    writeln("<div id='title'><h2>PureJ VM Inspection " + lnk(_currentParameters, img("icons/refresh-24.png", "Refresh")) + " </h2>");
+    writeln("<div id='title'><h2>PureJ VM Inspection " + lnk(_reloadParameters, img("icons/refresh-24.png", "Refresh")) + " </h2>");
     writeln("</div><div id='menu'>");
     writeln("<ul>");
-    writeln("<li>" + lnk(RequestParams.PAGE + "=statistics", img("icons/charts-24.png", "Statistics") + "Statistics") + "</li>");
-    writeln("<li>" + lnk(RequestParams.PAGE + "=threads", img("icons/threads-24.png", "Threads") + "Threads") + "</li>");
-    writeln("<li>" + lnk(RequestParams.PAGE + "=mbeans", img("icons/beans-24.png", "MBeans") + "MBeans") + "</li>");
-    writeln("<li>" + lnk(RequestParams.PAGE + "=system", img("icons/system-24.png", "System") + "System") + "</li>");
+    writeln("<li>" + lnk("page=statistics", img("icons/charts-24.png", "Statistics") + "Statistics") + "</li>");
+    writeln("<li>" + lnk("page=threads", img("icons/threads-24.png", "Threads") + "Threads") + "</li>");
+    writeln("<li>" + lnk("page=mbeans", img("icons/beans-24.png", "MBeans") + "MBeans") + "</li>");
+    writeln("<li>" + lnk("page=system", img("icons/system-24.png", "System") + "System") + "</li>");
     writeln("</ul>");
     writeln("</div>");
   }

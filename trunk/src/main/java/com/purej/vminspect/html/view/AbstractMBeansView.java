@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.List;
 import javax.management.ObjectName;
 import com.purej.vminspect.data.MBeanUtils;
-import com.purej.vminspect.html.RequestParams;
 
 /**
  * Abstract class for the MBeans views.
@@ -57,16 +56,16 @@ public abstract class AbstractMBeansView extends AbstractHtmlView {
 
   protected static String mBeanParams(String... additionalParams) {
     StringBuilder builder = new StringBuilder();
-    builder.append(RequestParams.PAGE).append("=mbeans");
+    builder.append("page").append("=mbeans");
     for (String param : additionalParams) {
-      builder.append(RequestParams.SEPARATOR).append(param);
+      builder.append(PARAMS_SEPARATOR).append(param);
     }
     return builder.toString();
   }
 
   protected static String mBeanLnk(int serverIdx, ObjectName objectName, String value) {
-    String mbSrvIdx = RequestParams.MBEAN_SRV_IDX + "=" + serverIdx;
-    String mbName = RequestParams.MBEAN_NAME + "=" + urlEncode(objectName.toString());
+    String mbSrvIdx = "mbSrvIdx=" + serverIdx;
+    String mbName = "mbName=" + urlEncode(objectName.toString());
     return lnk(mBeanParams(mbSrvIdx, mbName), value);
   }
 }
