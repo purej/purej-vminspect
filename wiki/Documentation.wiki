@@ -59,7 +59,7 @@ For non-webapps, VM inspection can be enabled by starting an embeddable web-serv
 }}}
 
 =Configuring the !VmInspectServlet=
-The !VmInspectServlet supports a few servlet-init-parameters. All of them provide a default value so are optional to be configured.
+The !VmInspectServlet supports a few servlet-init-parameters. All of them provide a default value so they are optional to be configured.
 
 || *Property* || *Description* || *Default* ||
 ||vminspect.mbeans.readonly||true/false, specifies if MBeans should only be accessed read-only||false||
