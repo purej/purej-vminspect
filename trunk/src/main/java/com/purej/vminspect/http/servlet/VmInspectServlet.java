@@ -20,6 +20,7 @@ import com.purej.vminspect.http.HttpResourceResponse;
 import com.purej.vminspect.http.HttpResponse;
 import com.purej.vminspect.http.HttpTextResponse;
 import com.purej.vminspect.http.RequestController;
+import com.purej.vminspect.util.Utils;
 
 /**
  * The servlet that produces the VM inspection HTML report. This is currently implemented against servlet-spec version 2.5 but should
@@ -98,7 +99,7 @@ public final class VmInspectServlet extends HttpServlet {
       // Write in correct order: a) content type, b) cookies, c) content, d) flush:
       response.setContentType(httpResponse.getContentType());
       for (Map.Entry<String, String> entry : httpResponse.getCookies().entrySet()) {
-        Cookie cookie = new Cookie(entry.getKey(), entry.getValue());
+        Cookie cookie = new Cookie(entry.getKey(), Utils.urlEncode(entry.getValue()));
         cookie.setMaxAge(30 * 24 * 60 * 60); // 30 days
         cookie.setPath(request.getRequestURI());
         response.addCookie(cookie);
@@ -151,7 +152,7 @@ public final class VmInspectServlet extends HttpServlet {
 
     // Add all cookies:
     for (Cookie cookie : req.getCookies()) {
-      request.getCookies().put(cookie.getName(), cookie.getValue());
+      request.getCookies().put(cookie.getName(), Utils.urlDecode(cookie.getValue()));
     }
 
     return request;
