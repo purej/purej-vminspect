@@ -1,4 +1,6 @@
 *trunk - xxx*
+  * *IMPORTANT:* Moved VmInspectServlet to package com.purej.vminspect.http.servlet
+  * Clean separation between http-handling and html-producing (eg. views)
   * Internal optimisations without impact to users, more unit-test
 
 *1.0 - 31.12.2013*
