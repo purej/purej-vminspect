@@ -1,3 +1,6 @@
+*trunk - xxx*
+  * Internal optimisations without impact to users, more unit-test
+
 *1.0 - 31.12.2013*
   * No programmatic changes, but switched to Sonatype-Maven repository and officially released to Maven Central
 
