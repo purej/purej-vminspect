@@ -2,8 +2,9 @@
 package com.purej.vminspect.data;
 
 import java.lang.management.ManagementFactory;
+import java.util.List;
+import java.util.Set;
 import javax.management.MBeanServer;
-import javax.management.MBeanServerFactory;
 import javax.management.ObjectName;
 import junit.framework.Assert;
 import org.junit.Test;
@@ -20,8 +21,13 @@ public class MBeansTest {
    */
   @Test
   public void testMBeanServers() {
-    for (MBeanServer server : MBeanServerFactory.findMBeanServer(null)) {
-      System.out.println("MBeanServer: " + server.toString());
+    List<MBeanServer> servers = MBeanUtils.getMBeanServers();
+    for (int i = 0; i < servers.size(); i++) {
+      Set<ObjectName> objectNames = servers.get(i).queryNames(null, null);
+      for (ObjectName name : objectNames) {
+        int idx = MBeanUtils.getMBeanServerIdx(name);
+        Assert.assertEquals(i, idx);
+      }
     }
   }
 
@@ -32,7 +38,7 @@ public class MBeansTest {
   public void testMBeanName() {
     for (MBeanName name : MBeanUtils.getMBeanNames()) {
       String objectName = name.getObjectNameString();
-      System.out.println("MBean objectName: " + objectName);
+      //System.out.println("MBean objectName: " + objectName);
       MBeanData mbean = MBeanUtils.getMBean(0, objectName);
       Assert.assertEquals(objectName, mbean.getName().getObjectNameString());
     }
@@ -46,10 +52,11 @@ public class MBeansTest {
     for (MBeanName name : MBeanUtils.getMBeanNames()) {
       String objectName = name.getObjectNameString();
       MBeanData mbean = MBeanUtils.getMBean(0, objectName);
-      System.out.println();
-      System.out.println("Attributes for MBean : " + objectName);
+      //System.out.println("Attributes for MBean : " + objectName);
       for (MBeanAttribute attribute : mbean.getAttributes()) {
-        System.out.println("Attribute " + attribute.getName() + "=" + attribute.getValue() + " (" + attribute.getDescription() + ")");
+        Assert.assertNotNull(attribute);
+        Assert.assertNotNull(attribute.getName());
+        //System.out.println("Attribute " + attribute.getName() + "=" + attribute.getValue() + " (" + attribute.getDescription() + ")");
       }
     }
   }
@@ -123,7 +130,10 @@ public class MBeansTest {
     // Reload & set value2:
     mbean = MBeanUtils.getMBean(0, objectName);
     Assert.assertNotNull(mbean);
-    Object v = mbean.getAttribute(attributeName).getValue();
+    MBeanAttribute attribute = mbean.getAttribute(attributeName);
+    Assert.assertEquals(attributeName, attribute.getName());
+    Assert.assertEquals(true, attribute.isWritable());
+    Object v = attribute.getValue();
     Assert.assertEquals(value1, v != null ? v.toString() : null);
     MBeanUtils.invokeAttribute(mbean, mbean.getAttribute(attributeName), value2);
 
@@ -146,7 +156,12 @@ public class MBeansTest {
     // Load & invoke:
     MBeanData mbean = MBeanUtils.getMBean(0, objectName);
     Assert.assertNotNull(mbean);
-    Object result = MBeanUtils.invokeOperation(mbean, getOperation(mbean, operationName, params.length), params);
+    MBeanOperation operation = getOperation(mbean, operationName, params.length);
+    Assert.assertEquals("Unknown", operation.getImpact());
+    if (operationName.indexOf("Void") < 0) {
+      Assert.assertNotNull(operation.getReturnType());
+    }
+    Object result = MBeanUtils.invokeOperation(mbean, operation, params);
     Assert.assertEquals(expectedResult, result != null ? result.toString() : null);
   }
 
