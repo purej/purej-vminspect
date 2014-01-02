@@ -19,7 +19,7 @@ import org.jrobin.graph.RrdGraph;
 import org.jrobin.graph.RrdGraphDef;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.purej.vminspect.html.view.AbstractHtmlView;
+import com.purej.vminspect.util.Utils;
 
 /**
  * Abstract a single statistics holder using JRobin as the data store. See http://oldwww.jrobin.org/api/index.html for API documentation.
@@ -232,10 +232,10 @@ public final class Statistics {
     String titleEnd = "";
     if (width > 400) {
       if (range.getPeriod().equals(Period.CUSTOM)) {
-        titleEnd = " - " + AbstractHtmlView.formatDate(range.getStartDate()) + " - " + AbstractHtmlView.formatDate(range.getEndDate());
+        titleEnd = " - " + Utils.formatDate(range.getStartDate()) + " - " + Utils.formatDate(range.getEndDate());
       }
       else {
-        titleEnd = " - " + AbstractHtmlView.formatDate(new Date());
+        titleEnd = " - " + Utils.formatDate(new Date());
       }
     }
     graphDef.setTitle(titleStart + titleEnd);

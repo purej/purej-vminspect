@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.List;
 import javax.management.ObjectName;
 import com.purej.vminspect.data.MBeanUtils;
+import com.purej.vminspect.util.Utils;
 
 /**
  * Abstract class for the MBeans views.
@@ -65,7 +66,7 @@ public abstract class AbstractMBeansView extends AbstractHtmlView {
 
   protected static String mBeanLnk(int serverIdx, ObjectName objectName, String value) {
     String mbSrvIdx = "mbSrvIdx=" + serverIdx;
-    String mbName = "mbName=" + urlEncode(objectName.toString());
+    String mbName = "mbName=" + Utils.urlEncode(objectName.toString());
     return lnk(mBeanParams(mbSrvIdx, mbName), value);
   }
 }

@@ -25,6 +25,7 @@ import com.purej.vminspect.html.view.StatisticsMainView;
 import com.purej.vminspect.html.view.SystemMainView;
 import com.purej.vminspect.html.view.ThreadsDumpView;
 import com.purej.vminspect.html.view.ThreadsMainView;
+import com.purej.vminspect.util.Utils;
 
 /**
  * This is the controller that dispatches each request depending on the request-parameters to the correct view.
@@ -230,7 +231,7 @@ public class RequestController {
         if (params.length() > 0) {
           params.append("&amp;");
         }
-        params.append(entry.getKey()).append("=").append(AbstractHtmlView.urlEncode(entry.getValue()));
+        params.append(entry.getKey()).append("=").append(Utils.urlEncode(entry.getValue()));
       }
     }
     return params.toString();

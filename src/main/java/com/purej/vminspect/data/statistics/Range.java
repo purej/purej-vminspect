@@ -4,7 +4,7 @@ package com.purej.vminspect.data.statistics;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
-import com.purej.vminspect.html.view.AbstractHtmlView;
+import com.purej.vminspect.util.Utils;
 
 /**
  * Represents a range for the statistics. A range can be a fixed period or a period of type CUSTOM and a custom start/end date.
@@ -80,8 +80,8 @@ public final class Range {
     if (index == -1) {
       return createPeriodRange(Period.valueOfIgnoreCase(value));
     }
-    Date startDate = AbstractHtmlView.parseDate(value.substring(0, index));
-    Date endDate = index < value.length() - 1 ? AbstractHtmlView.parseDate(value.substring(index + 1)) : new Date();
+    Date startDate = Utils.parseDate(value.substring(0, index));
+    Date endDate = index < value.length() - 1 ? Utils.parseDate(value.substring(index + 1)) : new Date();
     return Range.createCustomRange(startDate, endDate);
   }
 
@@ -111,7 +111,7 @@ public final class Range {
    */
   public String asString() {
     if (_period.equals(Period.CUSTOM)) {
-      return AbstractHtmlView.formatDate(_startDate) + CUSTOM_PERIOD_SEPARATOR + AbstractHtmlView.formatDate(_endDate);
+      return Utils.formatDate(_startDate) + CUSTOM_PERIOD_SEPARATOR + Utils.formatDate(_endDate);
     }
     return _period.getCode();
   }

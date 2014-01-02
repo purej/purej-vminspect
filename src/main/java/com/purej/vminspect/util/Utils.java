@@ -6,6 +6,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,8 +18,23 @@ import java.util.Set;
  * @author Stefan Mueller
  */
 public final class Utils {
+  private static final String DATE_FORMAT = "dd.MM.yyyy";
 
   private Utils() {
+  }
+
+  /**
+   * Formats date only.
+   */
+  public static String formatDate(Date date) {
+    return new SimpleDateFormat(DATE_FORMAT).format(date);
+  }
+
+  /**
+   * Parses the given date only.
+   */
+  public static Date parseDate(String date) throws ParseException {
+    return new SimpleDateFormat(DATE_FORMAT).parse(date);
   }
 
   /**

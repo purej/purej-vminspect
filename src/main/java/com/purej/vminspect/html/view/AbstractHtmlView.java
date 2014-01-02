@@ -2,11 +2,10 @@
 package com.purej.vminspect.html.view;
 
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import com.purej.vminspect.util.Utils;
 
 /**
  * Abstract view class with some utility functions to render HTML pages.
@@ -18,7 +17,6 @@ public abstract class AbstractHtmlView {
   private static final String NUMBER_FORMAT = "###,###";
   private static final String DECIMAL_FORMAT = "###,###.##";
   private static final String PCT_FORMAT = "##.##";
-  private static final String DATE_FORMAT = "dd.MM.yyyy";
   private static final String DATETIME_FORMAT = "dd.MM.yyyy HH:mm:ss";
 
   /**
@@ -165,49 +163,42 @@ public abstract class AbstractHtmlView {
   /**
    * Formats to a number without fractions.
    */
-  public static String formatNumber(long value) {
+  protected static String formatNumber(long value) {
     return new DecimalFormat(NUMBER_FORMAT).format(value);
   }
 
   /**
    * Formats the given Megabytes 2 fraction digits.
    */
-  public static String formatMb(double mbs) {
+  protected static String formatMb(double mbs) {
     return new DecimalFormat(DECIMAL_FORMAT).format(mbs) + " Mb";
   }
 
   /**
    * Formats with 2 fraction digits.
    */
-  public static String formatDecimal(double value) {
+  protected static String formatDecimal(double value) {
     return new DecimalFormat(DECIMAL_FORMAT).format(value);
   }
 
   /**
    * Formats to pcts with 2 fraction digits.
    */
-  public static String formatPct(double value) {
+  protected static String formatPct(double value) {
     return new DecimalFormat(PCT_FORMAT).format(value) + "%";
   }
 
   /**
    * Formats date only.
    */
-  public static String formatDate(Date date) {
-    return new SimpleDateFormat(DATE_FORMAT).format(date);
-  }
-
-  /**
-   * Parses the given date only.
-   */
-  public static Date parseDate(String date) throws ParseException {
-    return new SimpleDateFormat(DATE_FORMAT).parse(date);
+  protected static String formatDate(Date date) {
+    return Utils.formatDate(date);
   }
 
   /**
    * Formats date and time.
    */
-  public static String formatDateTime(Date date) {
+  protected static String formatDateTime(Date date) {
     return new SimpleDateFormat(DATETIME_FORMAT).format(date);
   }
 
@@ -227,18 +218,6 @@ public abstract class AbstractHtmlView {
     String txt = text == null ? "" : text;
     return txt.replaceAll("[&]", "&amp;").replaceAll("[<]", "&lt;").replaceAll("[>]", "&gt;").replaceAll("\"", "&quot;").replaceAll("'", "&apos;")
         .replaceAll("[\n]", "<br/>");
-  }
-
-  /**
-   * Encodes the given URL to HTML save form.
-   */
-  public static final String urlEncode(String text) {
-    try {
-      return URLEncoder.encode(text != null ? text : "", "UTF-8");
-    }
-    catch (Exception e) {
-      throw new RuntimeException("Could not URL-encode text '" + text + "'!");
-    }
   }
 
   protected static String params(String... params) {
