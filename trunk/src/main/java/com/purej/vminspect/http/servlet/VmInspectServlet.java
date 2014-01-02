@@ -101,10 +101,14 @@ public final class VmInspectServlet extends HttpServlet {
   }
 
   private static void writeHttpResponse(HttpResponse httpResponse, String requestURI, HttpServletResponse response) throws IOException {
-    // a) content type:
-    response.setContentType(httpResponse.getContentType());
+    // Sanity check first:
+    byte[] data = httpResponse.getContentBytes();
+    if (data == null || data.length == 0) {
+      response.sendError(HttpServletResponse.SC_NOT_FOUND);
+      return;
+    }
 
-    // b) cookies:
+    // a) Cookies:
     for (Map.Entry<String, String> entry : httpResponse.getCookies().entrySet()) {
       Cookie cookie = new Cookie(entry.getKey(), Utils.urlEncode(entry.getValue()));
       cookie.setMaxAge(30 * 24 * 60 * 60); // 30 days
@@ -112,7 +116,7 @@ public final class VmInspectServlet extends HttpServlet {
       response.addCookie(cookie);
     }
 
-    // c) caching:
+    // b) Caching:
     if (httpResponse.getCacheSeconds() > 0) {
       response.addHeader("Cache-Control", "max-age=" + httpResponse.getCacheSeconds());
     }
@@ -122,15 +126,12 @@ public final class VmInspectServlet extends HttpServlet {
       response.addHeader("Expires", "-1");
     }
 
-    // d) content:
-    byte[] data = httpResponse.getContentBytes();
-    if (data == null || data.length == 0) {
-      response.sendError(HttpServletResponse.SC_NOT_FOUND);
-    }
-    else {
-      response.setContentLength(data.length);
-      response.getOutputStream().write(data);
-    }
+    // c) content type and length:
+    response.setContentType(httpResponse.getContentType());
+    response.setContentLength(data.length);
+
+    // d) binary content:
+    response.getOutputStream().write(data);
   }
 
 }
