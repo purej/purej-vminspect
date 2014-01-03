@@ -107,12 +107,21 @@ public final class StatisticsCollector {
   }
 
   /**
-   * Creates a new instance of this class.
+   * Returns the singleton instance of this class or null if not yet initialized.
+   */
+  public static StatisticsCollector getInstance() {
+    return _instance;
+  }
+
+  /**
+   * Initializes and returns the singleton instance of this collector or returns the already initialized instance.
    *
    * @param storageDir where to store the statistics files
    * @param collectionFrequencyMillis the collection frequency in millseconds
+   * @param ref the instance of the class that references this collector; will be used when calling destroy again
+   * @see #destroy(Object)
    */
-  public static synchronized StatisticsCollector getOrCreate(String storageDir, int collectionFrequencyMillis, Object ref) {
+  public static synchronized StatisticsCollector init(String storageDir, int collectionFrequencyMillis, Object ref) {
     if (_instance == null) {
       _instance = new StatisticsCollector(storageDir, collectionFrequencyMillis);
       _instance.startTimer();
@@ -124,6 +133,7 @@ public final class StatisticsCollector {
   /**
    * Destroys the collector instance and stops the underlying timer task if the given
    * reference is the last reference to the collector instance.
+   * @see #init(String, int, Object)
    */
   public static synchronized void destroy(Object ref) {
     _instanceRefs.remove(ref);

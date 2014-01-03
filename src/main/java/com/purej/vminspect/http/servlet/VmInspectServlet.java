@@ -57,7 +57,7 @@ public final class VmInspectServlet extends HttpServlet {
    */
   public void init(boolean mbeansReadonly, int statisticsCollectionFrequencyMs, String statisticsStorageDir) {
     // Get or create collector, create controller:
-    _collector = StatisticsCollector.getOrCreate(statisticsStorageDir, statisticsCollectionFrequencyMs, this);
+    _collector = StatisticsCollector.init(statisticsStorageDir, statisticsCollectionFrequencyMs, this);
     _controller = new RequestController(_collector, mbeansReadonly);
   }
 

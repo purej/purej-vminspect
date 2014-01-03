@@ -15,8 +15,10 @@ public class StatisticsCollectorTest {
    */
   @Test
   public void testCollectInMemory() throws Exception {
-    StatisticsCollector collector = StatisticsCollector.getOrCreate(null, 10000, this);
-    Assert.assertSame(collector, StatisticsCollector.getOrCreate(null, -1, this)); // Only one instance...
+    Assert.assertNull(StatisticsCollector.getInstance());
+    StatisticsCollector collector = StatisticsCollector.init(null, 10000, this);
+    Assert.assertSame(collector, StatisticsCollector.getInstance()); // Only one instance...
+    Assert.assertSame(collector, StatisticsCollector.init(null, -1, this)); // Only one instance...
     try {
       Assert.assertEquals(null, collector.getStatisticsStorageDir());
       Assert.assertEquals(10000, collector.getCollectionFrequencyMillis());
@@ -39,6 +41,7 @@ public class StatisticsCollectorTest {
     finally {
       StatisticsCollector.destroy(this);
     }
+    Assert.assertNull(StatisticsCollector.getInstance());
   }
 
   /**
@@ -46,8 +49,10 @@ public class StatisticsCollectorTest {
    */
   @Test
   public void testCollectOnDisk() throws Exception {
-    StatisticsCollector collector = StatisticsCollector.getOrCreate("target/stats-store", 10000, this);
-    Assert.assertSame(collector, StatisticsCollector.getOrCreate(null, -1, this)); // Only one instance...
+    Assert.assertNull(StatisticsCollector.getInstance());
+    StatisticsCollector collector = StatisticsCollector.init("target/stats-store", 10000, this);
+    Assert.assertSame(collector, StatisticsCollector.getInstance()); // Only one instance...
+    Assert.assertSame(collector, StatisticsCollector.init(null, -1, this)); // Only one instance...
     try {
       Assert.assertNotNull(collector.getStatisticsStorageDir());
       Assert.assertEquals(10000, collector.getCollectionFrequencyMillis());
@@ -70,5 +75,6 @@ public class StatisticsCollectorTest {
     finally {
       StatisticsCollector.destroy(this);
     }
+    Assert.assertNull(StatisticsCollector.getInstance());
   }
 }
