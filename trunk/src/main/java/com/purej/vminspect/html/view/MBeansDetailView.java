@@ -102,7 +102,7 @@ public class MBeansDetailView extends AbstractMBeansView {
   }
 
   private String getMBeanNameParams(String addon) {
-    String mbSrvIdx = "mbOpIdx=" + _mbean.getName().getServerIdx();
+    String mbSrvIdx = "mbSrvIdx=" + _mbean.getName().getServerIdx();
     String mbName = "mbName=" + Utils.urlEncode(_mbean.getName().getObjectNameString());
     return addon != null ? mBeanParams(mbSrvIdx, mbName, addon) : mBeanParams(mbSrvIdx, mbName);
   }
