@@ -53,6 +53,21 @@ public class UtilsTest {
    * Tests the named functionality.
    */
   @Test
+  public void testCheckNotNull() throws Exception {
+    Assert.assertEquals("x", Utils.checkNotNull("x"));
+    try {
+      Utils.checkNotNull(null);
+      Assert.fail();
+    }
+    catch (IllegalArgumentException e) {
+      // Expected...
+    }
+  }
+
+  /**
+   * Tests the named functionality.
+   */
+  @Test
   public void testEncodeDecode() throws Exception {
     Assert.assertEquals("", Utils.urlEncode(null));
     Assert.assertEquals("", Utils.urlEncode(""));
