@@ -100,15 +100,17 @@ public final class MBeanUtils {
   /**
    * Sets the given attribute of the specified MBean to the passed value.
    */
-  public static void invokeAttribute(MBeanData mbean, MBeanAttribute attribute, String value) {
+  public static Object invokeAttribute(MBeanData mbean, MBeanAttribute attribute, String value) {
     ObjectName objectName = mbean.getName().getObjectName();
-    Attribute attr = new Attribute(attribute.getName(), toTypedValue(value, attribute.getType()));
+    Object objectValue = toTypedValue(value, attribute.getType());
+    Attribute attr = new Attribute(attribute.getName(), objectValue);
     try {
       getMBeanServer(mbean.getName().getServerIdx()).setAttribute(objectName, attr);
     }
     catch (Exception e) {
       throw new RuntimeException("An error occurred setting attribute '" + attribute.getName() + "' to value '" + value + "'!", e);
     }
+    return convertValueIfNeeded(objectValue);
   }
 
   /**

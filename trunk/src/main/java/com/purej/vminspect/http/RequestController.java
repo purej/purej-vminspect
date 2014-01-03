@@ -162,10 +162,11 @@ public class RequestController {
           }
           // Invoke the attribute:
           String value = request.getParameter(RequestParams.MBEAN_ATTRIBUTE_VALUE);
-          MBeanUtils.invokeAttribute(mbean, attribute, value);
+          Object result = MBeanUtils.invokeAttribute(mbean, attribute, value);
           // Reload state & show MBean page:
           mbean = MBeanUtils.getMBean(Integer.parseInt(mbServerIdx), mbName);
-          String okMsg = "Attribute <b>" + attribute.getName() + "</b> successfully set to value <b>" + AbstractHtmlView.htmlEncode(value) + "</b>!";
+          String okMsg = "Attribute <b>" + attribute.getName() + "</b> successfully set to value <b>"
+              + AbstractHtmlView.htmlEncode(result != null ? result.toString() : "null") + "</b>!";
           return new MBeansDetailView(response.getOutput(), mbean, okMsg, null, _mbeansReadonly);
         }
         else if (request.getParameter(RequestParams.MBEAN_ATTRIBUTE_CANCEL) != null) {
