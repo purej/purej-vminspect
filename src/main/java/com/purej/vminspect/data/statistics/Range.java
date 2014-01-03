@@ -20,7 +20,7 @@ public final class Range {
 
   private Range(Period period, Date startDate, Date endDate) {
     super();
-    _period = period;
+    _period = Utils.checkNotNull(period);
     _startDate = startDate;
     _endDate = endDate;
   }
