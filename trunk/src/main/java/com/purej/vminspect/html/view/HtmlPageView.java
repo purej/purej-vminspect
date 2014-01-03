@@ -38,6 +38,7 @@ public class HtmlPageView extends AbstractHtmlView {
     writeln("<title>PureJ VM Inspection</title>");
     writeln("<meta name='author' content='Stefan Mueller, adopus consulting gmbh, Switzerland'/>");
     writeln("<link rel='stylesheet' href='?resource=vminspect.css' type='text/css'/>");
+    writeln("<link rel='icon' href='?resource=icons/vminspect-icon.png' type='image/png'>");
     writeln("<script type='text/javascript' src='?resource=vminspect.js'></script>");
     writeln("</head>");
     writeln("<body>");
