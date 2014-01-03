@@ -24,6 +24,16 @@ public final class Utils {
   }
 
   /**
+   * Checks and throws an exception if the given value is null.
+   */
+  public static <T> T checkNotNull(T value) {
+    if (value == null) {
+      throw new IllegalArgumentException("Argument is null!");
+    }
+    return value;
+  }
+
+  /**
    * Formats date only.
    */
   public static String formatDate(Date date) {
