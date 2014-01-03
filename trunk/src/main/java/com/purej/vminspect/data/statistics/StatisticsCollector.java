@@ -5,10 +5,8 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -23,7 +21,7 @@ import com.purej.vminspect.util.Utils;
 
 /**
  * This class holds the different {@link Statistics} instances and provides a timer to
- * collect all statistics on a regular basis.
+ * collect all statistics values on a regular basis.
  * <p/>
  * Note: This class is a singleton and should only be created once per virtual machine!
  *
@@ -33,20 +31,12 @@ public final class StatisticsCollector {
   private static final Logger LOG = LoggerFactory.getLogger(StatisticsCollector.class);
   private static final double BYTES_PER_MB = 1024 * 1024;
 
-  private static final FilenameFilter RRD_FILE_FILTER = new FilenameFilter() {
-    @Override
-    public boolean accept(File dir, String name) {
-      return name != null && name.endsWith(".rrd");
-    }
-  };
-
   // This static variables ensure only one collector instance per VM:
   private static StatisticsCollector _instance;
   private static Set<Object> _instanceRefs = new HashSet<Object>();
 
   // Instance members:
-  private final Map<String, Statistics> _statistics = new HashMap<String, Statistics>();
-  private final List<Statistics> _orderedStatistics = new ArrayList<Statistics>();
+  private final List<Statistics> _statistics = new ArrayList<Statistics>();
   private final String _storageDir;
   private final int _collectionFrequencyMillis;
   private final Timer _timer;
@@ -57,7 +47,6 @@ public final class StatisticsCollector {
   // Will be changed with each collect-call:
   private volatile long _lastCollectTimestamp;
   private volatile long _lastCollectDurationMs;
-  private volatile long _lastGcTimeMillis;
   private volatile long _estimatedMemorySize;
   private volatile long _diskUsage;
 
@@ -88,21 +77,69 @@ public final class StatisticsCollector {
       throw new RuntimeException("Could not created JRobin backend factory!", e);
     }
 
-    // Init all statistics:
+    // Register default statistics:
     try {
-      initStatistics("usedMemory", "Used Heap Memory", "Used heap memory in megabytes", "mb");
-      initStatistics("usedNonHeapMemory", "Used Non Heap Memory", "Used non-heap memory in megabytes", "mb");
-      initStatistics("usedPhysicalMemory", "Used Physical Memory", "Used physical memory in megabytes", "mb");
+      // Register the memory statistics:
+      registerStatistics("usedMemory", "Used Heap Memory", "mb", "Used heap memory in megabytes", new ValueProvider() {
+        @Override
+        public double getValue(SystemData data) {
+          return data.getMemoryHeap().getUsed() / BYTES_PER_MB;
+        }
+      });
+      registerStatistics("usedNonHeapMemory", "Used Non Heap Memory", "mb", "Used non-heap memory in megabytes", new ValueProvider() {
+        @Override
+        public double getValue(SystemData data) {
+          return data.getMemoryNonHeap().getUsed() / BYTES_PER_MB;
+        }
+      });
+      registerStatistics("usedPhysicalMemory", "Used Physical Memory", "mb", "Used physical memory in megabytes", new ValueProvider() {
+        @Override
+        public double getValue(SystemData data) {
+          return data.getMemoryPhysical().getUsed() / BYTES_PER_MB;
+        }
+      });
 
-      initStatistics("threads", "Live Threads", "Number of live threads", "");
-      initStatistics("loadedClasses", "Loaded Classes", "Number of loaded classes", "");
-      initStatistics("gcTime", "Garbage Collector Time", "Garbage collector time per statistics frequency in milliseconds", "ms");
+      // Register the threads/classes/gc statistics:
+      registerStatistics("threads", "Live Threads", "", "Number of live threads", new ValueProvider() {
+        @Override
+        public double getValue(SystemData data) {
+          return data.getThreadCurrentCount();
+        }
+      });
+      registerStatistics("loadedClasses", "Loaded Classes", "", "Number of loaded classes", new ValueProvider() {
+        @Override
+        public double getValue(SystemData data) {
+          return data.getCLLoadedClassCount();
+        }
+      });
+      registerStatistics("gcTime", "Garbage Collector Time", "ms", "Garbage collector time per statistics frequency in milliseconds",
+          new ValueProvider() {
+            private long _lastGcTimeMillis;
 
-      initStatistics("vmLoad", "VM CPU Load", "Recent VM CPU load (over all CPUs)", "%%");
-      initStatistics("systemLoad", "System CPU Load", "Recent system CPU load (over all CPUs)", "%%");
+            @Override
+            public double getValue(SystemData data) {
+              long gcTimeMillis = data.getGcCollectionTimeMillis() - _lastGcTimeMillis;
+              _lastGcTimeMillis = data.getGcCollectionTimeMillis();
+              return gcTimeMillis;
+            }
+          });
+
+      // Register the load statistics:
+      registerStatistics("vmLoad", "VM CPU Load", "%%", "Recent VM CPU load (all CPUs)", new ValueProvider() {
+        @Override
+        public double getValue(SystemData data) {
+          return data.getProcessCpuLoadPct();
+        }
+      });
+      registerStatistics("systemLoad", "System CPU Load", "%%", "Recent system CPU load (all CPUs)", new ValueProvider() {
+        @Override
+        public double getValue(SystemData data) {
+          return data.getSystemCpuLoadPct();
+        }
+      });
     }
     catch (IOException e) {
-      throw new RuntimeException("Could not initialize the statistics!", e);
+      throw new RuntimeException("Could not initialize the default statistics!", e);
     }
   }
 
@@ -117,7 +154,7 @@ public final class StatisticsCollector {
    * Initializes and returns the singleton instance of this collector or returns the already initialized instance.
    *
    * @param storageDir where to store the statistics files
-   * @param collectionFrequencyMillis the collection frequency in millseconds
+   * @param collectionFrequencyMillis the collection frequency in milliseconds
    * @param ref the instance of the class that references this collector; will be used when calling destroy again
    * @see #destroy(Object)
    */
@@ -143,10 +180,20 @@ public final class StatisticsCollector {
     }
   }
 
-  private void initStatistics(String name, String label, String description, String unit) throws IOException {
-    Statistics stats = new Statistics(name, label, description, unit, _storageDir, _collectionFrequencyMillis / 1000, _rrdBackendFactory);
-    _statistics.put(name, stats);
-    _orderedStatistics.add(stats);
+  /**
+   * Registers a new statistics with the given configuration.
+   *
+   * @param name the name of the statistics, must be a simple name without spaces and special characters
+   * @param label the label to be shown on the generated statistics graphics
+   * @param unit the unit to be shown on the generated statistics graphics
+   * @param description the description to be shown on the UI (mouse over)
+   * @param valueProvider the provider for statistics values
+   * @throws IOException if the {@link Statistics} instance could not be created for example if the JRobin file could not be created
+   */
+  public void registerStatistics(String name, String label, String unit, String description, ValueProvider valueProvider) throws IOException {
+    Statistics stats = new Statistics(name, label, unit, description, valueProvider, _storageDir, _collectionFrequencyMillis / 1000,
+        _rrdBackendFactory);
+    _statistics.add(stats);
   }
 
   private void startTimer() {
@@ -211,7 +258,12 @@ public final class StatisticsCollector {
       // Calculate disk usage or memory size:
       if (_storageDir != null) {
         long sum = 0;
-        File[] files = new File(_storageDir).listFiles(RRD_FILE_FILTER);
+        File[] files = new File(_storageDir).listFiles(new FilenameFilter() {
+          @Override
+          public boolean accept(File dir, String name) {
+            return name != null && name.endsWith(".rrd");
+          }
+        });
         if (files != null) {
           for (File file : files) {
             sum += file.length();
@@ -232,30 +284,27 @@ public final class StatisticsCollector {
   }
 
   private void collectData(SystemData data) throws IOException {
-    long gcTimeMillis = data.getGcCollectionTimeMillis() - _lastGcTimeMillis;
-    _lastGcTimeMillis = data.getGcCollectionTimeMillis();
-
-    getStatistics("usedMemory").addValue(data.getMemoryHeap().getUsed() / BYTES_PER_MB);
-    getStatistics("usedNonHeapMemory").addValue(data.getMemoryNonHeap().getUsed() / BYTES_PER_MB);
-    getStatistics("usedPhysicalMemory").addValue(data.getMemoryPhysical().getUsed() / BYTES_PER_MB);
-    getStatistics("threads").addValue(data.getThreadCurrentCount());
-    getStatistics("loadedClasses").addValue(data.getCLLoadedClassCount());
-    getStatistics("gcTime").addValue(gcTimeMillis);
-    getStatistics("vmLoad").addValue(data.getProcessCpuLoadPct());
-    getStatistics("systemLoad").addValue(data.getSystemCpuLoadPct());
+    for (Statistics statistics : _statistics) {
+      statistics.collectValue(data);
+    }
   }
 
   /**
    * Returns the {@link Statistics} with the given name.
    */
   public Statistics getStatistics(String graphName) {
-    return _statistics.get(graphName);
+    for (Statistics statistics : _statistics) {
+      if (statistics.getName().equals(graphName)) {
+        return statistics;
+      }
+    }
+    return null;
   }
 
   /**
    * Returns the list of all {@link Statistics}.
    */
   public List<Statistics> getStatistics() {
-    return _orderedStatistics;
+    return _statistics;
   }
 }
