@@ -2,6 +2,7 @@
   * *IMPORTANT:* Moved VmInspectServlet to package com.purej.vminspect.http.servlet
   * Cookie values are encoded/decoded to support non-http conform characters in searches
   * StatisticsCollector ensures that there is only one instance running per VM/classloader (also if multiple servlet-instances are used)
+  * Users can add their own statistics by implementing the new ValueProvider interface and registering it at the StatisticsCollector
   * Statistics ranges (UI choices) are preserved even if cookies are disabled
   * Showing the converted value in the status-message after setting an attribute instead of the original value
   * Clean separation between http-handling and html-producing (eg. views)
