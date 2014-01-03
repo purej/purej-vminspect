@@ -4,10 +4,8 @@ package com.purej.vminspect.util;
 import java.util.ArrayList;
 import java.util.List;
 import junit.framework.Assert;
-import org.jrobin.core.RrdBackendFactory;
-import org.jrobin.core.RrdMemoryBackendFactory;
 import org.junit.Test;
-import com.purej.vminspect.data.statistics.Statistics;
+import com.purej.vminspect.data.statistics.StatisticsCollector;
 
 /**
  * Tests the named functionality.
@@ -267,16 +265,14 @@ public class UtilsTest {
    * Tests the named functionality.
    */
   @Test
-  public void testEstimateMemoryRrdMemoryBackend() throws Exception {
-    RrdBackendFactory factory = RrdBackendFactory.getFactory(RrdMemoryBackendFactory.NAME);
-    System.out.println("Memory before create statistics: " + Utils.estimateMemory(factory));
-    Statistics s1 = new Statistics("s1", "s1", "s1", "Mb", null, 10, factory);
-    Statistics s2 = new Statistics("s2", "s2", "s2", "Mb", null, 10, factory);
-    System.out.println("Memory before addValues: " + Utils.estimateMemory(factory));
-    for (int i = 0; i < 100; i++) {
-      s1.addValue(i);
-      s2.addValue(i);
+  public void testEstimateStatisticsCollector() throws Exception {
+    StatisticsCollector collector = StatisticsCollector.init(null, 10000, this);
+    try {
+      System.out.println("Memory of the collector: " + Utils.estimateMemory(collector));
+      Assert.assertTrue(Utils.estimateMemory(collector) > 1000000);
     }
-    System.out.println("Memory after addValues: " + Utils.estimateMemory(factory));
+    finally {
+      StatisticsCollector.destroy(this);
+    }
   }
 }
