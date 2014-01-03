@@ -19,10 +19,12 @@ import org.jrobin.graph.RrdGraph;
 import org.jrobin.graph.RrdGraphDef;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.purej.vminspect.data.SystemData;
 import com.purej.vminspect.util.Utils;
 
 /**
- * Abstract a single statistics holder using JRobin as the data store. See http://oldwww.jrobin.org/api/index.html for API documentation.
+ * Represents a single statistics using JRobin as the data store.
+ * See http://oldwww.jrobin.org/api/index.html for API documentation.
  *
  * @author Stefan Mueller
  */
@@ -37,6 +39,7 @@ public final class Statistics {
   private final String _label;
   private final String _description;
   private final String _unit;
+  private final ValueProvider _valueProvider;
   private final int _resolutionSeconds;
   private final RrdBackendFactory _rrdBackendFactory;
   private final String _rrdPath;
@@ -44,36 +47,36 @@ public final class Statistics {
   /**
    * Creates a new instance of this class.
    *
-   * @param name the name of this statistics
-   * @param label the label of this statistics
-   * @param description the description of this statistics
-   * @param unit the unit to be displayed with this statistics
+   * @param name the name of the statistics, must be a simple name without spaces and special characters
+   * @param label the label to be shown on the generated statistics graphics
+   * @param unit the unit to be shown on the generated statistics graphics
+   * @param description the description to be shown on the UI
+   * @param valueProvider the provider for statistics values
    * @param storageDir where the JRobin file should be stored
    * @param resolutionSeconds the resolution in seconds
    * @param rrdBackendFactory the backend factory to be used
    * @throws IOException if a JRobin file access error occurred
    */
-  public Statistics(String name, String label, String description, String unit, String storageDir, int resolutionSeconds,
-      RrdBackendFactory rrdBackendFactory) throws IOException {
+  public Statistics(String name, String label, String unit, String description, ValueProvider valueProvider, String storageDir,
+      int resolutionSeconds, RrdBackendFactory rrdBackendFactory) throws IOException {
     if (name == null || name.length() > 20) {
       throw new IllegalArgumentException("JRobin names cannot exceed 20 characaters!");
     }
-    _name = name;
-    _label = label;
-    _description = description;
-    _unit = unit;
+    _name = Utils.checkNotNull(name);
+    _label = Utils.checkNotNull(label);
+    _unit = Utils.checkNotNull(unit);
+    _description = Utils.checkNotNull(description);
+    _valueProvider = Utils.checkNotNull(valueProvider);
     _resolutionSeconds = resolutionSeconds;
-    _rrdBackendFactory = rrdBackendFactory;
+    _rrdBackendFactory = Utils.checkNotNull(rrdBackendFactory);
     _rrdPath = storageDir != null ? new File(storageDir, name + ".rrd").getCanonicalPath() : name + ".rrd";
     initRrdDb(false);
   }
 
   private RrdDef createRrdDef() throws RrdException {
     RrdDef rrdDef = new RrdDef(_rrdPath, _resolutionSeconds);
-    // StartTime required as addValue is called right away after creation:
-    rrdDef.setStartTime(Util.getTime() - _resolutionSeconds);
-    // Single gauge datasource:
-    rrdDef.addDatasource(_name, "GAUGE", _resolutionSeconds * 2, 0, Double.NaN);
+    rrdDef.setStartTime(Util.getTime() - _resolutionSeconds); // Matches more or less as collect is called right after init
+    rrdDef.addDatasource(_name, "GAUGE", _resolutionSeconds * 2, 0, Double.NaN); // Single gauge
 
     // Archives for average/max for each supported period:
     // 1 second for 1 hour periods:
@@ -134,20 +137,22 @@ public final class Statistics {
   }
 
   /**
-   * Adds a new statistics value with the current timestamp.
+   * Collects the current value of this statistics using the configured {@link ValueProvider}.
+   * This method will be called on a regular basis by the {@link StatisticsCollector}.
    */
-  public void addValue(double value) throws IOException {
+  public void collectValue(SystemData data) throws IOException {
+    double value = _valueProvider.getValue(data);
     try {
-      doAddValue(value);
+      addValue(value);
     }
     catch (FileNotFoundException e) {
       LOG.warn("JRobin file '" + _rrdPath + "' does not exist, recreating it");
       initRrdDb(true);
-      doAddValue(value);
+      addValue(value);
     }
   }
 
-  private void doAddValue(double value) throws IOException {
+  private void addValue(double value) throws IOException {
     try {
       // Open the existing file in r/w mode:
       RrdDb rrdDb = new RrdDb(_rrdPath, false, _rrdBackendFactory);
