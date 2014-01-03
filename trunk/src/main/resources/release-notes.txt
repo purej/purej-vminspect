@@ -3,6 +3,7 @@
   * Cookie values are encoded/decoded to support non-http conform characters in searches
   * StatisticsCollector ensures that there is only one instance running per VM/classloader (also if multiple servlet-instances are used)
   * Statistics ranges (UI choices) are preserved even if cookies are disabled
+  * Showing the converted value in the status-message after setting an attribute instead of the original value
   * Clean separation between http-handling and html-producing (eg. views)
   * Lots of internal optimisations without impact to users:
     - more unit-test
