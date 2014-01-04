@@ -6,14 +6,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Encapsulates a HTTP response and decouples it from the original socket-stream or servlet-request.
+ * Encapsulates a HTTP response and decouples it from the original socket-stream or servlet-response.
  * <p/>
  * Reasons:<br/>
  * - If there are exceptions in the middle of writing the body content, it's too late to show an error page.
  * Therefore the complete response is built in memory and if successful, it will be written to the socket output-stream/servlet-response.
  * <br/>
  * - Http clients sometimes require the content-length to be specified in the HTML header - This is only possible if the number of bytes to
- * be written as content is known before the actual writing.
+ * be written as content is known BEFORE the actual writing.
  *
  * @author Stefan Mueller
  */
