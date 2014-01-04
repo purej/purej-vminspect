@@ -166,7 +166,7 @@ public class RequestController {
           // Reload state & show MBean page:
           mbean = MBeanUtils.getMBean(Integer.parseInt(mbServerIdx), mbName);
           String okMsg = "Attribute <b>" + attribute.getName() + "</b> successfully set to value <b>"
-              + AbstractHtmlView.htmlEncode(result != null ? result.toString() : "null") + "</b>!";
+              + Utils.htmlEncode(result != null ? result.toString() : "null") + "</b>!";
           return new MBeansDetailView(response.getOutput(), mbean, okMsg, null, _mbeansReadonly);
         }
         else if (request.getParameter(RequestParams.MBEAN_ATTRIBUTE_CANCEL) != null) {
@@ -199,7 +199,7 @@ public class RequestController {
           // Reload state & show MBean page:
           mbean = MBeanUtils.getMBean(Integer.parseInt(mbServerIdx), mbName);
           String okMsg = "Operation <b>" + operation.getName() + "</b> successfully invoked. Operation result is <b>"
-              + AbstractHtmlView.htmlEncode(result != null ? result.toString() : "null") + "</b>!";
+              + Utils.htmlEncode(result != null ? result.toString() : "null") + "</b>!";
           return new MBeansDetailView(response.getOutput(), mbean, okMsg, null, _mbeansReadonly);
         }
         else if (request.getParameter(RequestParams.MBEAN_OPERATION_CANCEL) != null) {
