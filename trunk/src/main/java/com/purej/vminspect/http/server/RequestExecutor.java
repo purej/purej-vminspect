@@ -7,8 +7,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.SocketException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -185,8 +183,7 @@ final class RequestExecutor implements Runnable {
   }
 
   private static void appendResponseStatus(String statusPart, StringBuilder builder) {
-    builder.append("HTTP/1.0 ").append(statusPart).append("\r\nDate: ");
-    builder.append(new SimpleDateFormat("EEE, d MMM yyyy hh:mm:ss z").format(new Date()));
+    builder.append("HTTP/1.0 ").append(statusPart);
     builder.append("\r\nServer: VmInspectionServer (simple Java HTTP server)\r\nAllow: GET\r\nConnection: close");
   }
 }
