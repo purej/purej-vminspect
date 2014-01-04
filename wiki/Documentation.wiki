@@ -26,7 +26,7 @@ Maven users just need to add the following dependency, it will download the requ
   </dependency>
 }}}
 
-=Enabling the VM Inspection=
+=Enabling VM Inspection=
 
 ==Web-Applications==
 
@@ -66,7 +66,7 @@ Note that this server-implementation is very basic and might not be secure enoug
 }}}
 
 
-=Configuring the VM Inspection=
+=Configuring VM Inspection=
 VM Inspection supports a few configuration parameters. All of them provide a default value so they are optional to be configured.
 
 || *Servlet Init Parameter* || *Description* || *Default* ||
