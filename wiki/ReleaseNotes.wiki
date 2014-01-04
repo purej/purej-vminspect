@@ -5,7 +5,7 @@ https://purej-vminspect.googlecode.com/svn/wiki/pics/purej-logo-48.png
 </p>
 
 
-===trunk - xxx===
+===trunk - (snapshot)===
 Changes impacting users:
   * *IMPORTANT:* Moved and renamed servlet to _com.purej.vminspect.http.servlet.!VmInspectionServlet_
   * New class !VmInspectionServer for standalone usage without having to use a servlet-container
