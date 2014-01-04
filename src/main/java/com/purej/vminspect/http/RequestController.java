@@ -105,14 +105,14 @@ public class RequestController {
   }
 
   private static HttpResponse doThreadDump() throws IOException {
-    HttpTextResponse response = new HttpTextResponse("text/plain; charset=UTF-8");
+    HttpTextResponse response = new HttpTextResponse("text/plain; charset=utf-8");
     new ThreadsDumpView(response.getOutput(), ThreadData.getAllThreads()).render();
     return response;
   }
 
   private HttpResponse doHtml(HttpRequest request, String page) throws IOException {
     long start = System.currentTimeMillis();
-    HttpTextResponse response = new HttpTextResponse("text/html; charset=UTF-8");
+    HttpTextResponse response = new HttpTextResponse("text/html; charset=utf-8");
 
     // Create the content view:
     AbstractHtmlView view;
