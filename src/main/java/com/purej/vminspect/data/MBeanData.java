@@ -2,7 +2,7 @@
 package com.purej.vminspect.data;
 
 /**
- * Provides data about a a single MBean.
+ * Provides data about a single MBean.
  *
  * @author Stefan Mueller
  */
