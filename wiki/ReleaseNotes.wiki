@@ -4,6 +4,7 @@ https://purej-vminspect.googlecode.com/svn/wiki/pics/purej-logo-48.png
 [https://code.google.com/p/purej-vminspect/ Home] | [Documentation] | [ReleaseNotes] | [Downloads]*
 </p>
 
+
 ===trunk - xxx===
 Changes impacting users:
   * *IMPORTANT:* Moved and renamed servlet to _com.purej.vminspect.http.servlet.!VmInspectionServlet_
@@ -18,10 +19,12 @@ Bug fixes and internal optimizations:
   * Lots more unit-test for higher coverage
   * Utility methods moved to util package to clean up package dependencies (no more cycles)
 
-*1.0 - 31.12.2013*
+
+===1.0 - 31.12.2013===
   * No programmatic changes, but switched to Sonatype-Maven repository and officially released to Maven Central
 
-*0.6 - 29.12.2013*
+
+===0.6 - 29.12.2013===
   * Moved to code.google.com, added licensing
   * System-view shows commited memory in addition to used/max - memory-bar became two-colored
   * System-view shows the CPU load and total CPU time of the VM process
@@ -34,12 +37,14 @@ Bug fixes and internal optimizations:
   * OperatingSystemMXBean.getSystemLoadAverage() did not work on many platforms and has been replaced by getSystemCpuLoad() 
   * {{{AuthorizationCallback}}} removed again, authorization should be implemented using a custom servlet filter if required
 
+
 ===0.4 - 22.12.2013===
   * Added logging with slf4j
   * MBean access can be restricted to read-only by setting the servlet-param 'vminspect.mbeans.readonly' to true
   * {{{AuthorizationCallback}}} ifc that can be configured by setting the servlet-param 'vminspect.authorization.callback' to a custom class
   * Lots of internal refactoring without impact to users
   * Lots of javadoc and checkstyle-rules applied
+
 
 ===0.2 - 17.11.2013===
   * First usable version
