@@ -20,7 +20,7 @@ public final class HttpResourceResponse extends HttpResponse {
    * @param resource the resource
    */
   public HttpResourceResponse(String resource) {
-    super(getContentType(resource), 3600); // 1 hour cache for resources...
+    super(getContentType(resource), 14400); // 4 hour cache for resources...
     _resource = resource.replace("..", ""); // For security reason!;
   }
 
