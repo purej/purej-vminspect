@@ -1,0 +1,44 @@
+===1.1 - (04.01.2014)===
+Changes impacting users:
+  * *IMPORTANT:* Moved and renamed servlet to _com.purej.vminspect.http.servlet.!VmInspectionServlet_
+  * New class !VmInspectionServer for standalone usage without having to use a servlet-container
+  * Users can add their own statistics by implementing the new !ValueProvider interface and registering it at the !StatisticsCollector
+Bug fixes and internal optimizations:
+  * Cookie values are encoded/decoded to support non-http conform characters in searches
+  * !StatisticsCollector ensures that there is only one instance running per VM/classloader (also if multiple servlet-instances are used)
+  * Statistics ranges (UI choices) are preserved even if cookies are disabled
+  * Showing the converted value in the status-message after setting an attribute instead of the original value
+  * Clean separation between http-handling (package .http) and html-producing (package .html)
+  * Lots more unit-test for higher coverage
+  * Improved Javadoc
+  * Utility methods moved to util package to clean up package dependencies (no more cycles)
+
+
+===1.0 - 31.12.2013===
+  * No programmatic changes, but switched to Sonatype-Maven repository and officially released to Maven Central
+
+
+===0.6 - 29.12.2013===
+  * Moved to code.google.com, added licensing
+  * System-view shows commited memory in addition to used/max - memory-bar became two-colored
+  * System-view shows the CPU load and total CPU time of the VM process
+  * Corrected MBeans wild-card search to correctly apply wildcards
+  * Threads-view shows the peek-lives and totally started threads
+  * Statistics is optionally hold in-memory if no statistics-storage directory has been configured
+  * Statistics detail view can be zoomed in and out and the size is preserved when switching period
+  * Checked all HTML output to be W3C-compliant
+  * Reduced java-script complexity, removed unused scripts
+  * OperatingSystemMXBean.getSystemLoadAverage() did not work on many platforms and has been replaced by getSystemCpuLoad() 
+  * {{{AuthorizationCallback}}} removed again, authorization should be implemented using a custom servlet filter if required
+
+
+===0.4 - 22.12.2013===
+  * Added logging with slf4j
+  * MBean access can be restricted to read-only by setting the servlet-param 'vminspect.mbeans.readonly' to true
+  * {{{AuthorizationCallback}}} ifc that can be configured by setting the servlet-param 'vminspect.authorization.callback' to a custom class
+  * Lots of internal refactoring without impact to users
+  * Lots of javadoc and checkstyle-rules applied
+
+
+===0.2 - 17.11.2013===
+  * First usable version
