@@ -23,9 +23,10 @@ import com.purej.vminspect.util.Utils;
  * <p/>
  * The following servlet init parameters are supported (all optional):
  * <ul>
- * <li>vminspect.mbeans.readonly: true/false, specifies if VmInspect is allowed to edit MBean values or invoke non-info operations (default false)</li>
- * <li>vminspect.statistics.collection.frequencyMs: Number of milliseconds for the statistics collection timer (default 60'000ms)</li>
- * <li>vminspect.statistics.storage.dir: Optional Path where to store the statistics files (default no storage directory)</li>
+ * <li>vminspect.mbeans.readonly: true/false, specifies if VmInspect is allowed to edit MBean values or invoke non-info operations (default: false)</li>
+ * <li>vminspect.statistics.collection.frequencyMs: Number of milliseconds for the statistics collection timer (default: 60'000ms)</li>
+ * <li>vminspect.statistics.storage.dir: Optional Path where to store the statistics files (default: no storage directory). If no storage
+ * directory is configured, the statistics will be kept in-memory and thus will be lost after a VM restart.</li>
  * </ul>
  *
  * @author Stefan Mueller
