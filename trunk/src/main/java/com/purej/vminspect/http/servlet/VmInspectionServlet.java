@@ -30,8 +30,8 @@ import com.purej.vminspect.util.Utils;
  *
  * @author Stefan Mueller
  */
-public final class VmInspectServlet extends HttpServlet {
-  private static final Logger LOGGER = LoggerFactory.getLogger(VmInspectServlet.class);
+public final class VmInspectionServlet extends HttpServlet {
+  private static final Logger LOGGER = LoggerFactory.getLogger(VmInspectionServlet.class);
   private static final long serialVersionUID = 1L;
 
   // Members that get set in the init method:
