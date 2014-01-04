@@ -54,7 +54,7 @@ For non-webapps, VM inspection can be enabled using the internal lightweight sta
   new VmInspectionServer(8080);
 }}}
 
-Note that this server-implementation is very basic and might be not secure enough for certain usages. If security and more configuration options are required, the recommended way is the use the VM inspection servlet with one of the many powerful embeddable web-servers out there (for example [http://www.eclipse.org/jetty Jetty]):
+Note that this server-implementation is very basic and might not be secure enough for certain usages. If security and more configuration options are required, the recommended way is the use the VM inspection servlet with one of the many powerful embeddable web-servers out there (for example [http://www.eclipse.org/jetty Jetty]):
 
 {{{
   Server server = new Server(8080);
