@@ -141,18 +141,12 @@ final class RequestExecutor implements Runnable {
 
     // Write in correct order: a) Status
     StringBuilder builder = new StringBuilder(512);
-    builder.append("HTTP/1.0 200 OK\r\nDate: ");
-    builder.append(new SimpleDateFormat("EEE, d MMM yyyy hh:mm:ss z").format(new Date()));
-    builder.append("\r\nServer: VmInspectHttpServer (Java)\r\nAllow: GET\r\nConnection: close");
+    appendResponseStatus("200 OK", builder);
 
     // b) Cookies:
     for (Map.Entry<String, String> entry : response.getCookies().entrySet()) {
-      builder.append("\r\nSet-Cookie: ");
-      builder.append(entry.getKey());
-      builder.append("=");
-      builder.append(Utils.urlEncode(entry.getValue()));
-      builder.append("; Max-Age=");
-      builder.append(30 * 24 * 60 * 60); // 30 days
+      builder.append("\r\nSet-Cookie: ").append(entry.getKey()).append("=").append(Utils.urlEncode(entry.getValue()));
+      builder.append("; Max-Age=").append(30 * 24 * 60 * 60); // 30 days
     }
 
     // c) Caching:
@@ -175,11 +169,13 @@ final class RequestExecutor implements Runnable {
 
   private static void writeErrorResponse(Exception e, String errorPart, OutputStream out) throws IOException {
     StringBuilder builder = new StringBuilder(100);
-    builder.append("HTTP/1.0 ");
-    builder.append(errorPart);
-    builder.append("\r\nDate: ");
-    builder.append(new SimpleDateFormat("EEE, d MMM yyyy hh:mm:ss z").format(new Date()));
-    builder.append("\r\nServer: VmInspectHttpServer (Java)\r\nAllow: GET\r\nConnection: close");
+    appendResponseStatus(errorPart, builder);
     out.write(builder.toString().getBytes("UTF-8"));
+  }
+
+  private static void appendResponseStatus(String statusPart, StringBuilder builder) {
+    builder.append("HTTP/1.0 ").append(statusPart).append("\r\nDate: ");
+    builder.append(new SimpleDateFormat("EEE, d MMM yyyy hh:mm:ss z").format(new Date()));
+    builder.append("\r\nServer: VmInspectionServer (simple Java HTTP server)\r\nAllow: GET\r\nConnection: close");
   }
 }
