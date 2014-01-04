@@ -19,6 +19,9 @@ import com.purej.vminspect.http.RequestController;
  * <p/>
  * Note: This class starts some listener threads and opens a server-socket so it should NEVER be used inside JEE
  * application server containers!
+ * <p/>
+ * Note: This server is very basic and probably NOT secure, if security is required it is recommended to use
+ * the VmInspectionServlet with one of the professional servlet-containers (Jetty, Tomcat, etc.)
  *
  * @author Stefan Mueller
  */
