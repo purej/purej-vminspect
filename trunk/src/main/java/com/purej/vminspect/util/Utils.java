@@ -86,6 +86,15 @@ public final class Utils {
   }
 
   /**
+   * Encodes the given text to HTML save form.
+   */
+  public static String htmlEncode(String text) {
+    String txt = text == null ? "" : text;
+    return txt.replaceAll("[&]", "&amp;").replaceAll("[<]", "&lt;").replaceAll("[>]", "&gt;").replaceAll("\"", "&quot;").replaceAll("'", "&apos;")
+        .replaceAll("[\n]", "<br/>");
+  }
+
+  /**
    * Compares the two given objects and handles null values for both of them.
    */
   public static <T extends Comparable<T>> int compareTo(T c1, T c2) {

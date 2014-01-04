@@ -211,13 +211,12 @@ public abstract class AbstractHtmlView {
     return "<a href='?" + parameters + "'>" + txt + "</a>";
   }
 
-  /**
-   * Encodes the given text to HTML save form.
-   */
-  public static final String htmlEncode(String text) {
-    String txt = text == null ? "" : text;
-    return txt.replaceAll("[&]", "&amp;").replaceAll("[<]", "&lt;").replaceAll("[>]", "&gt;").replaceAll("\"", "&quot;").replaceAll("'", "&apos;")
-        .replaceAll("[\n]", "<br/>");
+  protected static final String htmlEncode(String text) {
+    return Utils.htmlEncode(text);
+  }
+
+  protected static final String urlEncode(String text) {
+    return Utils.urlEncode(text);
   }
 
   protected static String params(String... params) {

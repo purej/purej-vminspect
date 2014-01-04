@@ -6,7 +6,6 @@ import com.purej.vminspect.data.MBeanAttribute;
 import com.purej.vminspect.data.MBeanData;
 import com.purej.vminspect.data.MBeanOperation;
 import com.purej.vminspect.data.MBeanParameter;
-import com.purej.vminspect.util.Utils;
 
 /**
  * Displays details about a single MBean.
@@ -103,7 +102,7 @@ public class MBeansDetailView extends AbstractMBeansView {
 
   private String getMBeanNameParams(String addon) {
     String mbSrvIdx = "mbSrvIdx=" + _mbean.getName().getServerIdx();
-    String mbName = "mbName=" + Utils.urlEncode(_mbean.getName().getObjectNameString());
+    String mbName = "mbName=" + urlEncode(_mbean.getName().getObjectNameString());
     return addon != null ? mBeanParams(mbSrvIdx, mbName, addon) : mBeanParams(mbSrvIdx, mbName);
   }
 }
