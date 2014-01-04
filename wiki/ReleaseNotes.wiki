@@ -4,6 +4,19 @@ https://purej-vminspect.googlecode.com/svn/wiki/pics/purej-logo-48.png
 [https://code.google.com/p/purej-vminspect/ Home] | [Documentation] | [ReleaseNotes] | [Downloads]*
 </p>
 
+*trunk - xxx*
+  * *IMPORTANT:* Moved and renamed servlet to com.purej.vminspect.http.servlet.VmInspectionServlet
+  * New class VmInspectionServer for standalone usage without a servlet-container
+  * Users can add their own statistics by implementing the new ValueProvider interface and registering it at the StatisticsCollector
+  * Cookie values are encoded/decoded to support non-http conform characters in searches
+  * StatisticsCollector ensures that there is only one instance running per VM/classloader (also if multiple servlet-instances are used)
+  * Statistics ranges (UI choices) are preserved even if cookies are disabled
+  * Showing the converted value in the status-message after setting an attribute instead of the original value
+  * Clean separation between http-handling and html-producing (eg. views)
+  * Lots of internal optimisations without impact to users:
+    - more unit-test
+    - parse()/format() date methods moved to Util class to cleanup circular package dependencies
+
 *1.0 - 31.12.2013*
   * No programmatic changes, but switched to Sonatype-Maven repository and officially released to Maven Central
 
