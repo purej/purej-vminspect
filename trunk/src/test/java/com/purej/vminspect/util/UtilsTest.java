@@ -66,7 +66,7 @@ public class UtilsTest {
    * Tests the named functionality.
    */
   @Test
-  public void testEncodeDecode() throws Exception {
+  public void testUrlEncodeDecode() throws Exception {
     Assert.assertEquals("", Utils.urlEncode(null));
     Assert.assertEquals("", Utils.urlEncode(""));
     Assert.assertEquals("ja%26va", Utils.urlEncode("ja&va"));
@@ -81,6 +81,20 @@ public class UtilsTest {
     Assert.assertEquals("ja=\";va", Utils.urlDecode("ja%3D%22%3Bva"));
     Assert.assertEquals("ja v-<>a.*", Utils.urlDecode("ja+v-%3C%3Ea.*")); // produced by encoder
     Assert.assertEquals("ja v-<>a.*", Utils.urlDecode("ja+v-<>a.*")); // produced by html forms with get
+  }
+
+  /**
+   * Tests the named functionality.
+   */
+  @Test
+  public void testHtmlEncode() throws Exception {
+    Assert.assertEquals("", Utils.htmlEncode(null));
+    Assert.assertEquals("", Utils.htmlEncode(""));
+    Assert.assertEquals(" hello ", Utils.htmlEncode(" hello "));
+    Assert.assertEquals("&amp;hello&lt;&gt;world", Utils.htmlEncode("&hello<>world"));
+    Assert.assertEquals("hello&quot;world", Utils.htmlEncode("hello\"world"));
+    Assert.assertEquals("1&apos;2&apos;3&apos;", Utils.htmlEncode("1'2'3'"));
+    Assert.assertEquals("hel<br/>lo<br/>world", Utils.htmlEncode("hel\r\nlo\nworld"));
   }
 
   /**
