@@ -1,5 +1,5 @@
 // Copyright (c), 2013, adopus consulting GmbH Switzerland, all rights reserved.
-package com.purej.vminspect.html.view;
+package com.purej.vminspect.html;
 
 import java.io.IOException;
 import com.purej.vminspect.data.statistics.Period;

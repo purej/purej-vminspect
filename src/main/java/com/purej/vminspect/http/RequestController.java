@@ -14,17 +14,17 @@ import com.purej.vminspect.data.ThreadData;
 import com.purej.vminspect.data.statistics.Range;
 import com.purej.vminspect.data.statistics.Statistics;
 import com.purej.vminspect.data.statistics.StatisticsCollector;
-import com.purej.vminspect.html.view.AbstractHtmlView;
-import com.purej.vminspect.html.view.HtmlPageView;
-import com.purej.vminspect.html.view.MBeansDetailView;
-import com.purej.vminspect.html.view.MBeansInvokeAttributeView;
-import com.purej.vminspect.html.view.MBeansInvokeOperationView;
-import com.purej.vminspect.html.view.MBeansMainView;
-import com.purej.vminspect.html.view.StatisticsDetailView;
-import com.purej.vminspect.html.view.StatisticsMainView;
-import com.purej.vminspect.html.view.SystemMainView;
-import com.purej.vminspect.html.view.ThreadsDumpView;
-import com.purej.vminspect.html.view.ThreadsMainView;
+import com.purej.vminspect.html.AbstractHtmlView;
+import com.purej.vminspect.html.HtmlPageView;
+import com.purej.vminspect.html.MBeansDetailView;
+import com.purej.vminspect.html.MBeansInvokeAttributeView;
+import com.purej.vminspect.html.MBeansInvokeOperationView;
+import com.purej.vminspect.html.MBeansMainView;
+import com.purej.vminspect.html.StatisticsDetailView;
+import com.purej.vminspect.html.StatisticsMainView;
+import com.purej.vminspect.html.SystemMainView;
+import com.purej.vminspect.html.ThreadsDumpView;
+import com.purej.vminspect.html.ThreadsMainView;
 import com.purej.vminspect.util.Utils;
 
 /**
