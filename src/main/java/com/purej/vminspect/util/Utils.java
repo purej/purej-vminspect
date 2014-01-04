@@ -88,10 +88,12 @@ public final class Utils {
   /**
    * Encodes the given text to HTML save form.
    */
-  public static String htmlEncode(String text) {
-    String txt = text == null ? "" : text;
-    return txt.replaceAll("[&]", "&amp;").replaceAll("[<]", "&lt;").replaceAll("[>]", "&gt;").replaceAll("\"", "&quot;").replaceAll("'", "&apos;")
-        .replaceAll("[\n]", "<br/>");
+  public static String htmlEncode(String txt) {
+    if (txt == null) {
+      return "";
+    }
+    return txt.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;").replace("'", "&apos;")
+        .replace("\r\n", "<br/>").replace("\n", "<br/>");
   }
 
   /**
