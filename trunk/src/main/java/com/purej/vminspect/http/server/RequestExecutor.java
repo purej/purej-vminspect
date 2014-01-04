@@ -158,7 +158,7 @@ final class RequestExecutor implements Runnable {
     }
 
     // d) Content type and length:
-    builder.append("\r\nContent-Type: " + response.getContentType() + "; charset=utf-8");
+    builder.append("\r\nContent-Type: " + response.getContentType());
     builder.append("\r\nContent-Length: " + data.length);
 
     // e) Finalize to output-stream - header and binary content:
