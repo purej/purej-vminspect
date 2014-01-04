@@ -9,10 +9,10 @@ import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import com.purej.vminspect.data.MySample;
-import com.purej.vminspect.http.servlet.VmInspectServlet;
+import com.purej.vminspect.http.servlet.VmInspectionServlet;
 
 /**
- * Starts the {@link VmInspectServlet} in a embedded jetty server.
+ * Starts the {@link VmInspectionServlet} in a embedded jetty server.
  *
  * @author Stefan Mueller
  */
@@ -36,7 +36,7 @@ public final class JettyServerConfigurable {
     Server server = new Server();
     server.setConnectors(new Connector[] {connector});
 
-    VmInspectServlet servlet = new VmInspectServlet();
+    VmInspectionServlet servlet = new VmInspectionServlet();
     servlet.init(false, Integer.parseInt(args[1]), args.length > 2 ? args[2] : null);
     ServletHolder servletHolder = new ServletHolder(servlet);
     ServletContextHandler handler = new ServletContextHandler();
