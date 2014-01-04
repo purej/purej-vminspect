@@ -26,7 +26,7 @@ Maven users just need to add the following dependency, it will download the requ
   </dependency>
 }}}
 
-=Enabling the !VmInspectServlet=
+=Enabling the VM Inspection=
 
 ==Web-Applications==
 
@@ -66,10 +66,10 @@ Note that this server-implementation is very basic and might not be secure enoug
 }}}
 
 
-=Configuring the !VmInspectServlet=
-The !VmInspectServlet supports a few servlet-init-parameters. All of them provide a default value so they are optional to be configured.
+=Configuring the VM Inspection=
+VM Inspection supports a few configuration parameters. All of them provide a default value so they are optional to be configured.
 
-|| *Property* || *Description* || *Default* ||
+|| *Servlet Init Parameter* || *Description* || *Default* ||
 ||vminspect.mbeans.readonly||true/false, specifies if MBeans should only be accessed read-only||false||
 ||vminspect.statistics.collection.frequencyMs||Number of milliseconds for the statistics collection timer||60000||
 ||vminspect.statistics.storage.dir||Optional path where to store the statistics files or null if no storage required||null||
@@ -93,7 +93,12 @@ The !VmInspectServlet supports a few servlet-init-parameters. All of them provid
   </servlet>
 }}}
 
-*Example configuration for non-web-apps with Jetty*
+*Example configuration for non-web-apps using the !VmInspectionServer*
+{{{
+  new VmInspectionServer(true, 60000, "/home/users/john/my-app-statistics", 8080);
+}}}
+
+*Example configuration for non-web-apps using an embedded Jetty*
 {{{
   servletHolder.setInitParameter("vminspect.mbeans.readonly", "true");
   servletHolder.setInitParameter("vminspect.statistics.storage.dir", "/home/users/john/my-app-statistics");
