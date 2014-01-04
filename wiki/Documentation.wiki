@@ -22,7 +22,7 @@ Maven users just need to add the following dependency, it will download the requ
   <dependency>
     <groupId>com.purej</groupId>
     <artifactId>purej-vminspect</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
   </dependency>
 }}}
 
@@ -35,7 +35,7 @@ Add the following config to the _web.xml_:
 {{{
   <servlet>
     <servlet-name>vminspect</servlet-name>
-    <servlet-class>com.purej.vminspect.html.VmInspectServlet</servlet-class>
+    <servlet-class>com.purej.vminspect.http.servlet.VmInspectionServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
 
@@ -52,7 +52,7 @@ For non-webapps, VM inspection can be enabled by starting an embeddable web-serv
 {{{
   Server server = new Server(8080);
   ServletContextHandler handler = new ServletContextHandler(server, "/inspect");
-  ServletHolder servletHolder = new ServletHolder(VmInspectServlet.class);
+  ServletHolder servletHolder = new ServletHolder(VmInspectionServlet.class);
   servletHolder.setInitOrder(1);
   handler.addServlet(servletHolder, "/*");
   server.start();
@@ -72,7 +72,7 @@ The !VmInspectServlet supports a few servlet-init-parameters. All of them provid
 {{{
   <servlet>
     <servlet-name>vminspect</servlet-name>
-    <servlet-class>com.purej.vminspect.html.VmInspectServlet</servlet-class>
+    <servlet-class>com.purej.vminspect.http.servlet.VmInspectionServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
     <init-param>
       <param-name>vminspect.mbeans.readonly</param-name>
