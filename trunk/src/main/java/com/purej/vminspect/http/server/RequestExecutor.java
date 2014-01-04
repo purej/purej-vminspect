@@ -18,8 +18,12 @@ import com.purej.vminspect.http.RequestController;
 import com.purej.vminspect.util.Utils;
 
 /**
- * Each instance of this class executes and HTTP request and writes
- * the response to the socket's output-stream.
+ * Each instance of this class executes a single HTTP request and writes
+ * the response to the socket's output-stream. The given socket will be closed
+ * after processing the request.
+ * <p/>
+ * This class implements the {@link Runnable} interface and allows to be executed
+ * asynchronously using an ExecutorService.
  *
  * @author Stefan Mueller
  */
