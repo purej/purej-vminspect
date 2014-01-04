@@ -48,7 +48,7 @@ Add the following config to the _web.xml_:
 
 ==Non-Web-Applications==
 
-For non-webapps, VM inspection can be enabled using the internal lightweight standalone HTTP server:
+For non-webapps, VM inspection can be enabled using the internal lightweight standalone HTTP server which requires no external dependencies:
 
 {{{
   new VmInspectionServer(8080);
