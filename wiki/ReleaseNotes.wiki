@@ -6,7 +6,7 @@ https://purej-vminspect.googlecode.com/svn/wiki/pics/purej-logo-48.png
 
 ===trunk - xxx===
 Changes impacting users:
-  * *IMPORTANT:* Moved and renamed servlet to com.purej.vminspect.http.servlet.!VmInspectionServlet
+  * *IMPORTANT:* Moved and renamed servlet to _com.purej.vminspect.http.servlet.!VmInspectionServlet_
   * New class !VmInspectionServer for standalone usage without having to use a servlet-container
   * Users can add their own statistics by implementing the new !ValueProvider interface and registering it at the !StatisticsCollector
 Bug fixes and internal optimizations:
