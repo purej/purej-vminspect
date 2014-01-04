@@ -9,7 +9,7 @@ import com.purej.vminspect.data.statistics.Statistics;
 import com.purej.vminspect.data.statistics.StatisticsCollector;
 
 /**
- * Displays the currently existing statistics.
+ * Displays the statistics overview page with all statistics available.
  *
  * @author Stefan Mueller
  */

@@ -6,7 +6,7 @@ import com.purej.vminspect.data.statistics.Period;
 import com.purej.vminspect.data.statistics.Range;
 
 /**
- * Displays the currently existing statistics.
+ * Abstract class for statistics views.
  *
  * @author Stefan Mueller
  */

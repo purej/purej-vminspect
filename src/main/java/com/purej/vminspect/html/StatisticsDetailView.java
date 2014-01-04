@@ -5,7 +5,7 @@ import java.io.IOException;
 import com.purej.vminspect.data.statistics.Range;
 
 /**
- * Displays the currently existing statistics.
+ * Displays the statistics detail page with one statistics.
  *
  * @author Stefan Mueller
  */
