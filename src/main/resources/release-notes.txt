@@ -1,4 +1,4 @@
-===trunk - (snapshot)===
+===1.1 - (04.01.2014)===
 Changes impacting users:
   * *IMPORTANT:* Moved and renamed servlet to _com.purej.vminspect.http.servlet.!VmInspectionServlet_
   * New class !VmInspectionServer for standalone usage without having to use a servlet-container
@@ -10,6 +10,7 @@ Bug fixes and internal optimizations:
   * Showing the converted value in the status-message after setting an attribute instead of the original value
   * Clean separation between http-handling (package .http) and html-producing (package .html)
   * Lots more unit-test for higher coverage
+  * Improved Javadoc
   * Utility methods moved to util package to clean up package dependencies (no more cycles)
 
 
