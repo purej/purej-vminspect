@@ -64,7 +64,7 @@ final class RequestExecutor implements Runnable {
             }
             catch (Exception e) {
               LOGGER.debug("Could not handle HTTP request!", e);
-              writeErrorResponse(e, "404 Not Found", out);
+              writeErrorResponse(e, "400 Bad Request", out);
             }
           }
         }
@@ -174,8 +174,8 @@ final class RequestExecutor implements Runnable {
     String details = Utils.htmlEncode(Utils.getExceptionInfo(e));
     builder.append("\r\nCache-Control: no-cache\r\nPragma: no-cache\r\nExpires: -1");
     builder.append("\r\nContent-Type: text/html; charset=utf-8");
-    builder.append("\r\n\r\n<html><head><title>Error").append(errorPart).append(" ").append(msg).append("</title>");
-    builder.append("<body><h2>").append(errorPart).append(" ").append(msg).append("</h2>");
+    builder.append("\r\n\r\n<html><head><title>Error ").append(errorPart).append("</title>");
+    builder.append("<body><h2>").append(errorPart).append(" - ").append(msg).append("</h2>");
     builder.append("<p><pre>").append(details).append("</pre></p><hr/><i><small>Powered by adopus consulting gmbh</small></i></body>");
     out.write(builder.toString().getBytes("UTF-8"));
   }
