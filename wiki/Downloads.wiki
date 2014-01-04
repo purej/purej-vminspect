@@ -11,7 +11,7 @@ Maven users just need to add the following dependency, it will download the requ
   <dependency>
     <groupId>com.purej</groupId>
     <artifactId>purej-vminspect</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
   </dependency>
 }}}
 
@@ -21,6 +21,13 @@ Maven users just need to add the following dependency, it will download the requ
   * JRobin for statistics graphics (Version 1.5.9, see [http://sourceforge.net/projects/jrobin JRobin on Sourceforge])
 
 
+*Version 1.1 (04.01.2014)*
+|| *File* || *Size* || *Summary* ||
+||[https://purej-vminspect.googlecode.com/svn/wiki/downloads/1.1/purej-vminspect-1.1.jar purej-vminspect-1.1.jar]||145kb||Binary||
+||[https://purej-vminspect.googlecode.com/svn/wiki/downloads/1.1/purej-vminspect-1.1-sources.jar purej-vminspect-1.1-sources.jar]||104kb||Sources||
+||[https://purej-vminspect.googlecode.com/svn/wiki/downloads/1.1/purej-vminspect-1.1-javadoc.jar purej-vminspect-1.1-javadoc.jar]||279kb||Javadoc||
+
+==Old Versions==
 *Version 1.0 (31.12.2013)*
 || *File* || *Size* || *Summary* ||
 ||[https://purej-vminspect.googlecode.com/svn/wiki/downloads/1.0/purej-vminspect-1.0.jar purej-vminspect-1.0.jar]||129kb||Binary||
