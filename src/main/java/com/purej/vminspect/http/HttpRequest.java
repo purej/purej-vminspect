@@ -6,7 +6,8 @@ import java.util.Map;
 
 /**
  * Encapsulates a HTTP request. This only stores the parts of a GET request that are
- * used by VM inspection.
+ * used by VM inspection. This class allows decoupling execution logic from the concrete
+ * request-implementation (eg. for example servlet-spec version, custom HTTP server etc.)
  *
  * @author Stefan Mueller
  */
