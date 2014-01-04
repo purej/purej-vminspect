@@ -2,7 +2,7 @@
 package com.purej.vminspect.data;
 
 /**
- * Represents a resolved MBean attribute.
+ * Represents a resolved MBean operation.
  *
  * @author Stefan Mueller
  */
