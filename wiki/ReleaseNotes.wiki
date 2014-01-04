@@ -33,12 +33,12 @@ https://purej-vminspect.googlecode.com/svn/wiki/pics/purej-logo-48.png
   * OperatingSystemMXBean.getSystemLoadAverage() did not work on many platforms and has been replaced by getSystemCpuLoad() 
   * {{{AuthorizationCallback}}} removed again, authorization should be implemented using a custom servlet filter if required
 
-*0.4 - 22.12.2013*
+===0.4 - 22.12.2013===
   * Added logging with slf4j
   * MBean access can be restricted to read-only by setting the servlet-param 'vminspect.mbeans.readonly' to true
   * {{{AuthorizationCallback}}} ifc that can be configured by setting the servlet-param 'vminspect.authorization.callback' to a custom class
   * Lots of internal refactoring without impact to users
   * Lots of javadoc and checkstyle-rules applied
 
-*0.2 - 17.11.2013*
+===0.2 - 17.11.2013===
   * First usable version
