@@ -10,7 +10,7 @@ import com.purej.vminspect.data.statistics.Range;
  *
  * @author Stefan Mueller
  */
-public abstract class AbstractStatisticsView extends AbstractHtmlView {
+abstract class AbstractStatisticsView extends AbstractHtmlView {
   private final Range _range;
 
   /**
