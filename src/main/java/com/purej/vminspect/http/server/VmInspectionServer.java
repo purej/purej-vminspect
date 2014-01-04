@@ -22,6 +22,14 @@ import com.purej.vminspect.http.RequestController;
  * <p/>
  * Note: This server is very basic and maybe NOT secure enough, if security is required it is recommended to use
  * the VmInspectionServlet with one of the professional servlet-containers (Jetty, Tomcat, etc.)
+ * <p/>
+ * Beside the HTTP server socket, some more attributes can be configured when creating an instance of this class:
+ * <ul>
+ * <li>mbeansReadonly: specifies if VmInspect is allowed to edit MBean values or invoke non-info operations (default: false)</li>
+ * <li>statisticsCollectionFrequencyMs: Number of milliseconds for the statistics collection timer (default: 60'000ms)</li>
+ * <li>statisticsStorageDir: Optional Path where to store the statistics files (default: no storage directory). If no storage
+ * directory is configured, the statistics will be kept in-memory and thus will be lost after a VM restart.</li>
+ * </ul>
  *
  * @author Stefan Mueller
  */
@@ -43,7 +51,7 @@ public final class VmInspectionServer {
   }
 
   /**
-   * Creates a new instance of this very basic HTTP server.
+   * Creates a new instance of this very basic HTTP server. See the class javadoc for further argument details.
    *
    * @param mbeansReadonly if MBeans should be accessed read-only
    * @param statisticsCollectionFrequencyMs the statistics collection frequency in milliseconds (60'000 recommended)
