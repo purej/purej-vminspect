@@ -47,7 +47,14 @@ Add the following config to the _web.xml_:
 
 
 ==Non-Web-Applications==
-For non-webapps, VM inspection can be enabled by starting an embeddable web-server such as for example [http://www.eclipse.org/jetty Jetty]:
+
+For non-webapps, VM inspection can be enabled using the internal lightweight standalone HTTP server:
+
+{{{
+  new VmInspectionServer(8080);
+}}}
+
+Note that this server-implementation is very basic and might be not secure enough for certain usages. If security and more configuration options are required, the recommended way is the use the VM inspection servlet with one of the many powerful embeddable web-servers out there (for example [http://www.eclipse.org/jetty Jetty]):
 
 {{{
   Server server = new Server(8080);
@@ -57,6 +64,7 @@ For non-webapps, VM inspection can be enabled by starting an embeddable web-serv
   handler.addServlet(servletHolder, "/*");
   server.start();
 }}}
+
 
 =Configuring the !VmInspectServlet=
 The !VmInspectServlet supports a few servlet-init-parameters. All of them provide a default value so they are optional to be configured.
