@@ -4,7 +4,6 @@ package com.purej.vminspect.html.view;
 import java.io.IOException;
 import com.purej.vminspect.data.statistics.Period;
 import com.purej.vminspect.data.statistics.Range;
-import com.purej.vminspect.util.Utils;
 
 /**
  * Displays the currently existing statistics.
@@ -42,8 +41,8 @@ public abstract class AbstractStatisticsView extends AbstractHtmlView {
   protected static String addRangeParams(String otherParams, Range range) {
     if (range.getPeriod() == Period.CUSTOM) {
       if (range.getStartDate() != null && range.getEndDate() != null) {
-        String from = Utils.urlEncode(formatDate(range.getStartDate()));
-        String to = Utils.urlEncode(formatDate(range.getEndDate()));
+        String from = urlEncode(formatDate(range.getStartDate()));
+        String to = urlEncode(formatDate(range.getEndDate()));
         return params(otherParams, "statsPeriod=custom", "statsFromDate=" + from, "statsToDate=" + to);
       }
       return params(otherParams, "statsPeriod=custom");
