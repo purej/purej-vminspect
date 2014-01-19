@@ -18,7 +18,7 @@ Maven users just need to add the following dependency, it will download the requ
   * slf4j for logging (Version 1.7.5, see [http://www.slf4j.org/download.html slf4j.org])
   * JRobin for statistics graphics (Version 1.5.9, see [http://sourceforge.net/projects/jrobin JRobin on Sourceforge])
 
-==Current stable version==
+==Newest stable version==
 
 *Version 1.1 (04.01.2014)*
 || *File* || *Size* || *Summary* ||
@@ -26,7 +26,7 @@ Maven users just need to add the following dependency, it will download the requ
 ||[https://purej-vminspect.googlecode.com/svn/wiki/downloads/1.1/purej-vminspect-1.1-sources.jar purej-vminspect-1.1-sources.jar]||104kb||Sources||
 ||[https://purej-vminspect.googlecode.com/svn/wiki/downloads/1.1/purej-vminspect-1.1-javadoc.jar purej-vminspect-1.1-javadoc.jar]||279kb||Javadoc||
 
-==Old Versions==
+==Old stable Versions==
 *Version 1.0 (31.12.2013)*
 || *File* || *Size* || *Summary* ||
 ||[https://purej-vminspect.googlecode.com/svn/wiki/downloads/1.0/purej-vminspect-1.0.jar purej-vminspect-1.0.jar]||129kb||Binary||
