@@ -25,9 +25,9 @@ public final class MemoryData {
    */
   public MemoryData(long used, long commited, long max) {
     super();
-    this._used = used;
-    this._committed = commited;
-    this._max = max;
+    _used = used;
+    _committed = commited;
+    _max = max;
   }
 
   /**
