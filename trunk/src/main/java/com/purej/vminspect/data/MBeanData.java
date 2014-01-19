@@ -16,10 +16,10 @@ public class MBeanData {
    * Creates a new instance of this class.
    */
   public MBeanData(MBeanName name, String description, MBeanAttribute[] attributes, MBeanOperation[] operations) {
-    this._name = name;
-    this._description = description;
-    this._attributes = attributes;
-    this._operations = operations;
+    _name = name;
+    _description = description;
+    _attributes = attributes;
+    _operations = operations;
   }
 
   /**

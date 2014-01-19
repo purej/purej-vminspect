@@ -15,9 +15,9 @@ public class MBeanParameter {
    * Creates a new instance of this class.
    */
   public MBeanParameter(String name, String type, String description) {
-    this._name = name;
-    this._type = type;
-    this._description = description;
+    _name = name;
+    _type = type;
+    _description = description;
   }
 
   /**
