@@ -125,7 +125,7 @@ public class MBeansTest {
     // Load & set value1:
     MBeanData mbean = MBeanUtils.getMBean(0, objectName);
     Assert.assertNotNull(mbean);
-    MBeanUtils.invokeAttribute(mbean, mbean.getAttribute(attributeName), value1);
+    MBeanUtils.invokeAttribute(mbean.getName(), mbean.getAttribute(attributeName), value1);
 
     // Reload & set value2:
     mbean = MBeanUtils.getMBean(0, objectName);
@@ -135,7 +135,7 @@ public class MBeansTest {
     Assert.assertEquals(true, attribute.isWritable());
     Object v = attribute.getValue();
     Assert.assertEquals(value1, v != null ? v.toString() : null);
-    MBeanUtils.invokeAttribute(mbean, mbean.getAttribute(attributeName), value2);
+    MBeanUtils.invokeAttribute(mbean.getName(), mbean.getAttribute(attributeName), value2);
 
     // Reload & check:
     mbean = MBeanUtils.getMBean(0, objectName);
@@ -145,7 +145,7 @@ public class MBeansTest {
 
     // For complex objects:
     if (mbean.getAttribute(attributeName).getType().contains(".")) {
-      MBeanUtils.invokeAttribute(mbean, mbean.getAttribute(attributeName), null);
+      MBeanUtils.invokeAttribute(mbean.getName(), mbean.getAttribute(attributeName), null);
       mbean = MBeanUtils.getMBean(0, objectName);
       Assert.assertNotNull(mbean);
       Assert.assertEquals(null, mbean.getAttribute(attributeName).getValue());
@@ -161,7 +161,7 @@ public class MBeansTest {
     if (operationName.indexOf("Void") < 0) {
       Assert.assertNotNull(operation.getReturnType());
     }
-    Object result = MBeanUtils.invokeOperation(mbean, operation, params);
+    Object result = MBeanUtils.invokeOperation(mbean.getName(), operation, params);
     Assert.assertEquals(expectedResult, result != null ? result.toString() : null);
   }
 

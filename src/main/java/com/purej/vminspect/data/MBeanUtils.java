@@ -100,12 +100,12 @@ public final class MBeanUtils {
   /**
    * Sets the given attribute of the specified MBean to the passed value.
    */
-  public static Object invokeAttribute(MBeanData mbean, MBeanAttribute attribute, String value) {
-    ObjectName objectName = mbean.getName().getObjectName();
+  public static Object invokeAttribute(MBeanName mbeanName, MBeanAttribute attribute, String value) {
+    ObjectName objectName = mbeanName.getObjectName();
     Object objectValue = toTypedValue(value, attribute.getType());
     Attribute attr = new Attribute(attribute.getName(), objectValue);
     try {
-      getMBeanServer(mbean.getName().getServerIdx()).setAttribute(objectName, attr);
+      getMBeanServer(mbeanName.getServerIdx()).setAttribute(objectName, attr);
     }
     catch (Exception e) {
       throw new RuntimeException("An error occurred setting attribute '" + attribute.getName() + "' to value '" + value + "'!", e);
@@ -116,12 +116,12 @@ public final class MBeanUtils {
   /**
    * Invokes the given operation and returns the result.
    */
-  public static Object invokeOperation(MBeanData mbean, MBeanOperation operation, String[] parameterValues) {
+  public static Object invokeOperation(MBeanName mbeanName, MBeanOperation operation, String[] parameterValues) {
     MBeanParameter[] params = operation.getParameters();
     if (params.length != parameterValues.length) {
       throw new RuntimeException("Parameter count missmatch!");
     }
-    ObjectName objectName = mbean.getName().getObjectName();
+    ObjectName objectName = mbeanName.getObjectName();
     try {
       Object[] typedParams = new Object[params.length];
       String[] types = new String[params.length];
@@ -129,7 +129,7 @@ public final class MBeanUtils {
         typedParams[i] = toTypedValue(parameterValues[i], params[i].getType());
         types[i] = params[i].getType();
       }
-      Object result = getMBeanServer(mbean.getName().getServerIdx()).invoke(objectName, operation.getName(), typedParams, types);
+      Object result = getMBeanServer(mbeanName.getServerIdx()).invoke(objectName, operation.getName(), typedParams, types);
       return convertValueIfNeeded(result);
     }
     catch (Exception e) {
