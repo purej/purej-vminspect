@@ -1,7 +1,7 @@
 <p align="center">
 https://purej-vminspect.googlecode.com/svn/wiki/pics/purej-logo-48.png
 *<font size="20">VM Inspection</font><br/>
-[https://code.google.com/p/purej-vminspect/ Home] | [Documentation] | [ReleaseNotes] | [Downloads]*
+[https://code.google.com/p/purej-vminspect/ Home] | [Documentation] | [ReleaseNotes] | [Downloads] | [License]*
 </p>
 
 
