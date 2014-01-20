@@ -15,6 +15,7 @@ import com.purej.vminspect.data.statistics.StatisticsCollector;
 import com.purej.vminspect.http.HttpRequest;
 import com.purej.vminspect.http.HttpResponse;
 import com.purej.vminspect.http.RequestController;
+import com.purej.vminspect.http.servlet.AuthorizationCallback.SimpleAuthorizationCallback;
 import com.purej.vminspect.util.Utils;
 
 /**
@@ -38,33 +39,61 @@ public final class VmInspectionServlet extends HttpServlet {
   // Members that get set in the init method:
   private StatisticsCollector _collector;
   private RequestController _controller;
+  private AuthorizationCallback _callback;
 
   @Override
-  public void init() {
+  public void init() throws ServletException {
     // Load configuration from init parameters:
     boolean mbeansReadonly = Boolean.parseBoolean(getServletConfig().getInitParameter("vminspect.mbeans.readonly"));
+    boolean mbeansWriteConfirmation = Boolean.parseBoolean(getServletConfig().getInitParameter("vminspect.mbeans.writeConfirmation"));
+    String callbackClass = getServletConfig().getInitParameter("vminspect.mbeans.authorizationCallbackClass");
     String collectionFrequency = getServletConfig().getInitParameter("vminspect.statistics.collection.frequencyMs");
     String storageDir = getServletConfig().getInitParameter("vminspect.statistics.storage.dir");
-    init(mbeansReadonly, collectionFrequency != null ? Integer.parseInt(collectionFrequency) : 60000, storageDir);
+
+    // Create the correct callback instance:
+    AuthorizationCallback callback;
+    if (callbackClass != null) {
+      try {
+        callback = (AuthorizationCallback) Class.forName(callbackClass).newInstance();
+      }
+      catch (Exception e) {
+        throw new ServletException("Could not load AuthorizationCallback class '" + callbackClass + "'!");
+      }
+    }
+    else {
+      callback = new SimpleAuthorizationCallback(mbeansReadonly);
+    }
+
+    // Call the init:
+    init(callback, mbeansWriteConfirmation, collectionFrequency != null ? Integer.parseInt(collectionFrequency) : 60000, storageDir);
   }
 
   /**
    * Initializes this servlet instance or does nothing if already initialized.
    * This method can be used to programmatically initialize the servlet.
    *
-   * @param mbeansReadonly if MBeans should be accessed read-only
+   * @param callback the authorization callback to check if write access to MBeans is allowed
+   * @param mbeansWriteConfirmation if write operations require a confirmation screen
    * @param statisticsCollectionFrequencyMs the statistics collection frequency in milliseconds (60'000 recommended)
    * @param statisticsStorageDir the optional statistics storage directory
    */
-  public void init(boolean mbeansReadonly, int statisticsCollectionFrequencyMs, String statisticsStorageDir) {
-    // Get or create collector, create controller:
-    _collector = StatisticsCollector.init(statisticsStorageDir, statisticsCollectionFrequencyMs, this);
-    _controller = new RequestController(_collector, mbeansReadonly);
+  public void init(AuthorizationCallback callback, boolean mbeansWriteConfirmation, int statisticsCollectionFrequencyMs, String statisticsStorageDir) {
+    if (_collector == null) {
+      if (callback == null) {
+        throw new IllegalArgumentException("AuthorizationCallback is null!");
+      }
+      // Get or create collector, create controller:
+      _collector = StatisticsCollector.init(statisticsStorageDir, statisticsCollectionFrequencyMs, this);
+      _controller = new RequestController(_collector, mbeansWriteConfirmation);
+      _callback = callback;
+    }
   }
 
   @Override
   public void destroy() {
     StatisticsCollector.destroy(this); // Makes sure the collector is destroyed if this was the last reference...
+    _collector = null;
+    _controller = null;
   }
 
   @Override
@@ -72,7 +101,7 @@ public final class VmInspectionServlet extends HttpServlet {
     try {
       // Create the request, process it and write the response:
       HttpRequest httpRequest = createHttpRequest(request);
-      HttpResponse httpResponse = _controller.process(httpRequest);
+      HttpResponse httpResponse = _controller.process(httpRequest, !_callback.isMBeansWriteAllowed(request));
       writeHttpResponse(httpResponse, request.getRequestURI(), response);
     }
     catch (Exception e) {

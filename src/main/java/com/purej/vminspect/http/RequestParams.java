@@ -17,9 +17,11 @@ public final class RequestParams {
   public static final String MBEAN_ATTRIBUTE_NAME = "mbAtrName";
   public static final String MBEAN_ATTRIBUTE_VALUE = "mbAtrValue";
   public static final String MBEAN_ATTRIBUTE_INVOKE = "mbAtrInvoke";
+  public static final String MBEAN_ATTRIBUTE_INVOKE_CONFIRM = "mbAtrInvokeConfirm";
   public static final String MBEAN_ATTRIBUTE_CANCEL = "mbAtrCancel";
   public static final String MBEAN_OPERATION_IDX = "mbOpIdx";
   public static final String MBEAN_OPERATION_INVOKE = "mbOpInvoke";
+  public static final String MBEAN_OPERATION_INVOKE_CONFIRM = "mbOpInvokeConfirm";
   public static final String MBEAN_OPERATION_CANCEL = "mbOpCancel";
   public static final String MBEAN_OPERATION_VALUE = "mbOpValue";
   public static final String MBEAN_DOMAIN_FILTER = "mbDomainFilter";

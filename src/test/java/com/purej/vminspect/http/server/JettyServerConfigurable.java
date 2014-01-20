@@ -9,6 +9,7 @@ import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import com.purej.vminspect.data.MySample;
+import com.purej.vminspect.http.servlet.AuthorizationCallback.SimpleAuthorizationCallback;
 import com.purej.vminspect.http.servlet.VmInspectionServlet;
 
 /**
@@ -37,7 +38,7 @@ public final class JettyServerConfigurable {
     server.setConnectors(new Connector[] {connector});
 
     VmInspectionServlet servlet = new VmInspectionServlet();
-    servlet.init(false, Integer.parseInt(args[1]), args.length > 2 ? args[2] : null);
+    servlet.init(new SimpleAuthorizationCallback(true), false, Integer.parseInt(args[1]), args.length > 2 ? args[2] : null);
     ServletHolder servletHolder = new ServletHolder(servlet);
     ServletContextHandler handler = new ServletContextHandler();
     handler.setContextPath("/inspect");

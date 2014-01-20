@@ -29,14 +29,16 @@ final class RequestExecutor implements Runnable {
   private static final Logger LOGGER = LoggerFactory.getLogger(VmInspectionServer.class);
   private final Socket _socket;
   private final RequestController _controller;
+  private final boolean _mbeansReadonly;
 
   /**
    * Creates a new instance of this class that executes the sockets request.
    */
-  RequestExecutor(Socket socket, RequestController controller) {
+  RequestExecutor(Socket socket, RequestController controller, boolean mbeansReadonly) {
     super();
     _socket = socket;
     _controller = controller;
+    _mbeansReadonly = mbeansReadonly;
   }
 
   /**
@@ -57,7 +59,7 @@ final class RequestExecutor implements Runnable {
           else {
             LOGGER.debug("HTTP GET request from {} with parameters {}", _socket.getRemoteSocketAddress(), request.getParameters());
             try {
-              HttpResponse httpResponse = _controller.process(request);
+              HttpResponse httpResponse = _controller.process(request, _mbeansReadonly);
               writeResponse(httpResponse, out);
             }
             catch (SocketException e) {
@@ -66,7 +68,7 @@ final class RequestExecutor implements Runnable {
             }
             catch (Exception e) {
               LOGGER.debug("Could not handle HTTP request!", e);
-              writeErrorResponse(e, "400 Bad Request", out);
+              writeErrorResponse(e, "500 Server Error", out);
             }
           }
         }
