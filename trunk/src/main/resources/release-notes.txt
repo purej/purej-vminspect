@@ -1,3 +1,8 @@
+===1.2 - (20.01.2014)===
+  * MBean write confirmation screen can be configured (default is false, so no confirmation screen is displayed)
+  * Better replace for apos (&#39;) as of browser compatibility issues
+
+
 ===1.1 - (04.01.2014)===
 Changes impacting users:
   * *IMPORTANT:* Moved and renamed servlet to _com.purej.vminspect.http.servlet.!VmInspectionServlet_

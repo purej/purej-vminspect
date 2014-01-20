@@ -47,19 +47,21 @@ public final class VmInspectionServer {
    * @throws IOException if the server socket could not be bound to the given port
    */
   public VmInspectionServer(int port) throws IOException {
-    this(false, 60000, null, port);
+    this(false, false, 60000, null, port);
   }
 
   /**
    * Creates a new instance of this very basic HTTP server. See the class javadoc for further argument details.
    *
    * @param mbeansReadonly if MBeans should be accessed read-only
+   * @param mbeansWriteConfirmation if write operations require a confirmation screen
    * @param statisticsCollectionFrequencyMs the statistics collection frequency in milliseconds (60'000 recommended)
    * @param statisticsStorageDir the optional statistics storage directory
    * @param port the port where the server-socket listens for incoming HTTP requests
    * @throws IOException if the server socket could not be bound to the given port
    */
-  public VmInspectionServer(boolean mbeansReadonly, int statisticsCollectionFrequencyMs, String statisticsStorageDir, int port) throws IOException {
+  public VmInspectionServer(final boolean mbeansReadonly, boolean mbeansWriteConfirmation, int statisticsCollectionFrequencyMs,
+      String statisticsStorageDir, int port) throws IOException {
     // Create the executor to handle request:
     _executor = Executors.newFixedThreadPool(3, new ThreadFactory() {
       @Override
@@ -78,7 +80,7 @@ public final class VmInspectionServer {
         while (!_serverSocket.isClosed()) {
           try {
             Socket socket = _serverSocket.accept();
-            _executor.execute(new RequestExecutor(socket, _controller));
+            _executor.execute(new RequestExecutor(socket, _controller, mbeansReadonly));
           }
           catch (Exception e) {
             if (_serverSocket.isClosed()) {
@@ -93,7 +95,7 @@ public final class VmInspectionServer {
 
     // Get or create collector, create controller and startup:
     _collector = StatisticsCollector.init(statisticsStorageDir, statisticsCollectionFrequencyMs, this);
-    _controller = new RequestController(_collector, mbeansReadonly);
+    _controller = new RequestController(_collector, mbeansWriteConfirmation);
     _listener.start();
   }
 

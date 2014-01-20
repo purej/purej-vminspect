@@ -17,7 +17,8 @@ public class VmInspectionServerTest {
    */
   @SuppressWarnings("unused")
   public static void main(String[] args) throws Exception {
-    new VmInspectionServer(8080);
+    //new VmInspectionServer(8080);
+    new VmInspectionServer(false, true, 60000, null, 8080);
 
     ManagementFactory.getPlatformMBeanServer().registerMBean(new MySample(false), new ObjectName("purej.vminspect", "id", "1"));
     ManagementFactory.getPlatformMBeanServer().registerMBean(new MySample(true), new ObjectName("purej.vminspect", "id", "2"));

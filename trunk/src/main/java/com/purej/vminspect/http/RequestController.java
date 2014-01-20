@@ -15,6 +15,7 @@ import com.purej.vminspect.data.statistics.Range;
 import com.purej.vminspect.data.statistics.Statistics;
 import com.purej.vminspect.data.statistics.StatisticsCollector;
 import com.purej.vminspect.html.AbstractHtmlView;
+import com.purej.vminspect.html.ConfirmState;
 import com.purej.vminspect.html.HtmlPageView;
 import com.purej.vminspect.html.MBeansDetailView;
 import com.purej.vminspect.html.MBeansInvokeAttributeView;
@@ -49,28 +50,29 @@ public class RequestController {
   }
 
   private final StatisticsCollector _collector;
-  private final boolean _mbeansReadonly;
+  private final ConfirmState _initialConfirmState;
 
   /**
    * Creates a new instance of this class.
    *
    * @param collector the collector
-   * @param mbeansReadonly if MBeans must be accessed read-only
+   * @param mbeansWriteConfirmation if a confirmation screen before MBeans write operation is required
    */
-  public RequestController(StatisticsCollector collector, boolean mbeansReadonly) {
+  public RequestController(StatisticsCollector collector, boolean mbeansWriteConfirmation) {
     super();
     _collector = collector;
-    _mbeansReadonly = mbeansReadonly;
+    _initialConfirmState = mbeansWriteConfirmation ? ConfirmState.NEXT : ConfirmState.OFF;
   }
 
   /**
    * Processes the given request and returns the in-memory response.
    *
    * @param httpRequest the request to be processed
+   * @param mbeansReadonly if MBeans must be accessed read-only
    * @return the in-memory response
    * @throws IOException if an exception occurred
    */
-  public HttpResponse process(HttpRequest httpRequest) throws IOException {
+  public HttpResponse process(HttpRequest httpRequest, boolean mbeansReadonly) throws IOException {
     // 1.) Check if static resource (eg. png/css/etc.)
     String resource = httpRequest.getParameter(RequestParams.RESOURCE);
     if (resource != null) {
@@ -89,7 +91,7 @@ public class RequestController {
       }
       // 4.) All other output are HTML based:
       else {
-        return doHtml(httpRequest, page);
+        return doHtml(httpRequest, page, mbeansReadonly);
       }
     }
   }
@@ -110,14 +112,14 @@ public class RequestController {
     return response;
   }
 
-  private HttpResponse doHtml(HttpRequest request, String page) throws IOException {
+  private HttpResponse doHtml(HttpRequest request, String page, boolean mbeansReadonly) throws IOException {
     long start = System.currentTimeMillis();
     HttpTextResponse response = new HttpTextResponse("text/html; charset=utf-8");
 
     // Create the content view:
     AbstractHtmlView view;
     if ("mbeans".equals(page)) {
-      view = getMBeansView(request, response);
+      view = handleMBeansView(request, response, mbeansReadonly);
     }
     else if ("threads".equals(page)) {
       view = new ThreadsMainView(response.getOutput(), ThreadData.getAllThreads());
@@ -145,7 +147,7 @@ public class RequestController {
     return response;
   }
 
-  private AbstractHtmlView getMBeansView(HttpRequest request, HttpTextResponse response) throws IOException {
+  private AbstractHtmlView handleMBeansView(HttpRequest request, HttpTextResponse response, boolean mbeansReadonly) throws IOException {
     String mbServerIdx = request.getParameter(RequestParams.MBEAN_SRV_IDX);
     String mbName = request.getParameter(RequestParams.MBEAN_NAME);
     if (mbServerIdx != null && mbName != null) {
@@ -154,67 +156,14 @@ public class RequestController {
       String mbAtrName = request.getParameter(RequestParams.MBEAN_ATTRIBUTE_NAME);
       String mbOpIdx = request.getParameter(RequestParams.MBEAN_OPERATION_IDX);
       if (mbAtrName != null) {
-        // MBean Attribute specified:
-        MBeanAttribute attribute = mbean.getAttribute(mbAtrName);
-        if (request.getParameter(RequestParams.MBEAN_ATTRIBUTE_INVOKE) != null) {
-          if (_mbeansReadonly) {
-            throw new UnsupportedOperationException("Not allowed to edit an attribute as in readonly-mode!");
-          }
-          // Invoke the attribute:
-          String value = request.getParameter(RequestParams.MBEAN_ATTRIBUTE_VALUE);
-          Object result = MBeanUtils.invokeAttribute(mbean, attribute, value);
-          // Reload state & show MBean page:
-          mbean = MBeanUtils.getMBean(Integer.parseInt(mbServerIdx), mbName);
-          String okMsg = "Attribute <b>" + attribute.getName() + "</b> successfully set to value <b>"
-              + Utils.htmlEncode(result != null ? result.toString() : "null") + "</b>!";
-          return new MBeansDetailView(response.getOutput(), mbean, okMsg, null, _mbeansReadonly);
-        }
-        else if (request.getParameter(RequestParams.MBEAN_ATTRIBUTE_CANCEL) != null) {
-          // Show MBean page:
-          String warnMsg = "Canceled, attribute <b>" + attribute.getName() + "</b> not set!";
-          return new MBeansDetailView(response.getOutput(), mbean, null, warnMsg, _mbeansReadonly);
-        }
-        else {
-          // Show page to edit the attribute:
-          return new MBeansInvokeAttributeView(response.getOutput(), mbean, attribute);
-        }
+        return handleMBeansAttributeView(request, response, mbean, mbAtrName, mbeansReadonly);
       }
       else if (mbOpIdx != null) {
-        // MBean Operation specified:
-        int opIdx = Integer.parseInt(mbOpIdx);
-        if (mbean.getOperations().length <= opIdx) {
-          throw new RuntimeException("Operation at index '" + opIdx + "' does not exist!");
-        }
-        MBeanOperation operation = mbean.getOperations()[opIdx];
-        if (request.getParameter(RequestParams.MBEAN_OPERATION_INVOKE) != null) {
-          if (_mbeansReadonly && !operation.getImpact().equals("Info")) {
-            throw new UnsupportedOperationException("Not allowed to invoke a non-info operation as in readonly-mode!");
-          }
-          // Invoke the operation:
-          String[] params = new String[operation.getParameters().length];
-          for (int i = 0; i < params.length; i++) {
-            params[i] = request.getParameter(RequestParams.MBEAN_OPERATION_VALUE + i);
-          }
-          Object result = MBeanUtils.invokeOperation(mbean, operation, params);
-          // Reload state & show MBean page:
-          mbean = MBeanUtils.getMBean(Integer.parseInt(mbServerIdx), mbName);
-          String okMsg = "Operation <b>" + operation.getName() + "</b> successfully invoked. Operation result is <b>"
-              + Utils.htmlEncode(result != null ? result.toString() : "null") + "</b>!";
-          return new MBeansDetailView(response.getOutput(), mbean, okMsg, null, _mbeansReadonly);
-        }
-        else if (request.getParameter(RequestParams.MBEAN_OPERATION_CANCEL) != null) {
-          // Show MBean page:
-          String warnMsg = "Canceled, operation <b>" + operation.getName() + "</b> not invoked!";
-          return new MBeansDetailView(response.getOutput(), mbean, null, warnMsg, _mbeansReadonly);
-        }
-        else {
-          // Show page to edit the attribute:
-          return new MBeansInvokeOperationView(response.getOutput(), mbean, opIdx, operation);
-        }
+        return handleMBeansOperationView(request, response, mbean, mbOpIdx, mbeansReadonly);
       }
       else {
         // Show MBean page:
-        return new MBeansDetailView(response.getOutput(), mbean, null, null, _mbeansReadonly);
+        return new MBeansDetailView(response.getOutput(), mbean, null, null, mbeansReadonly);
       }
     }
     else {
@@ -222,6 +171,82 @@ public class RequestController {
       String domainFilter = CookieManager.getDomainFilter(request, response);
       String typeFilter = CookieManager.getTypeFilter(request, response);
       return new MBeansMainView(response.getOutput(), domainFilter, typeFilter, MBeanUtils.getMBeanNames());
+    }
+  }
+
+  private AbstractHtmlView handleMBeansAttributeView(HttpRequest request, HttpTextResponse response, MBeanData mbean, String mbAtrName,
+      boolean mbeansReadonly) throws IOException {
+    // MBean Attribute specified:
+    MBeanAttribute attribute = mbean.getAttribute(mbAtrName);
+    String newValue = request.getParameter(RequestParams.MBEAN_ATTRIBUTE_VALUE);
+    if (request.getParameter(RequestParams.MBEAN_ATTRIBUTE_INVOKE) != null) {
+      if (mbeansReadonly) {
+        throw new UnsupportedOperationException("Not allowed to edit an attribute as in readonly-mode!");
+      }
+
+      // Invoke the attribute:
+      Object result = MBeanUtils.invokeAttribute(mbean.getName(), attribute, newValue);
+
+      // Reload state & show MBean page:
+      MBeanData reloaded = MBeanUtils.getMBean(mbean.getName());
+      String okMsg = "Attribute <b>" + attribute.getName() + "</b> successfully set to value <b>"
+          + Utils.htmlEncode(result != null ? result.toString() : "null") + "</b>!";
+      return new MBeansDetailView(response.getOutput(), reloaded, okMsg, null, mbeansReadonly);
+    }
+    else if (request.getParameter(RequestParams.MBEAN_ATTRIBUTE_INVOKE_CONFIRM) != null) {
+      // Show edit attribute confirmation:
+      return new MBeansInvokeAttributeView(response.getOutput(), mbean, attribute, ConfirmState.NOW, newValue);
+    }
+    else if (request.getParameter(RequestParams.MBEAN_ATTRIBUTE_CANCEL) != null) {
+      // Show MBean page:
+      String warnMsg = "Canceled, attribute <b>" + attribute.getName() + "</b> not set!";
+      return new MBeansDetailView(response.getOutput(), mbean, null, warnMsg, mbeansReadonly);
+    }
+    else {
+      // Show page to edit the attribute:
+      return new MBeansInvokeAttributeView(response.getOutput(), mbean, attribute, _initialConfirmState, null);
+    }
+  }
+
+  private AbstractHtmlView handleMBeansOperationView(HttpRequest request, HttpTextResponse response, MBeanData mbean, String mbOpIdx,
+      boolean mbeansReadonly) throws IOException {
+    // MBean Operation specified:
+    int opIdx = Integer.parseInt(mbOpIdx);
+    if (mbean.getOperations().length <= opIdx) {
+      throw new RuntimeException("Operation at index '" + opIdx + "' does not exist!");
+    }
+
+    // Get operation and extract parameters:
+    MBeanOperation operation = mbean.getOperations()[opIdx];
+    String[] params = new String[operation.getParameters().length];
+    for (int i = 0; i < params.length; i++) {
+      params[i] = request.getParameter(RequestParams.MBEAN_OPERATION_VALUE + i);
+    }
+    if (request.getParameter(RequestParams.MBEAN_OPERATION_INVOKE) != null) {
+      if (mbeansReadonly && !operation.getImpact().equals("Info")) {
+        throw new UnsupportedOperationException("Not allowed to invoke a non-info operation as in readonly-mode!");
+      }
+
+      // Invoke the operation:
+      Object result = MBeanUtils.invokeOperation(mbean.getName(), operation, params);
+
+      // Reload state & show MBean page:
+      MBeanData reloaded = MBeanUtils.getMBean(mbean.getName());
+      String okMsg = "Operation <b>" + operation.getName() + "</b> successfully invoked. Operation result is <b>"
+          + Utils.htmlEncode(result != null ? result.toString() : "null") + "</b>!";
+      return new MBeansDetailView(response.getOutput(), reloaded, okMsg, null, mbeansReadonly);
+    }
+    else if (request.getParameter(RequestParams.MBEAN_OPERATION_INVOKE_CONFIRM) != null) {
+      return new MBeansInvokeOperationView(response.getOutput(), mbean, opIdx, operation, ConfirmState.NOW, params);
+    }
+    else if (request.getParameter(RequestParams.MBEAN_OPERATION_CANCEL) != null) {
+      // Show MBean page:
+      String warnMsg = "Canceled, operation <b>" + operation.getName() + "</b> not invoked!";
+      return new MBeansDetailView(response.getOutput(), mbean, null, warnMsg, mbeansReadonly);
+    }
+    else {
+      // Show page to edit the operation:
+      return new MBeansInvokeOperationView(response.getOutput(), mbean, opIdx, operation, _initialConfirmState, params);
     }
   }
 
