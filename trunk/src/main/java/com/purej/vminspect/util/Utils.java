@@ -92,7 +92,7 @@ public final class Utils {
     if (txt == null) {
       return "";
     }
-    return txt.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;").replace("'", "&apos;")
+    return txt.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;").replace("'", "&#39;")
         .replace("\r\n", "<br/>").replace("\n", "<br/>");
   }
 
