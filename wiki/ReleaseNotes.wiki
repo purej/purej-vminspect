@@ -5,6 +5,11 @@ https://purej-vminspect.googlecode.com/svn/wiki/pics/purej-logo-48.png
 </p>
 
 
+===1.2 - (20.01.2014)===
+  * MBean write confirmation screen can be configured (default is no confirmation screen to be displayed)
+  * Better replace for apos (&#39;) as of browser compatibility issues
+
+
 ===1.1 - (04.01.2014)===
 Changes impacting users:
   * *IMPORTANT:* Moved and renamed servlet to _com.purej.vminspect.http.servlet.!VmInspectionServlet_
