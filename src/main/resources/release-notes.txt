@@ -1,5 +1,5 @@
 ===1.2 - (20.01.2014)===
-  * MBean write confirmation screen can be configured (default is false, so no confirmation screen is displayed)
+  * MBean write confirmation screen can be configured (default is no confirmation screen to be displayed)
   * Better replace for apos (&#39;) as of browser compatibility issues
 
 
