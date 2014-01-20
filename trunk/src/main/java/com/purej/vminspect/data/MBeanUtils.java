@@ -20,6 +20,7 @@ import javax.management.MBeanOperationInfo;
 import javax.management.MBeanParameterInfo;
 import javax.management.MBeanServer;
 import javax.management.MBeanServerFactory;
+import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import javax.management.openmbean.CompositeData;
 import javax.management.openmbean.TabularData;
@@ -68,17 +69,16 @@ public final class MBeanUtils {
   /**
    * Returns the MBean for the given object name or null if the MBean could not be found.
    */
-  public static MBeanData getMBean(int mbServerIdx, String mbName) {
+  public static MBeanData getMBean(MBeanName mbName) {
     try {
-      ObjectName name = new ObjectName(mbName);
-      MBeanServer server = getMBeanServer(mbServerIdx);
-      MBeanInfo mbeanInfo = server.getMBeanInfo(name);
+      MBeanServer server = getMBeanServer(mbName.getServerIdx());
+      MBeanInfo mbeanInfo = server.getMBeanInfo(mbName.getObjectName());
 
       // Create the list of attributes:
       MBeanAttributeInfo[] attributeInfos = mbeanInfo.getAttributes();
       MBeanAttribute[] attributes = new MBeanAttribute[attributeInfos.length];
       for (int i = 0; i < attributes.length; i++) {
-        attributes[i] = createAttribute(server, name, attributeInfos[i]);
+        attributes[i] = createAttribute(server, mbName.getObjectName(), attributeInfos[i]);
       }
       Arrays.sort(attributes, new MBeanAttributeComparator());
 
@@ -90,10 +90,22 @@ public final class MBeanUtils {
       }
       Arrays.sort(operations, new MBeanOperationComparator());
 
-      return new MBeanData(new MBeanName(mbServerIdx, name), mbeanInfo.getDescription(), attributes, operations);
+      return new MBeanData(mbName, mbeanInfo.getDescription(), attributes, operations);
     }
     catch (Exception e) {
-      throw new RuntimeException("MBean with name '" + mbName + "' could not be resolved!");
+      throw new RuntimeException("MBean with name '" + mbName + "' could not be resolved!", e);
+    }
+  }
+
+  /**
+   * Returns the MBean for the given object name or null if the MBean could not be found.
+   */
+  public static MBeanData getMBean(int mbServerIdx, String mbName) {
+    try {
+      return getMBean(new MBeanName(mbServerIdx, new ObjectName(mbName)));
+    }
+    catch (MalformedObjectNameException e) {
+      throw new RuntimeException("MBean with name '" + mbName + "' could not be resolved!", e);
     }
   }
 
