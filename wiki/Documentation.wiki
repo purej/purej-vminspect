@@ -71,6 +71,7 @@ VM Inspection supports a few configuration parameters. All of them provide a def
 
 || *Servlet Init Parameter* || *Description* || *Default* ||
 ||vminspect.mbeans.readonly||true/false, specifies if MBeans should only be accessed read-only||false||
+||vminspect.mbeans.writeConfirmation||true/false, specifies if MBeans write operations require a confirmation screen||false||
 ||vminspect.statistics.collection.frequencyMs||Number of milliseconds for the statistics collection timer||60000||
 ||vminspect.statistics.storage.dir||Optional path where to store the statistics files or null if no storage required||null||
 
@@ -83,7 +84,7 @@ VM Inspection supports a few configuration parameters. All of them provide a def
     <servlet-class>com.purej.vminspect.http.servlet.VmInspectionServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
     <init-param>
-      <param-name>vminspect.mbeans.readonly</param-name>
+      <param-name>vminspect.mbeans.writeConfirmation</param-name>
       <param-value>true</param-value>
     </init-param>
     <init-param>
@@ -95,11 +96,11 @@ VM Inspection supports a few configuration parameters. All of them provide a def
 
 *Example configuration for non-web-apps using the !VmInspectionServer*
 {{{
-  new VmInspectionServer(true, 60000, "/home/users/john/my-app-statistics", 8080);
+  new VmInspectionServer(false, true, 60000, "/home/users/john/my-app-statistics", 8080);
 }}}
 
 *Example configuration for non-web-apps using an embedded Jetty*
 {{{
-  servletHolder.setInitParameter("vminspect.mbeans.readonly", "true");
+  servletHolder.setInitParameter("vminspect.mbeans.writeConfirmation", "true");
   servletHolder.setInitParameter("vminspect.statistics.storage.dir", "/home/users/john/my-app-statistics");
 }}}
