@@ -93,7 +93,7 @@ public class UtilsTest {
     Assert.assertEquals(" hello ", Utils.htmlEncode(" hello "));
     Assert.assertEquals("&amp;hello&lt;&gt;world", Utils.htmlEncode("&hello<>world"));
     Assert.assertEquals("hello&quot;world", Utils.htmlEncode("hello\"world"));
-    Assert.assertEquals("1&apos;2&apos;3&apos;", Utils.htmlEncode("1'2'3'"));
+    Assert.assertEquals("1&#39;2&#39;3&#39;", Utils.htmlEncode("1'2'3'"));
     Assert.assertEquals("hel<br/>lo<br/>world", Utils.htmlEncode("hel\r\nlo\nworld"));
   }
 
