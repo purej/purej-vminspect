@@ -24,6 +24,7 @@ import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import javax.management.openmbean.CompositeData;
 import javax.management.openmbean.TabularData;
+import com.purej.vminspect.data.MBeanOperation.Impact;
 
 /**
  * Helper class for MBean operations.
@@ -193,19 +194,19 @@ public final class MBeanUtils {
     }
     String returnType = getTypeDescription(operationInfo.getReturnType());
 
-    String impact;
+    Impact impact;
     switch (operationInfo.getImpact()) {
     case MBeanOperationInfo.INFO:
-      impact = "Info";
+      impact = Impact.Info;
       break;
     case MBeanOperationInfo.ACTION:
-      impact = "Action";
+      impact = Impact.Action;
       break;
     case MBeanOperationInfo.ACTION_INFO:
-      impact = "Action/Info";
+      impact = Impact.ActionInfo;
       break;
     default:
-      impact = "Unknown";
+      impact = Impact.Unknown;
     }
     return new MBeanOperation(operationInfo.getName(), parameters, returnType, impact, getDescription(operationInfo));
   }

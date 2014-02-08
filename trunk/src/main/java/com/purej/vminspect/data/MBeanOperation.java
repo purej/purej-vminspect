@@ -7,16 +7,31 @@ package com.purej.vminspect.data;
  * @author Stefan Mueller
  */
 public class MBeanOperation {
+
+  /**
+   * Enumeration for MBean operation impact.
+   */
+  public static enum Impact {
+    /** The operation is readonly. */
+    Info,
+    /** The operation might change the MBean. */
+    Action,
+    /** The operation might change the MBean. */
+    ActionInfo,
+    /** The operation has an unknown impact. */
+    Unknown
+  }
+
   private final String _name;
   private final MBeanParameter[] _parameters;
   private final String _returnType;
-  private final String _impact;
+  private final Impact _impact;
   private final String _description;
 
   /**
    * Creates a new instance of this class.
    */
-  public MBeanOperation(String name, MBeanParameter[] parameters, String returnType, String impact, String description) {
+  public MBeanOperation(String name, MBeanParameter[] parameters, String returnType, Impact impact, String description) {
     _name = name;
     _parameters = parameters;
     _returnType = returnType;
@@ -48,7 +63,7 @@ public class MBeanOperation {
   /**
    * Returns the displayable impact of this operation (Info, Action or Info/Action).
    */
-  public String getImpact() {
+  public Impact getImpact() {
     return _impact;
   }
 
