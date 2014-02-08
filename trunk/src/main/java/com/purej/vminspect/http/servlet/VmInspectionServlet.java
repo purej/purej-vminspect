@@ -11,14 +11,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.purej.vminspect.data.MBeanAttribute;
-import com.purej.vminspect.data.MBeanData;
-import com.purej.vminspect.data.MBeanOperation;
 import com.purej.vminspect.data.statistics.StatisticsCollector;
 import com.purej.vminspect.http.HttpRequest;
 import com.purej.vminspect.http.HttpResponse;
 import com.purej.vminspect.http.MBeanAccessControl;
 import com.purej.vminspect.http.RequestController;
+import com.purej.vminspect.http.RequestParams;
+import com.purej.vminspect.http.SimpleMBeanAccessControl;
 import com.purej.vminspect.util.Utils;
 
 /**
@@ -43,52 +42,52 @@ public final class VmInspectionServlet extends HttpServlet {
   // Members that get set in the init method:
   private StatisticsCollector _collector;
   private RequestController _controller;
-  private ServletMBeanAccessControl _servletMBeanAccessControl;
+  private MBeanAccessControlFactory _mbeanAccessControlFactory;
 
   @Override
   public void init() throws ServletException {
     // Load configuration from init parameters:
     boolean mbeansReadonly = Boolean.parseBoolean(getServletConfig().getInitParameter("vminspect.mbeans.readonly"));
     boolean mbeansWriteConfirmation = Boolean.parseBoolean(getServletConfig().getInitParameter("vminspect.mbeans.writeConfirmation"));
-    String servletMBeanAccessControlClass = getServletConfig().getInitParameter("vminspect.mbeans.servletMBeanAccessControllClass");
+    String accessControlFactoryClz = getServletConfig().getInitParameter("vminspect.mbeans.accessControlFactory");
     String collectionFrequency = getServletConfig().getInitParameter("vminspect.statistics.collection.frequencyMs");
     String storageDir = getServletConfig().getInitParameter("vminspect.statistics.storage.dir");
 
     // Create the correct callback instance:
-    ServletMBeanAccessControl servletMBeanAccessControl;
-    if (servletMBeanAccessControlClass != null) {
+    MBeanAccessControlFactory accessControlFactory;
+    if (accessControlFactoryClz != null) {
       try {
-        servletMBeanAccessControl = (ServletMBeanAccessControl) Class.forName(servletMBeanAccessControlClass).newInstance();
+        accessControlFactory = (MBeanAccessControlFactory) Class.forName(accessControlFactoryClz).newInstance();
       }
       catch (Exception e) {
-        throw new ServletException("Could not load configured ServletMBeanAccessControl class '" + servletMBeanAccessControlClass + "'!");
+        throw new ServletException("Could not load configured MBeanAccessControlFactory class '" + accessControlFactoryClz + "'!");
       }
     }
     else {
-      servletMBeanAccessControl = new SimpleServletMBeanAccessControl(mbeansReadonly, mbeansWriteConfirmation);
+      accessControlFactory = new StaticMBeanAccessControlFactory(new SimpleMBeanAccessControl(mbeansReadonly, mbeansWriteConfirmation));
     }
 
     // Call the init:
-    init(servletMBeanAccessControl, collectionFrequency != null ? Integer.parseInt(collectionFrequency) : 60000, storageDir);
+    init(accessControlFactory, collectionFrequency != null ? Integer.parseInt(collectionFrequency) : 60000, storageDir);
   }
 
   /**
    * Initializes this servlet instance or does nothing if already initialized.
    * This method can be used to programmatically initialize the servlet.
    *
-   * @param servletMBeanAccessControl the MBean access control for fine-grained MBean access
+   * @param mbeanAccessControlFactory the factory to create {@link MBeanAccessControl} instances for fine-grained MBeans access control
    * @param statisticsCollectionFrequencyMs the statistics collection frequency in milliseconds (60'000 recommended)
    * @param statisticsStorageDir the optional statistics storage directory
    */
-  public void init(ServletMBeanAccessControl servletMBeanAccessControl, int statisticsCollectionFrequencyMs, String statisticsStorageDir) {
+  public void init(MBeanAccessControlFactory mbeanAccessControlFactory, int statisticsCollectionFrequencyMs, String statisticsStorageDir) {
     if (_collector == null) {
-      if (servletMBeanAccessControl == null) {
-        throw new IllegalArgumentException("ServletMBeanAccessControl is null!");
+      if (mbeanAccessControlFactory == null) {
+        throw new IllegalArgumentException("MBeanAccessControlFactory is null!");
       }
       // Get or create collector, create controller:
       _collector = StatisticsCollector.init(statisticsStorageDir, statisticsCollectionFrequencyMs, this);
       _controller = new RequestController(_collector);
-      _servletMBeanAccessControl = servletMBeanAccessControl;
+      _mbeanAccessControlFactory = mbeanAccessControlFactory;
     }
   }
 
@@ -104,38 +103,12 @@ public final class VmInspectionServlet extends HttpServlet {
     try {
       // Create the request, process it and write the response:
       HttpRequest httpRequest = createHttpRequest(request);
-      HttpResponse httpResponse = _controller.process(httpRequest, new MBeanAccessControl() {
-
-        @Override
-        public boolean isChangeAllowed(MBeanData mbean, MBeanAttribute attribute) {
-          return _servletMBeanAccessControl.isChangeAllowed(request, mbean, attribute);
-        }
-
-        @Override
-        public boolean isCallAllowed(MBeanData mbean, MBeanOperation operation) {
-          return _servletMBeanAccessControl.isCallAllowed(request, mbean, operation);
-        }
-
-        @Override
-        public boolean needsChangeConfirmation(MBeanData mbean, MBeanAttribute attribute) {
-          return _servletMBeanAccessControl.needsChangeConfirmation(request, mbean, attribute);
-        }
-
-        @Override
-        public boolean needsCallConfirmation(MBeanData mbean, MBeanOperation operation) {
-          return _servletMBeanAccessControl.needsCallConfirmation(request, mbean, operation);
-        }
-
-        @Override
-        public void attributeChanged(MBeanData mbean, MBeanAttribute attribute, Object newValue) {
-          _servletMBeanAccessControl.attributeChanged(request, mbean, attribute, newValue);
-        }
-
-        @Override
-        public void operationCalled(MBeanData mbean, MBeanOperation operation, String[] params, Object result) {
-          _servletMBeanAccessControl.operationCalled(request, mbean, operation, params, result);
-        }
-      });
+      MBeanAccessControl mbeanAccessControl = null;
+      if (httpRequest.getParameter(RequestParams.MBEAN_NAME) != null) {
+        // Only create an instance of the MBeanAccessControl if a single MBean is targeted:
+        mbeanAccessControl = _mbeanAccessControlFactory.create(request);
+      }
+      HttpResponse httpResponse = _controller.process(httpRequest, mbeanAccessControl);
       writeHttpResponse(httpResponse, request.getRequestURI(), response);
     }
     catch (Exception e) {
