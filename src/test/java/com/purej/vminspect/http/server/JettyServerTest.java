@@ -9,26 +9,25 @@ import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import com.purej.vminspect.data.MySample;
-import com.purej.vminspect.http.servlet.AuthorizationCallback.SimpleAuthorizationCallback;
 import com.purej.vminspect.http.servlet.VmInspectionServlet;
 
 /**
- * Starts the {@link VmInspectionServlet} in a embedded jetty server.
+ * Starts the VmInspectServlet in a embedded jetty server for testing with a web-browser.
  *
  * @author Stefan Mueller
  */
-public final class JettyServerConfigurable {
+public final class JettyServerTest {
 
-  private JettyServerConfigurable() {
+  private JettyServerTest() {
   }
 
   /**
    * The java main method.
-   * Usage: JettyServerConfigurableMain port frequencyMs
    */
   public static void main(String[] args) throws Exception {
-    if (args.length != 2 || args.length != 3) {
-      System.out.println("Usage: " + JettyServerConfigurable.class.getName() + " port frequencyMs ");
+    if (args.length != 2 && args.length != 3) {
+      System.out.println("Usage: " + JettyServerTest.class.getName() + " port frequencyMs [statisticsStorageDir (optional)]");
+      System.exit(-1);
     }
 
     SelectChannelConnector connector = new SelectChannelConnector();
@@ -37,9 +36,12 @@ public final class JettyServerConfigurable {
     Server server = new Server();
     server.setConnectors(new Connector[] {connector});
 
-    VmInspectionServlet servlet = new VmInspectionServlet();
-    servlet.init(new SimpleAuthorizationCallback(true), false, Integer.parseInt(args[1]), args.length > 2 ? args[2] : null);
-    ServletHolder servletHolder = new ServletHolder(servlet);
+    ServletHolder servletHolder = new ServletHolder(VmInspectionServlet.class);
+    servletHolder.setInitParameter("vminspect.mbeans.readonly", "false");
+    servletHolder.setInitParameter("vminspect.mbeans.writeConfirmation", "true");
+    servletHolder.setInitParameter("vminspect.mbeans.servletMBeanAccessControllClass", null);
+    servletHolder.setInitParameter("vminspect.statistics.collection.frequencyMs", args[1]);
+    servletHolder.setInitParameter("vminspect.statistics.storage.dir", args.length > 2 ? args[2] : null);
     ServletContextHandler handler = new ServletContextHandler();
     handler.setContextPath("/inspect");
     handler.addServlet(servletHolder, "/*");
@@ -51,5 +53,7 @@ public final class JettyServerConfigurable {
     ManagementFactory.getPlatformMBeanServer().registerMBean(new MySample(true), new ObjectName("purej.vminspect:type=my Type,id=12"));
     ManagementFactory.getPlatformMBeanServer().registerMBean(new MySample(true), new ObjectName("purej.vminspect:type=myType,spaces=a b c"));
     ManagementFactory.getPlatformMBeanServer().registerMBean(new MySample(true), new ObjectName("purej.vminspect:type=myType,sonderzeichen='äöü';"));
+
+    System.out.println("Jetty-Server started and VmInspection deployed, check-out http://localhost:" + args[0] + "/inspect");
   }
 }

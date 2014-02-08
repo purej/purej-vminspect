@@ -8,6 +8,7 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import junit.framework.Assert;
 import org.junit.Test;
+import com.purej.vminspect.data.MBeanOperation.Impact;
 
 /**
  * Tests some MBeans functionality.
@@ -157,7 +158,7 @@ public class MBeansTest {
     MBeanData mbean = MBeanUtils.getMBean(0, objectName);
     Assert.assertNotNull(mbean);
     MBeanOperation operation = getOperation(mbean, operationName, params.length);
-    Assert.assertEquals("Unknown", operation.getImpact());
+    Assert.assertEquals(Impact.Unknown, operation.getImpact());
     if (operationName.indexOf("Void") < 0) {
       Assert.assertNotNull(operation.getReturnType());
     }

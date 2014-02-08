@@ -15,10 +15,8 @@ public class VmInspectionServerTest {
   /**
    * Starts the {@link VmInspectionServer} on port 8080 for testing with a browser.
    */
-  @SuppressWarnings("unused")
   public static void main(String[] args) throws Exception {
-    //new VmInspectionServer(8080);
-    new VmInspectionServer(false, true, 60000, null, 8080);
+    VmInspectionServer server = new VmInspectionServer(false, true, 60000, null, 8080);
 
     ManagementFactory.getPlatformMBeanServer().registerMBean(new MySample(false), new ObjectName("purej.vminspect", "id", "1"));
     ManagementFactory.getPlatformMBeanServer().registerMBean(new MySample(true), new ObjectName("purej.vminspect", "id", "2"));
@@ -26,7 +24,9 @@ public class VmInspectionServerTest {
     ManagementFactory.getPlatformMBeanServer().registerMBean(new MySample(true), new ObjectName("purej.vminspect:type=myType,spaces=a b c"));
     ManagementFactory.getPlatformMBeanServer().registerMBean(new MySample(true), new ObjectName("purej.vminspect:type=myType,sonderzeichen='äöü';"));
 
+    System.out.println("VmInspectionServer started, check-out http://localhost:8080/inspect");
     Thread.sleep(Integer.MAX_VALUE);
+    server.shutdown();
   }
 
   /**
