@@ -1,3 +1,4 @@
+// Copyright (c), 2013, adopus consulting GmbH Switzerland, all rights reserved.
 package com.purej.vminspect.http.server;
 
 import java.io.BufferedReader;
@@ -12,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.purej.vminspect.http.HttpRequest;
 import com.purej.vminspect.http.HttpResponse;
+import com.purej.vminspect.http.MBeanAccessControl;
 import com.purej.vminspect.http.RequestController;
 import com.purej.vminspect.util.Utils;
 
@@ -29,16 +31,16 @@ final class RequestExecutor implements Runnable {
   private static final Logger LOGGER = LoggerFactory.getLogger(VmInspectionServer.class);
   private final Socket _socket;
   private final RequestController _controller;
-  private final boolean _mbeansReadonly;
+  private final MBeanAccessControl _mBeanAccessControl;
 
   /**
    * Creates a new instance of this class that executes the sockets request.
    */
-  RequestExecutor(Socket socket, RequestController controller, boolean mbeansReadonly) {
+  RequestExecutor(Socket socket, RequestController controller, MBeanAccessControl mBeanAccessControl) {
     super();
     _socket = socket;
     _controller = controller;
-    _mbeansReadonly = mbeansReadonly;
+    _mBeanAccessControl = mBeanAccessControl;
   }
 
   /**
@@ -59,7 +61,7 @@ final class RequestExecutor implements Runnable {
           else {
             LOGGER.debug("HTTP GET request from {} with parameters {}", _socket.getRemoteSocketAddress(), request.getParameters());
             try {
-              HttpResponse httpResponse = _controller.process(request, _mbeansReadonly);
+              HttpResponse httpResponse = _controller.process(request, _mBeanAccessControl);
               writeResponse(httpResponse, out);
             }
             catch (SocketException e) {

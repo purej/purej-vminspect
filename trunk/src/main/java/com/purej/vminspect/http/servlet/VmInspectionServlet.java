@@ -11,11 +11,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.purej.vminspect.data.MBeanAttribute;
+import com.purej.vminspect.data.MBeanData;
+import com.purej.vminspect.data.MBeanOperation;
 import com.purej.vminspect.data.statistics.StatisticsCollector;
 import com.purej.vminspect.http.HttpRequest;
 import com.purej.vminspect.http.HttpResponse;
+import com.purej.vminspect.http.MBeanAccessControl;
 import com.purej.vminspect.http.RequestController;
-import com.purej.vminspect.http.servlet.AuthorizationCallback.SimpleAuthorizationCallback;
 import com.purej.vminspect.util.Utils;
 
 /**
@@ -25,6 +28,7 @@ import com.purej.vminspect.util.Utils;
  * The following servlet init parameters are supported (all optional):
  * <ul>
  * <li>vminspect.mbeans.readonly: true/false, specifies if VmInspect is allowed to edit MBean values or invoke non-info operations (default: false)</li>
+ * <li>vminspect.mbeans.writeConfirmation: true/false, specifies if a confirmation screen is displayed before edit MBean attributes or invoke MBean operations</li>
  * <li>vminspect.statistics.collection.frequencyMs: Number of milliseconds for the statistics collection timer (default: 60'000ms)</li>
  * <li>vminspect.statistics.storage.dir: Optional Path where to store the statistics files (default: no storage directory). If no storage
  * directory is configured, the statistics will be kept in-memory and thus will be lost after a VM restart.</li>
@@ -39,53 +43,52 @@ public final class VmInspectionServlet extends HttpServlet {
   // Members that get set in the init method:
   private StatisticsCollector _collector;
   private RequestController _controller;
-  private AuthorizationCallback _callback;
+  private ServletMBeanAccessControl _servletMBeanAccessControl;
 
   @Override
   public void init() throws ServletException {
     // Load configuration from init parameters:
     boolean mbeansReadonly = Boolean.parseBoolean(getServletConfig().getInitParameter("vminspect.mbeans.readonly"));
     boolean mbeansWriteConfirmation = Boolean.parseBoolean(getServletConfig().getInitParameter("vminspect.mbeans.writeConfirmation"));
-    String callbackClass = getServletConfig().getInitParameter("vminspect.mbeans.authorizationCallbackClass");
+    String servletMBeanAccessControlClass = getServletConfig().getInitParameter("vminspect.mbeans.servletMBeanAccessControllClass");
     String collectionFrequency = getServletConfig().getInitParameter("vminspect.statistics.collection.frequencyMs");
     String storageDir = getServletConfig().getInitParameter("vminspect.statistics.storage.dir");
 
     // Create the correct callback instance:
-    AuthorizationCallback callback;
-    if (callbackClass != null) {
+    ServletMBeanAccessControl servletMBeanAccessControl;
+    if (servletMBeanAccessControlClass != null) {
       try {
-        callback = (AuthorizationCallback) Class.forName(callbackClass).newInstance();
+        servletMBeanAccessControl = (ServletMBeanAccessControl) Class.forName(servletMBeanAccessControlClass).newInstance();
       }
       catch (Exception e) {
-        throw new ServletException("Could not load AuthorizationCallback class '" + callbackClass + "'!");
+        throw new ServletException("Could not load configured ServletMBeanAccessControl class '" + servletMBeanAccessControlClass + "'!");
       }
     }
     else {
-      callback = new SimpleAuthorizationCallback(mbeansReadonly);
+      servletMBeanAccessControl = new SimpleServletMBeanAccessControl(mbeansReadonly, mbeansWriteConfirmation);
     }
 
     // Call the init:
-    init(callback, mbeansWriteConfirmation, collectionFrequency != null ? Integer.parseInt(collectionFrequency) : 60000, storageDir);
+    init(servletMBeanAccessControl, collectionFrequency != null ? Integer.parseInt(collectionFrequency) : 60000, storageDir);
   }
 
   /**
    * Initializes this servlet instance or does nothing if already initialized.
    * This method can be used to programmatically initialize the servlet.
    *
-   * @param callback the authorization callback to check if write access to MBeans is allowed
-   * @param mbeansWriteConfirmation if write operations require a confirmation screen
+   * @param servletMBeanAccessControl the MBean access control for fine-grained MBean access
    * @param statisticsCollectionFrequencyMs the statistics collection frequency in milliseconds (60'000 recommended)
    * @param statisticsStorageDir the optional statistics storage directory
    */
-  public void init(AuthorizationCallback callback, boolean mbeansWriteConfirmation, int statisticsCollectionFrequencyMs, String statisticsStorageDir) {
+  public void init(ServletMBeanAccessControl servletMBeanAccessControl, int statisticsCollectionFrequencyMs, String statisticsStorageDir) {
     if (_collector == null) {
-      if (callback == null) {
-        throw new IllegalArgumentException("AuthorizationCallback is null!");
+      if (servletMBeanAccessControl == null) {
+        throw new IllegalArgumentException("ServletMBeanAccessControl is null!");
       }
       // Get or create collector, create controller:
       _collector = StatisticsCollector.init(statisticsStorageDir, statisticsCollectionFrequencyMs, this);
-      _controller = new RequestController(_collector, mbeansWriteConfirmation);
-      _callback = callback;
+      _controller = new RequestController(_collector);
+      _servletMBeanAccessControl = servletMBeanAccessControl;
     }
   }
 
@@ -97,11 +100,42 @@ public final class VmInspectionServlet extends HttpServlet {
   }
 
   @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  protected void doGet(final HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     try {
       // Create the request, process it and write the response:
       HttpRequest httpRequest = createHttpRequest(request);
-      HttpResponse httpResponse = _controller.process(httpRequest, !_callback.isMBeansWriteAllowed(request));
+      HttpResponse httpResponse = _controller.process(httpRequest, new MBeanAccessControl() {
+
+        @Override
+        public boolean isChangeAllowed(MBeanData mbean, MBeanAttribute attribute) {
+          return _servletMBeanAccessControl.isChangeAllowed(request, mbean, attribute);
+        }
+
+        @Override
+        public boolean isCallAllowed(MBeanData mbean, MBeanOperation operation) {
+          return _servletMBeanAccessControl.isCallAllowed(request, mbean, operation);
+        }
+
+        @Override
+        public boolean needsChangeConfirmation(MBeanData mbean, MBeanAttribute attribute) {
+          return _servletMBeanAccessControl.needsChangeConfirmation(request, mbean, attribute);
+        }
+
+        @Override
+        public boolean needsCallConfirmation(MBeanData mbean, MBeanOperation operation) {
+          return _servletMBeanAccessControl.needsCallConfirmation(request, mbean, operation);
+        }
+
+        @Override
+        public void attributeChanged(MBeanData mbean, MBeanAttribute attribute, Object newValue) {
+          _servletMBeanAccessControl.attributeChanged(request, mbean, attribute, newValue);
+        }
+
+        @Override
+        public void operationCalled(MBeanData mbean, MBeanOperation operation, String[] params, Object result) {
+          _servletMBeanAccessControl.operationCalled(request, mbean, operation, params, result);
+        }
+      });
       writeHttpResponse(httpResponse, request.getRequestURI(), response);
     }
     catch (Exception e) {
