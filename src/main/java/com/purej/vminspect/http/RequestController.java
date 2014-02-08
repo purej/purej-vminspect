@@ -65,7 +65,7 @@ public class RequestController {
    * Processes the given request and returns the in-memory response.
    *
    * @param httpRequest the request to be processed
-   * @param mbeanAccessControl handles fine-grained access control for MBeans
+   * @param mbeanAccessControl handles fine-grained access control for MBeans, mandatory only for each requests concerning a single MBean
    * @return the in-memory response
    * @throws IOException if an exception occurred
    */
