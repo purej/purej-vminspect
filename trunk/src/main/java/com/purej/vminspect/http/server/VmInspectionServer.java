@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import com.purej.vminspect.data.statistics.StatisticsCollector;
 import com.purej.vminspect.http.MBeanAccessControl;
 import com.purej.vminspect.http.RequestController;
-import com.purej.vminspect.http.SimpleMBeanAccessControl;
+import com.purej.vminspect.http.DefaultMBeanAccessControl;
 
 /**
  * This standalone server allows PureJ VM Inspection to be used without a servlet-container or other type of
@@ -59,7 +59,7 @@ public final class VmInspectionServer {
    */
   public VmInspectionServer(boolean mbeansReadonly, boolean mbeansWriteConfirmation, int statisticsCollectionFrequencyMs,
       String statisticsStorageDir, int port) throws IOException {
-    this(new SimpleMBeanAccessControl(mbeansReadonly, mbeansWriteConfirmation), statisticsCollectionFrequencyMs, statisticsStorageDir, port);
+    this(new DefaultMBeanAccessControl(mbeansReadonly, mbeansWriteConfirmation), statisticsCollectionFrequencyMs, statisticsStorageDir, port);
   }
 
   /**

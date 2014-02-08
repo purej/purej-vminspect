@@ -7,20 +7,20 @@ import com.purej.vminspect.data.MBeanOperation;
 import com.purej.vminspect.data.MBeanOperation.Impact;
 
 /**
- * An implementation of the {@link MBeanAccessControl} interface that
- * decides based on a read-only mode if change-/call-access is granted, independent
- * of the MBean attribute/operation.
+ * A default implementation of the {@link MBeanAccessControl} interface that
+ * decides based on two static booleans if change-/call-access is granted and write
+ * confirmation is required, independent of the MBean attribute/operation.
  *
  * @author Stefan Mueller
  */
-public class SimpleMBeanAccessControl implements MBeanAccessControl {
+public class DefaultMBeanAccessControl implements MBeanAccessControl {
   private final boolean _readOnly;
   private final boolean _needsWriteConfirmation;
 
   /**
    * Creates a new instance of this class.
    */
-  public SimpleMBeanAccessControl(boolean readOnly, boolean needsWriteConfirmation) {
+  public DefaultMBeanAccessControl(boolean readOnly, boolean needsWriteConfirmation) {
     _readOnly = readOnly;
     _needsWriteConfirmation = needsWriteConfirmation;
   }

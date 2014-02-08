@@ -17,7 +17,7 @@ import com.purej.vminspect.http.HttpResponse;
 import com.purej.vminspect.http.MBeanAccessControl;
 import com.purej.vminspect.http.RequestController;
 import com.purej.vminspect.http.RequestParams;
-import com.purej.vminspect.http.SimpleMBeanAccessControl;
+import com.purej.vminspect.http.DefaultMBeanAccessControl;
 import com.purej.vminspect.util.Utils;
 
 /**
@@ -28,6 +28,7 @@ import com.purej.vminspect.util.Utils;
  * <ul>
  * <li>vminspect.mbeans.readonly: true/false, specifies if VmInspect is allowed to edit MBean values or invoke non-info operations (default: false)</li>
  * <li>vminspect.mbeans.writeConfirmation: true/false, specifies if a confirmation screen is displayed before edit MBean attributes or invoke MBean operations</li>
+ * <li>vminspect.mbeans.accessControlFactory: fully qualified class name of an implementation of the {@link MBeanAccessControlFactory} interface</li>
  * <li>vminspect.statistics.collection.frequencyMs: Number of milliseconds for the statistics collection timer (default: 60'000ms)</li>
  * <li>vminspect.statistics.storage.dir: Optional Path where to store the statistics files (default: no storage directory). If no storage
  * directory is configured, the statistics will be kept in-memory and thus will be lost after a VM restart.</li>
@@ -64,7 +65,7 @@ public final class VmInspectionServlet extends HttpServlet {
       }
     }
     else {
-      accessControlFactory = new StaticMBeanAccessControlFactory(new SimpleMBeanAccessControl(mbeansReadonly, mbeansWriteConfirmation));
+      accessControlFactory = new StaticMBeanAccessControlFactory(new DefaultMBeanAccessControl(mbeansReadonly, mbeansWriteConfirmation));
     }
 
     // Call the init:
