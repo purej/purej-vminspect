@@ -32,7 +32,7 @@ public class MBeansInvokeAttributeView extends AbstractMBeansView {
     // Write the mbean title:
     writeln("<h3>" + img("icons/beans-24.png", "MBean") + "&nbsp;MBean: <i>" + htmlEncode(_mbean.getName().getObjectNameString()) + "</i></h3>");
     if (_confirm.isNow()) {
-      writeln("<div id='warnMsg' style='font-size:15pt;font-weight:bold;'>Change Attribute Confirmation</div><br/>");
+      writeln("<div id='warnMsg' style='font-size:12pt;font-weight:bold;padding:10px;'>Please confirm the MBeans attribute change!</div><br/>");
     }
 
     // Write the form with a table:

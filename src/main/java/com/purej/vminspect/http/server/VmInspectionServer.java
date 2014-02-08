@@ -10,7 +10,9 @@ import java.util.concurrent.ThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.purej.vminspect.data.statistics.StatisticsCollector;
+import com.purej.vminspect.http.MBeanAccessControl;
 import com.purej.vminspect.http.RequestController;
+import com.purej.vminspect.http.SimpleMBeanAccessControl;
 
 /**
  * This standalone server allows PureJ VM Inspection to be used without a servlet-container or other type of
@@ -23,13 +25,8 @@ import com.purej.vminspect.http.RequestController;
  * Note: This server is very basic and maybe NOT secure enough, if security is required it is recommended to use
  * the VmInspectionServlet with one of the professional servlet-containers (Jetty, Tomcat, etc.)
  * <p/>
- * Beside the HTTP server socket, some more attributes can be configured when creating an instance of this class:
- * <ul>
- * <li>mbeansReadonly: specifies if VmInspect is allowed to edit MBean values or invoke non-info operations (default: false)</li>
- * <li>statisticsCollectionFrequencyMs: Number of milliseconds for the statistics collection timer (default: 60'000ms)</li>
- * <li>statisticsStorageDir: Optional Path where to store the statistics files (default: no storage directory). If no storage
- * directory is configured, the statistics will be kept in-memory and thus will be lost after a VM restart.</li>
- * </ul>
+ * Beside the HTTP server socket, some more attributes can be configured when creating an instance of this class.
+ * See the javadoc of the different constructors for details.
  *
  * @author Stefan Mueller
  */
@@ -54,14 +51,28 @@ public final class VmInspectionServer {
    * Creates a new instance of this very basic HTTP server. See the class javadoc for further argument details.
    *
    * @param mbeansReadonly if MBeans should be accessed read-only
-   * @param mbeansWriteConfirmation if write operations require a confirmation screen
+   * @param mbeansWriteConfirmation if MBeans write operations require a confirmation screen
    * @param statisticsCollectionFrequencyMs the statistics collection frequency in milliseconds (60'000 recommended)
    * @param statisticsStorageDir the optional statistics storage directory
    * @param port the port where the server-socket listens for incoming HTTP requests
    * @throws IOException if the server socket could not be bound to the given port
    */
-  public VmInspectionServer(final boolean mbeansReadonly, boolean mbeansWriteConfirmation, int statisticsCollectionFrequencyMs,
+  public VmInspectionServer(boolean mbeansReadonly, boolean mbeansWriteConfirmation, int statisticsCollectionFrequencyMs,
       String statisticsStorageDir, int port) throws IOException {
+    this(new SimpleMBeanAccessControl(mbeansReadonly, mbeansWriteConfirmation), statisticsCollectionFrequencyMs, statisticsStorageDir, port);
+  }
+
+  /**
+   * Creates a new instance of this very basic HTTP server. See the class javadoc for further argument details.
+   *
+   * @param mBeanAccessControl defines fine-grained access control to MBeans
+   * @param statisticsCollectionFrequencyMs the statistics collection frequency in milliseconds (60'000 recommended)
+   * @param statisticsStorageDir the optional statistics storage directory
+   * @param port the port where the server-socket listens for incoming HTTP requests
+   * @throws IOException if the server socket could not be bound to the given port
+   */
+  public VmInspectionServer(final MBeanAccessControl mBeanAccessControl, int statisticsCollectionFrequencyMs, String statisticsStorageDir, int port)
+      throws IOException {
     // Create the executor to handle request:
     _executor = Executors.newFixedThreadPool(3, new ThreadFactory() {
       @Override
@@ -80,7 +91,7 @@ public final class VmInspectionServer {
         while (!_serverSocket.isClosed()) {
           try {
             Socket socket = _serverSocket.accept();
-            _executor.execute(new RequestExecutor(socket, _controller, mbeansReadonly));
+            _executor.execute(new RequestExecutor(socket, _controller, mBeanAccessControl));
           }
           catch (Exception e) {
             if (_serverSocket.isClosed()) {
@@ -95,7 +106,7 @@ public final class VmInspectionServer {
 
     // Get or create collector, create controller and startup:
     _collector = StatisticsCollector.init(statisticsStorageDir, statisticsCollectionFrequencyMs, this);
-    _controller = new RequestController(_collector, mbeansWriteConfirmation);
+    _controller = new RequestController(_collector);
     _listener.start();
   }
 

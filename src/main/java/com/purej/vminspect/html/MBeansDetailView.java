@@ -6,6 +6,7 @@ import com.purej.vminspect.data.MBeanAttribute;
 import com.purej.vminspect.data.MBeanData;
 import com.purej.vminspect.data.MBeanOperation;
 import com.purej.vminspect.data.MBeanParameter;
+import com.purej.vminspect.http.MBeanAccessControl;
 
 /**
  * Displays details about a single MBean.
@@ -16,17 +17,17 @@ public class MBeansDetailView extends AbstractMBeansView {
   private final MBeanData _mbean;
   private final String _okMessage;
   private final String _warnMessage;
-  private final boolean _readonly;
+  private final MBeanAccessControl _mbeanAccessControl;
 
   /**
    * Creates a new instance of this view.
    */
-  public MBeansDetailView(StringBuilder output, MBeanData mbean, String okMessage, String warnMessage, boolean readonly) {
+  public MBeansDetailView(StringBuilder output, MBeanData mbean, String okMessage, String warnMessage, MBeanAccessControl mbeanAccessControl) {
     super(output);
     _mbean = mbean;
     _okMessage = okMessage;
     _warnMessage = warnMessage;
-    _readonly = readonly;
+    _mbeanAccessControl = mbeanAccessControl;
   }
 
   @Override
@@ -54,12 +55,12 @@ public class MBeansDetailView extends AbstractMBeansView {
       table.addValue(htmlEncode(attribute.getType()));
       table.addValue(htmlEncode(attribute.getDescription()));
       if (attribute.isWritable()) {
-        if (_readonly) {
-          table.addValueCenter(img("icons/lock-grey-16.png", "No Permission"));
-        }
-        else {
+        if (_mbeanAccessControl.isChangeAllowed(_mbean, attribute)) {
           String atrIdxParam = "mbAtrName=" + attribute.getName();
           table.addValueCenter(lnk(getMBeanNameParams(atrIdxParam), img("icons/pencil-16.png", "Edit")));
+        }
+        else {
+          table.addValueCenter(img("icons/lock-grey-16.png", "No Permission"));
         }
       }
       else {
@@ -76,7 +77,7 @@ public class MBeansDetailView extends AbstractMBeansView {
       MBeanOperation operation = _mbean.getOperations()[i];
       table.nextRow();
       table.addValue(htmlEncode(operation.getName()));
-      table.addValue(operation.getImpact());
+      table.addValue(operation.getImpact().name());
       table.addValue(htmlEncode(operation.getReturnType()));
       write("<td>");
       for (int j = 0; j < operation.getParameters().length; j++) {
@@ -89,12 +90,12 @@ public class MBeansDetailView extends AbstractMBeansView {
       }
       write("</td>");
       table.addValue(htmlEncode(operation.getDescription()));
-      if (_readonly && !operation.getImpact().equals("Info")) {
-        table.addValueCenter(img("icons/lock-grey-16.png", "No Permission"));
-      }
-      else {
+      if (_mbeanAccessControl.isCallAllowed(_mbean, operation)) {
         String opIdxParam = "mbOpIdx=" + i;
         table.addValueCenter(lnk(getMBeanNameParams(opIdxParam), img("icons/play-green-16.png", "Invoke")));
+      }
+      else {
+        table.addValueCenter(img("icons/lock-grey-16.png", "No Permission"));
       }
     }
     table.endTable();

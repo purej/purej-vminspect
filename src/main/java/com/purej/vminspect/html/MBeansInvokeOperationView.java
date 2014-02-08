@@ -36,7 +36,7 @@ public class MBeansInvokeOperationView extends AbstractMBeansView {
     // Write the mbean title:
     writeln("<h3>" + img("icons/beans-24.png", "MBean") + "&nbsp;MBean: <i>" + htmlEncode(_mbean.getName().getObjectNameString()) + "</i></h3>");
     if (_confirm.isNow()) {
-      writeln("<div id='warnMsg' style='font-size:15pt;font-weight:bold;'>Invoke Operation Confirmation</div><br/>");
+      writeln("<div id='warnMsg' style='font-size:12pt;font-weight:bold;padding:10px;'>Please confirm the MBeans operation invocation!</div><br/>");
     }
 
     // Write the form with a table:
@@ -46,7 +46,7 @@ public class MBeansInvokeOperationView extends AbstractMBeansView {
     table.addValue(img("icons/flash-16.png", "MBean Operation") + "<b>&nbsp;Operation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>");
     table.addValue("<b>" + htmlEncode(_operation.getName()) + "</b>");
     table.nextRow("Description", htmlEncode(_operation.getDescription()));
-    table.nextRow("Impact", htmlEncode(_operation.getImpact()));
+    table.nextRow("Impact", htmlEncode(_operation.getImpact().name()));
     table.nextRow("Return Type", htmlEncode(_operation.getReturnType()));
     for (int i = 0; i < _operation.getParameters().length; i++) {
       table.nextRow("<br/>", "");
