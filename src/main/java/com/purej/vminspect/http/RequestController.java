@@ -184,6 +184,7 @@ public class RequestController {
 
       // Invoke the attribute:
       Object result = MBeanUtils.invokeAttribute(mbean.getName(), attribute, newValue);
+      mbeanAccessControl.attributeChanged(mbean, attribute, result);
 
       // Reload state & show MBean page:
       MBeanData reloaded = MBeanUtils.getMBean(mbean.getName());
@@ -228,6 +229,7 @@ public class RequestController {
 
       // Invoke the operation:
       Object result = MBeanUtils.invokeOperation(mbean.getName(), operation, params);
+      mbeanAccessControl.operationCalled(mbean, operation, params, result);
 
       // Reload state & show MBean page:
       MBeanData reloaded = MBeanUtils.getMBean(mbean.getName());
