@@ -1,3 +1,4 @@
+// Copyright (c), 2013, adopus consulting GmbH Switzerland, all rights reserved.
 package com.purej.vminspect.http.server;
 
 import java.lang.management.ManagementFactory;

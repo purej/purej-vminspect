@@ -36,12 +36,19 @@ public final class JettyServerTest {
     Server server = new Server();
     server.setConnectors(new Connector[] {connector});
 
+    // Init 1: Direct init
+    //VmInspectionServlet servlet = new VmInspectionServlet();
+    //servlet.init(new CustomMBeanAccessControlFactory(), Integer.parseInt(args[1]), args.length > 2 ? args[2] : null);
+    //ServletHolder servletHolder = new ServletHolder(servlet);
+
+    // Init 2: servlet parameters
     ServletHolder servletHolder = new ServletHolder(VmInspectionServlet.class);
     servletHolder.setInitParameter("vminspect.mbeans.readonly", "false");
     servletHolder.setInitParameter("vminspect.mbeans.writeConfirmation", "true");
-    servletHolder.setInitParameter("vminspect.mbeans.servletMBeanAccessControllClass", null);
+    //servletHolder.setInitParameter("vminspect.mbeans.accessControlFactory", CustomMBeanAccessControlFactory.class.getName());
     servletHolder.setInitParameter("vminspect.statistics.collection.frequencyMs", args[1]);
     servletHolder.setInitParameter("vminspect.statistics.storage.dir", args.length > 2 ? args[2] : null);
+
     ServletContextHandler handler = new ServletContextHandler();
     handler.setContextPath("/inspect");
     handler.addServlet(servletHolder, "/*");
