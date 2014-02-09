@@ -54,7 +54,7 @@ public final class VmInspectionServlet extends HttpServlet {
     String collectionFrequency = getServletConfig().getInitParameter("vminspect.statistics.collection.frequencyMs");
     String storageDir = getServletConfig().getInitParameter("vminspect.statistics.storage.dir");
 
-    // Create the correct callback instance:
+    // Create the correct MBeanAccessControlFactory instance (custom or default):
     MBeanAccessControlFactory accessControlFactory;
     if (accessControlFactoryClz != null) {
       try {
@@ -65,7 +65,14 @@ public final class VmInspectionServlet extends HttpServlet {
       }
     }
     else {
-      accessControlFactory = new StaticMBeanAccessControlFactory(new DefaultMBeanAccessControl(mbeansReadonly, mbeansWriteConfirmation));
+      // Create a default static MBeanAccessControlFactory instance using the boolean attributes:
+      final MBeanAccessControl accessControl = new DefaultMBeanAccessControl(mbeansReadonly, mbeansWriteConfirmation);
+      accessControlFactory = new MBeanAccessControlFactory() {
+        @Override
+        public MBeanAccessControl create(HttpServletRequest request) {
+          return accessControl;
+        }
+      };
     }
 
     // Call the init:
