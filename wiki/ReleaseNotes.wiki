@@ -5,10 +5,14 @@ https://purej-vminspect.googlecode.com/svn/wiki/pics/purej-logo-48.png
 </p>
 
 
-===1.2 - (20.01.2014)===
+===1.2.1 - (09.02.2014)===
+  * New MBeanAccessControl interfaces for fine-grained control of MBean access
+  * New MBeanAccessControlFactory to create custom MBeanAccessControl for each HttpServletRequest
+  * Little optimizations of MBean confirm messages
+
+===1.2.0 - (20.01.2014)===
   * MBean write confirmation screen can be configured (default is no confirmation screen to be displayed)
   * Better replace for apos (&#39;) as of browser compatibility issues
-
 
 ===1.1 - (04.01.2014)===
 Changes impacting users:
