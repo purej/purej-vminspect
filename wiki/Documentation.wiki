@@ -72,11 +72,13 @@ VM Inspection supports a few configuration parameters. All of them provide a def
 || *Servlet Init Parameter* || *Description* || *Default* ||
 ||vminspect.mbeans.readonly||true/false, specifies if MBeans should only be accessed read-only||false||
 ||vminspect.mbeans.writeConfirmation||true/false, specifies if MBeans write operations require a confirmation screen||false||
-||vminspect.mbeans.accessControlFactory||class name of an implementation of the MBeanAccessControlFactory interface||null||
+||vminspect.mbeans.accessControlFactory||optional full class name of an MBeanAccessControlFactory interface implementation||null||
 ||vminspect.statistics.collection.frequencyMs||Number of milliseconds for the statistics collection timer||60000||
 ||vminspect.statistics.storage.dir||Optional path where to store the statistics files or null if no storage required||null||
 
-*Note*: If no statistics storage-path is specified, the statistics will be kept only in memory and thus will be lost after a VM restart!
+*Note*: A custom MBeanAccessControlFactory might be used if fine-grained control of MBean access is required.
+
+*Note*: If no statistics storage-path is specified, the statistics will be kept only in memory and thus will be lost after a VM restart.
 
 *Example configuration for web-apps*
 {{{
