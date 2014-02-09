@@ -1,4 +1,4 @@
-===1.2.1 - (xxx)===
+===1.2.1 - (09.02.2014)===
   * New MBeanAccessControl interfaces for fine-grained control of MBean access
   * New MBeanAccessControlFactory to create custom MBeanAccessControl for each HttpServletRequest
   * Little optimizations of MBean confirm messages
