@@ -29,12 +29,6 @@ Maven users just need to add the following dependency, it will download the requ
 
 ==Older stable Versions==
 
-*Version 1.2 (20.01.2014)*
-|| *File* || *Size* || *Summary* ||
-||[https://purej-vminspect.googlecode.com/svn/wiki/downloads/1.2/purej-vminspect-1.2.jar purej-vminspect-1.2.jar]||148kb||Binary||
-||[https://purej-vminspect.googlecode.com/svn/wiki/downloads/1.2/purej-vminspect-1.2-sources.jar purej-vminspect-1.2-sources.jar]||106kb||Sources||
-||[https://purej-vminspect.googlecode.com/svn/wiki/downloads/1.2/purej-vminspect-1.2-javadoc.jar purej-vminspect-1.2-javadoc.jar]||296kb||Javadoc||
-
 *Version 1.1 (04.01.2014)*
 || *File* || *Size* || *Summary* ||
 ||[https://purej-vminspect.googlecode.com/svn/wiki/downloads/1.1/purej-vminspect-1.1.jar purej-vminspect-1.1.jar]||145kb||Binary||
