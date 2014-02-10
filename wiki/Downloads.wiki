@@ -9,7 +9,7 @@ Maven users just need to add the following dependency, it will download the requ
   <dependency>
     <groupId>com.purej</groupId>
     <artifactId>purej-vminspect</artifactId>
-    <version>1.2.1</version>
+    <version>1.2.2</version>
   </dependency>
 }}}
 
