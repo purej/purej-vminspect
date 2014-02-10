@@ -138,10 +138,11 @@ public final class VmInspectionServlet extends HttpServlet {
     }
 
     // Add all cookies:
-    for (Cookie cookie : req.getCookies()) {
-      request.getCookies().put(cookie.getName(), Utils.urlDecode(cookie.getValue()));
+    if (req.getCookies() != null) {
+      for (Cookie cookie : req.getCookies()) {
+        request.getCookies().put(cookie.getName(), Utils.urlDecode(cookie.getValue()));
+      }
     }
-
     return request;
   }
 
