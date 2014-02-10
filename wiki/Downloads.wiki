@@ -20,11 +20,11 @@ Maven users just need to add the following dependency, it will download the requ
 
 ==Newest stable version==
 
-*Version 1.2.1 (09.02.2014)*
+*Version 1.2.2 (10.02.2014)*
 || *File* || *Size* || *Summary* ||
-||[https://purej-vminspect.googlecode.com/svn/wiki/downloads/1.2.1/purej-vminspect-1.2.1.jar purej-vminspect-1.2.1.jar]||151kb||Binary||
-||[https://purej-vminspect.googlecode.com/svn/wiki/downloads/1.2.1/purej-vminspect-1.2.1-sources.jar purej-vminspect-1.2.1-sources.jar]||108kb||Sources||
-||[https://purej-vminspect.googlecode.com/svn/wiki/downloads/1.2.1/purej-vminspect-1.2.1-javadoc.jar purej-vminspect-1.2.1-javadoc.jar]||309kb||Javadoc||
+||[https://purej-vminspect.googlecode.com/svn/wiki/downloads/1.2.2/purej-vminspect-1.2.2.jar purej-vminspect-1.2.2.jar]||151kb||Binary||
+||[https://purej-vminspect.googlecode.com/svn/wiki/downloads/1.2.2/purej-vminspect-1.2.2-sources.jar purej-vminspect-1.2.2-sources.jar]||108kb||Sources||
+||[https://purej-vminspect.googlecode.com/svn/wiki/downloads/1.2.2/purej-vminspect-1.2.2-javadoc.jar purej-vminspect-1.2.2-javadoc.jar]||309kb||Javadoc||
 
 
 ==Older stable Versions==
