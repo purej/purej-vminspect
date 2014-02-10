@@ -7,7 +7,7 @@ https://purej-vminspect.googlecode.com/svn/wiki/pics/purej-logo-48.png
 
 ===1.2.2 - (10.02.2014)===
   * New MBeanAccessControl interfaces for fine-grained control of MBean access
-  * New MBeanAccessControlFactory to create custom MBeanAccessControl for each HttpServletRequest
+  * New MBeanAccessControlFactory to create custom MBeanAccessControl for each !HttpServletRequest
   * Little optimizations of MBean confirm messages
   * Bugfix: Prevent !NullpointerException if servlet-container returns null as cookie list
 
