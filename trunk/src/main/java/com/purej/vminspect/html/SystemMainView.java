@@ -71,7 +71,7 @@ public final class SystemMainView extends AbstractHtmlView {
     table.nextRow("VM System Properties", toShowLinkWithHiddenDiv("sProps", _sysData.getRtSystemProperties()));
     String processCpuPct = _sysData.getProcessCpuLoadPct() < 0 ? "n/a" : formatPct(_sysData.getProcessCpuLoadPct());
     String systemCpuPct = _sysData.getSystemCpuLoadPct() < 0 ? "n/a" : formatPct(_sysData.getSystemCpuLoadPct());
-    table.nextRow("VM CPU Load", processCpuPct + ", Total CPU Time: " + formatNumber(_sysData.getProcessCpuTimeMillis()) + "ms");
+    table.nextRow("VM CPU Load", processCpuPct + ", Total CPU Time: " + formatNumber(_sysData.getProcessCpuTimeMillis() / 1000) + "s");
     table.nextRow("System CPU Load", systemCpuPct);
     table.endTable();
     writeln("<br/>");
@@ -81,7 +81,7 @@ public final class SystemMainView extends AbstractHtmlView {
     writeln("<h3>" + img("icons/garbage-24.png", "Garbage Collector") + "&nbsp;Garbage Collector</h3>");
     CandyHtmlTable table = new CandyHtmlTable("Garbage Collector", "Name", "Value");
     table.nextRow("Number of Collections", formatNumber(_sysData.getGcCollectionCount()));
-    table.nextRow("Total Collection Time", formatNumber(_sysData.getGcCollectionTimeMillis()) + "ms");
+    table.nextRow("Total Collection Time", formatNumber(_sysData.getGcCollectionTimeMillis() / 1000) + "s");
     table.endTable();
     writeln("<br/>");
   }
