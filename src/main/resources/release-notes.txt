@@ -1,3 +1,6 @@
+===1.2.3 - (xxx)===
+  * MBean sorted by additional key/values if both domain-name and types are equal
+
 ===1.2.2 - (10.02.2014)===
   * New MBeanAccessControl interfaces for fine-grained control of MBean access
   * New MBeanAccessControlFactory to create custom MBeanAccessControl for each !HttpServletRequest

@@ -13,6 +13,7 @@ public final class MBeanNameComparator implements Comparator<MBeanName> {
   @Override
   public int compare(MBeanName o1, MBeanName o2) {
     int result = Utils.compareTo(o1.getDomain(), o2.getDomain());
-    return result == 0 ? Utils.compareTo(o1.getType(), o2.getType()) : result;
+    result = result == 0 ? Utils.compareTo(o1.getType(), o2.getType()) : result;
+    return result == 0 ? Utils.compareTo(o1.getOtherKeyValues(), o2.getOtherKeyValues()) : result;
   }
 }
