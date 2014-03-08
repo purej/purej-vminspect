@@ -26,7 +26,9 @@ import com.purej.vminspect.html.StatisticsMainView;
 import com.purej.vminspect.html.SystemMainView;
 import com.purej.vminspect.html.ThreadsDumpView;
 import com.purej.vminspect.html.ThreadsMainView;
+import com.purej.vminspect.util.Message;
 import com.purej.vminspect.util.Utils;
+import com.purej.vminspect.util.Message.MessageType;
 
 /**
  * This is the controller that dispatches each request depending on the request-parameters to the correct view.
@@ -161,7 +163,7 @@ public class RequestController {
       }
       else {
         // Show MBean page:
-        return new MBeansDetailView(response.getOutput(), mbean, null, null, mbeanAccessControl);
+        return new MBeansDetailView(response.getOutput(), mbean, null, mbeanAccessControl);
       }
     }
     else {
@@ -182,15 +184,23 @@ public class RequestController {
         throw new UnsupportedOperationException("Not allowed to edit the attribute according to MBeanAccessControl!");
       }
 
-      // Invoke the attribute:
-      Object result = MBeanUtils.invokeAttribute(mbean.getName(), attribute, newValue);
-      mbeanAccessControl.attributeChanged(mbean, attribute, result);
+      Message msg;
+      MBeanData reloaded = mbean;
+      try {
+        // Invoke the attribute:
+        Object result = MBeanUtils.invokeAttribute(mbean.getName(), attribute, newValue);
+        mbeanAccessControl.attributeChanged(mbean, attribute, result);
 
-      // Reload state & show MBean page:
-      MBeanData reloaded = MBeanUtils.getMBean(mbean.getName());
-      String okMsg = "Attribute <b>" + attribute.getName() + "</b> successfully set to value <b>"
-          + Utils.htmlEncode(result != null ? result.toString() : "null") + "</b>.";
-      return new MBeansDetailView(response.getOutput(), reloaded, okMsg, null, mbeanAccessControl);
+        // Reload state & show MBean page:
+        reloaded = MBeanUtils.getMBean(mbean.getName());
+        msg = new Message("Attribute <b>" + attribute.getName() + "</b> successfully set to value <b>"
+            + Utils.htmlEncode(result != null ? result.toString() : "null") + "</b>.", MessageType.OK);
+      }
+      catch (Exception e) {
+        mbeanAccessControl.attributeChangeFailed(mbean, attribute, e);
+        msg = new Message(Utils.getHtmlExceptionInfo(e), MessageType.ERROR);
+      }
+      return new MBeansDetailView(response.getOutput(), reloaded, msg, mbeanAccessControl);
     }
     else if (request.getParameter(RequestParams.MBEAN_ATTRIBUTE_INVOKE_CONFIRM) != null) {
       // Show edit attribute confirmation:
@@ -198,8 +208,8 @@ public class RequestController {
     }
     else if (request.getParameter(RequestParams.MBEAN_ATTRIBUTE_CANCEL) != null) {
       // Show MBean page:
-      String warnMsg = "Canceled, attribute <b>" + attribute.getName() + "</b> not set!";
-      return new MBeansDetailView(response.getOutput(), mbean, null, warnMsg, mbeanAccessControl);
+      Message warnMsg = new Message("Canceled, attribute <b>" + attribute.getName() + "</b> not set!", MessageType.WARN);
+      return new MBeansDetailView(response.getOutput(), mbean, warnMsg, mbeanAccessControl);
     }
     else {
       // Show page to edit the attribute:
@@ -227,28 +237,37 @@ public class RequestController {
         throw new UnsupportedOperationException("Not allowed to invoke the operation according to MBeanAccessControl!");
       }
 
-      // Invoke the operation:
-      Object result = MBeanUtils.invokeOperation(mbean.getName(), operation, params);
-      mbeanAccessControl.operationCalled(mbean, operation, params, result);
+      Message msg;
+      MBeanData reloaded = mbean;
+      try {
+        // Invoke the operation:
+        Object result = MBeanUtils.invokeOperation(mbean.getName(), operation, params);
+        mbeanAccessControl.operationCalled(mbean, operation, params, result);
 
-      // Reload state & show MBean page:
-      MBeanData reloaded = MBeanUtils.getMBean(mbean.getName());
-      String okMsg = "Operation <b>" + operation.getName() + "</b> successfully invoked.";
-      if ("void".equals(operation.getReturnType())) {
-        okMsg += " No operation result (void).";
+        // Reload state & show MBean page:
+        reloaded = MBeanUtils.getMBean(mbean.getName());
+        String okMsg = "Operation <b>" + operation.getName() + "</b> successfully invoked.";
+        if ("void".equals(operation.getReturnType())) {
+          msg = new Message(okMsg + " No operation result (void).", MessageType.OK);
+        }
+        else {
+          msg = new Message(okMsg + " Operation result is <b>" + Utils.htmlEncode(result != null ? result.toString() : "null") + "</b>.",
+              MessageType.OK);
+        }
       }
-      else {
-        okMsg += " Operation result is <b>" + Utils.htmlEncode(result != null ? result.toString() : "null") + "</b>.";
+      catch (Exception e) {
+        mbeanAccessControl.operationCallFailed(mbean, operation, params, e);
+        msg = new Message(Utils.getHtmlExceptionInfo(e), MessageType.ERROR);
       }
-      return new MBeansDetailView(response.getOutput(), reloaded, okMsg, null, mbeanAccessControl);
+      return new MBeansDetailView(response.getOutput(), reloaded, msg, mbeanAccessControl);
     }
     else if (request.getParameter(RequestParams.MBEAN_OPERATION_INVOKE_CONFIRM) != null) {
       return new MBeansInvokeOperationView(response.getOutput(), mbean, opIdx, operation, ConfirmState.NOW, params);
     }
     else if (request.getParameter(RequestParams.MBEAN_OPERATION_CANCEL) != null) {
       // Show MBean page:
-      String warnMsg = "Canceled, operation <b>" + operation.getName() + "</b> not invoked!";
-      return new MBeansDetailView(response.getOutput(), mbean, null, warnMsg, mbeanAccessControl);
+      Message warnMsg = new Message("Canceled, operation <b>" + operation.getName() + "</b> not invoked!", MessageType.WARN);
+      return new MBeansDetailView(response.getOutput(), mbean, warnMsg, mbeanAccessControl);
     }
     else {
       // Show page to call the operation:

@@ -55,10 +55,34 @@ public final class Utils {
     Throwable th = t;
     while (th != null) {
       if (builder.length() > 0) {
-        builder.append("Caused by: ");
+        builder.append("\nCaused by: ");
       }
-      builder.append(th.getClass().getName()).append(": ").append(th.getMessage()).append("\n");
+      builder.append(th.getClass().getName()).append(": ").append(th.getMessage());
       th = th.getCause();
+    }
+    return builder.toString();
+  }
+
+  /**
+   * Creates an exception info string from the given throwable.
+   */
+  public static String getHtmlExceptionInfo(Throwable t) {
+    StringBuilder builder = new StringBuilder();
+    Throwable th = t;
+    boolean isFirst = true;
+    while (th != null) {
+      if (!isFirst) {
+        builder.append("<br/>Caused by: ");
+      }
+      if (isFirst) {
+        builder.append("<b>");
+      }
+      builder.append(th.getClass().getName()).append(": ").append(htmlEncode(th.getMessage()));
+      if (isFirst) {
+        builder.append("</b>");
+      }
+      th = th.getCause();
+      isFirst = false;
     }
     return builder.toString();
   }

@@ -7,6 +7,7 @@ import com.purej.vminspect.data.MBeanData;
 import com.purej.vminspect.data.MBeanOperation;
 import com.purej.vminspect.data.MBeanParameter;
 import com.purej.vminspect.http.MBeanAccessControl;
+import com.purej.vminspect.util.Message;
 
 /**
  * Displays details about a single MBean.
@@ -15,18 +16,16 @@ import com.purej.vminspect.http.MBeanAccessControl;
  */
 public class MBeansDetailView extends AbstractMBeansView {
   private final MBeanData _mbean;
-  private final String _okMessage;
-  private final String _warnMessage;
+  private final Message _message;
   private final MBeanAccessControl _mbeanAccessControl;
 
   /**
    * Creates a new instance of this view.
    */
-  public MBeansDetailView(StringBuilder output, MBeanData mbean, String okMessage, String warnMessage, MBeanAccessControl mbeanAccessControl) {
+  public MBeansDetailView(StringBuilder output, MBeanData mbean, Message message, MBeanAccessControl mbeanAccessControl) {
     super(output);
     _mbean = mbean;
-    _okMessage = okMessage;
-    _warnMessage = warnMessage;
+    _message = message;
     _mbeanAccessControl = mbeanAccessControl;
   }
 
@@ -35,11 +34,8 @@ public class MBeansDetailView extends AbstractMBeansView {
     // Write the mbean title:
     writeln("<h3>" + img("icons/beans-24.png", "MBean") + "&nbsp;MBean: <i>" + htmlEncode(_mbean.getName().getObjectNameString()) + "</i></h3>");
 
-    if (_okMessage != null) {
-      writeln("<div id='okMsg'><br/>&nbsp;" + _okMessage + "<br/><br/></div>");
-    }
-    if (_warnMessage != null) {
-      writeln("<div id='warnMsg'><br/>&nbsp;" + _warnMessage + "<br/><br/></div>");
+    if (_message != null) {
+      writeln("<div id='" + _message.getType().getTag() + "'><br/>&nbsp;" + _message.getText() + "<br/><br/></div>");
     }
 
     // Write the attributes table:

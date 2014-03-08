@@ -33,12 +33,22 @@ public interface MBeanAccessControl {
   boolean needsCallConfirmation(MBeanData mbean, MBeanOperation operation);
 
   /**
-   * Will be called after an MBean attribute has been changed.
+   * Will be called after an MBean attribute has been successfully changed.
    */
   void attributeChanged(MBeanData mbean, MBeanAttribute attribute, Object newValue);
 
   /**
-   * Will be called after an MBean operation has been called.
+   * Will be called after an MBean attribute change has failed with an exception.
+   */
+  void attributeChangeFailed(MBeanData mbean, MBeanAttribute attribute, Exception exception);
+
+  /**
+   * Will be called after an MBean operation has been successfully called.
    */
   void operationCalled(MBeanData mbean, MBeanOperation operation, String[] params, Object result);
+
+  /**
+   * Will be called after an MBean operation call has failed with an exception.
+   */
+  void operationCallFailed(MBeanData mbean, MBeanOperation operation, String[] params, Exception exception);
 }
