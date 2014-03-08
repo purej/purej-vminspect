@@ -21,42 +21,50 @@ public class CustomMBeanAccessControlFactory implements MBeanAccessControlFactor
 
       @Override
       public boolean isChangeAllowed(MBeanData mbean, MBeanAttribute attribute) {
-        System.out.println("MBeanAccessControl.isChangeAllowed for MBean " + mbean.getName().getObjectNameString() + "." + attribute.getName()
-            + " and request " + request.hashCode());
+        printInfo("MBeanAccessControl.isChangeAllowed", mbean, "." + attribute.getName() + " and request " + request.hashCode());
         return true;
       }
 
       @Override
       public boolean isCallAllowed(MBeanData mbean, MBeanOperation operation) {
-        System.out.println("MBeanAccessControl.isCallAllowed for MBean " + mbean.getName().getObjectNameString() + "." + operation.getName()
-            + " and request " + request.hashCode());
+        printInfo("MBeanAccessControl.isCallAllowed", mbean, "." + operation.getName() + " and request " + request.hashCode());
         return true;
       }
 
       @Override
       public boolean needsChangeConfirmation(MBeanData mbean, MBeanAttribute attribute) {
-        System.out.println("MBeanAccessControl.needsChangeConfirmation for MBean " + mbean.getName().getObjectNameString() + "."
-            + attribute.getName() + " and request " + request.hashCode());
+        printInfo("MBeanAccessControl.needsChangeConfirmation", mbean, "." + attribute.getName() + " and request " + request.hashCode());
         return false;
       }
 
       @Override
       public boolean needsCallConfirmation(MBeanData mbean, MBeanOperation operation) {
-        System.out.println("MBeanAccessControl.needsCallConfirmation for MBean " + mbean.getName().getObjectNameString() + "." + operation.getName()
-            + " and request " + request.hashCode());
+        printInfo("MBeanAccessControl.needsCallConfirmation", mbean, "." + operation.getName() + " and request " + request.hashCode());
         return true;
       }
 
       @Override
       public void attributeChanged(MBeanData mbean, MBeanAttribute attribute, Object newValue) {
-        System.out.println("MBeanAccessControl.attributeChanged for MBean " + mbean.getName().getObjectNameString() + "." + attribute.getName()
-            + " and request " + request.hashCode());
+        printInfo("MBeanAccessControl.attributeChanged", mbean, "." + attribute.getName() + " and request " + request.hashCode());
+      }
+
+      @Override
+      public void attributeChangeFailed(MBeanData mbean, MBeanAttribute attribute, Exception exception) {
+        printInfo("MBeanAccessControl.attributeChangeFailed", mbean, "." + attribute.getName() + " and request " + request.hashCode());
       }
 
       @Override
       public void operationCalled(MBeanData mbean, MBeanOperation operation, String[] params, Object result) {
-        System.out.println("MBeanAccessControl.operationCalled for MBean " + mbean.getName().getObjectNameString() + "." + operation.getName()
-            + " and request " + request.hashCode());
+        printInfo("MBeanAccessControl.operationCalled", mbean, "." + operation.getName() + " and request " + request.hashCode());
+      }
+
+      @Override
+      public void operationCallFailed(MBeanData mbean, MBeanOperation operation, String[] params, Exception exception) {
+        printInfo("MBeanAccessControl.operationCallFailed", mbean, "." + operation.getName() + " and request " + request.hashCode());
+      }
+
+      private void printInfo(String method, MBeanData mbean, String addOnInfo) {
+        System.out.println(method + " for MBean " + mbean.getName().getObjectNameString() + addOnInfo);
       }
     };
   }

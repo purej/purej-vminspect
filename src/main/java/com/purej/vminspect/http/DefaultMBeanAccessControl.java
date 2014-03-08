@@ -51,7 +51,17 @@ public class DefaultMBeanAccessControl implements MBeanAccessControl {
   }
 
   @Override
+  public void attributeChangeFailed(MBeanData mbean, MBeanAttribute attribute, Exception exception) {
+    // Nothing to do...
+  }
+
+  @Override
   public void operationCalled(MBeanData mbean, MBeanOperation operation, String[] params, Object result) {
+    // Nothing to do...
+  }
+
+  @Override
+  public void operationCallFailed(MBeanData mbean, MBeanOperation operation, String[] params, Exception exception) {
     // Nothing to do...
   }
 }
