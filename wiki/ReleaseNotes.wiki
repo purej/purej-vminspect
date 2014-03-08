@@ -5,6 +5,10 @@ https://purej-vminspect.googlecode.com/svn/wiki/pics/purej-logo-48.png
 </p>
 
 
+===1.2.4 - (08.03.2014)===
+  * MBean attribute-change/operation-call exceptions are displayed inside the MBean view with a red block instead of the general white error page
+  * New callback methods on the MBeanAccessControl interface to treat attribute-change/operation-call exceptions
+
 ===1.2.3 - (27.02.2014)===
   * MBean sorted by additional key/values if both domain-name and types are equal
   * Display total CPU and garbage collector times in seconds instead of millis
