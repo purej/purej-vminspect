@@ -10,7 +10,7 @@
   </parent>
 
   <artifactId>purej-vminspect</artifactId>
-  <version>1.2.4-SNAPSHOT</version>
+  <version>1.2.4</version>
   <packaging>jar</packaging>
 
   <name>PureJ VM Inspection</name>
@@ -22,8 +22,8 @@
   </properties>
 
   <scm>
-    <connection>scm:svn:http://purej-vminspect.googlecode.com/svn/trunk</connection>
-    <url>http://purej-vminspect.googlecode.com/svn/trunk</url>
+    <connection>scm:svn:http://purej-vminspect.googlecode.com/svn/tags/purej-vminspect-1.2.4</connection>
+    <url>http://purej-vminspect.googlecode.com/svn/tags/purej-vminspect-1.2.4</url>
   </scm>
 
   <dependencies>
