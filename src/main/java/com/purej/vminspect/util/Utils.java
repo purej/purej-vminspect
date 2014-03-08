@@ -54,8 +54,10 @@ public final class Utils {
     StringBuilder builder = new StringBuilder();
     Throwable th = t;
     while (th != null) {
-      builder.append(th.getClass()).append(": ").append(th.getMessage());
-      builder.append("\n");
+      if (builder.length() > 0) {
+        builder.append("Caused by: ");
+      }
+      builder.append(th.getClass().getName()).append(": ").append(th.getMessage()).append("\n");
       th = th.getCause();
     }
     return builder.toString();
@@ -92,8 +94,8 @@ public final class Utils {
     if (txt == null) {
       return "";
     }
-    return txt.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;").replace("'", "&#39;")
-        .replace("\r\n", "<br/>").replace("\n", "<br/>");
+    return txt.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;").replace("'", "&#39;").replace("\r\n", "<br/>")
+        .replace("\n", "<br/>");
   }
 
   /**
