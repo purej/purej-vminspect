@@ -30,6 +30,7 @@ public class MySample implements MySampleMBean {
   private BigDecimal _bigDecimal;
   private String _string;
   private String[] _stringArray;
+  private List<String> _stringList;
   private List<byte[]> _allocated = new ArrayList<byte[]>();
 
   /**
@@ -56,6 +57,10 @@ public class MySample implements MySampleMBean {
       _bigDecimal = new BigDecimal("123456.78909");
       _string = "my string value";
       _stringArray = new String[] {"string1", "purej.vminspect:type=my Type,id=12", null, "my.objectName:type=Abc", "string3"};
+      _stringList = new ArrayList<String>();
+      _stringList.add("first line");
+      _stringList.add("second line");
+      _stringList.add("some special äöü chars <> !! %&&%");
     }
   }
 
@@ -65,8 +70,8 @@ public class MySample implements MySampleMBean {
   }
 
   @Override
-  public void setCharacterP(char inCharacterP) {
-    _characterP = inCharacterP;
+  public void setCharacterP(char value) {
+    _characterP = value;
   }
 
   @Override
@@ -75,8 +80,8 @@ public class MySample implements MySampleMBean {
   }
 
   @Override
-  public void setCharacterO(Character inCharacterO) {
-    _characterO = inCharacterO;
+  public void setCharacterO(Character value) {
+    _characterO = value;
   }
 
   @Override
@@ -85,8 +90,8 @@ public class MySample implements MySampleMBean {
   }
 
   @Override
-  public void setBooleanP(boolean inBooleanP) {
-    _booleanP = inBooleanP;
+  public void setBooleanP(boolean value) {
+    _booleanP = value;
   }
 
   @Override
@@ -95,8 +100,8 @@ public class MySample implements MySampleMBean {
   }
 
   @Override
-  public void setBooleanO(Boolean inBooleanO) {
-    _booleanO = inBooleanO;
+  public void setBooleanO(Boolean value) {
+    _booleanO = value;
   }
 
   @Override
@@ -105,8 +110,8 @@ public class MySample implements MySampleMBean {
   }
 
   @Override
-  public void setByteP(byte inByteP) {
-    _byteP = inByteP;
+  public void setByteP(byte value) {
+    _byteP = value;
   }
 
   @Override
@@ -115,8 +120,8 @@ public class MySample implements MySampleMBean {
   }
 
   @Override
-  public void setByteO(Byte inByteO) {
-    _byteO = inByteO;
+  public void setByteO(Byte value) {
+    _byteO = value;
   }
 
   @Override
@@ -125,8 +130,8 @@ public class MySample implements MySampleMBean {
   }
 
   @Override
-  public void setShortP(short inShortP) {
-    _shortP = inShortP;
+  public void setShortP(short value) {
+    _shortP = value;
   }
 
   @Override
@@ -135,8 +140,8 @@ public class MySample implements MySampleMBean {
   }
 
   @Override
-  public void setShortO(Short inShortO) {
-    _shortO = inShortO;
+  public void setShortO(Short value) {
+    _shortO = value;
   }
 
   @Override
@@ -145,8 +150,8 @@ public class MySample implements MySampleMBean {
   }
 
   @Override
-  public void setIntegerP(int inIntegerP) {
-    _integerP = inIntegerP;
+  public void setIntegerP(int value) {
+    _integerP = value;
   }
 
   @Override
@@ -155,8 +160,8 @@ public class MySample implements MySampleMBean {
   }
 
   @Override
-  public void setIntegerO(Integer inIntegerO) {
-    _integerO = inIntegerO;
+  public void setIntegerO(Integer value) {
+    _integerO = value;
   }
 
   @Override
@@ -165,8 +170,8 @@ public class MySample implements MySampleMBean {
   }
 
   @Override
-  public void setLongP(long inLongP) {
-    _longP = inLongP;
+  public void setLongP(long value) {
+    _longP = value;
   }
 
   @Override
@@ -175,8 +180,8 @@ public class MySample implements MySampleMBean {
   }
 
   @Override
-  public void setLongO(Long inLongO) {
-    _longO = inLongO;
+  public void setLongO(Long value) {
+    _longO = value;
   }
 
   @Override
@@ -185,8 +190,8 @@ public class MySample implements MySampleMBean {
   }
 
   @Override
-  public void setFloatP(float inFloatP) {
-    _floatP = inFloatP;
+  public void setFloatP(float value) {
+    _floatP = value;
   }
 
   @Override
@@ -195,8 +200,8 @@ public class MySample implements MySampleMBean {
   }
 
   @Override
-  public void setFloatO(Float inFloatO) {
-    _floatO = inFloatO;
+  public void setFloatO(Float value) {
+    _floatO = value;
   }
 
   @Override
@@ -205,8 +210,8 @@ public class MySample implements MySampleMBean {
   }
 
   @Override
-  public void setDoubleP(double inDoubleP) {
-    _doubleP = inDoubleP;
+  public void setDoubleP(double value) {
+    _doubleP = value;
   }
 
   @Override
@@ -215,8 +220,8 @@ public class MySample implements MySampleMBean {
   }
 
   @Override
-  public void setDoubleO(Double inDoubleO) {
-    _doubleO = inDoubleO;
+  public void setDoubleO(Double value) {
+    _doubleO = value;
   }
 
   @Override
@@ -225,8 +230,8 @@ public class MySample implements MySampleMBean {
   }
 
   @Override
-  public void setBigDecimal(BigDecimal inBigDecimal) {
-    _bigDecimal = inBigDecimal;
+  public void setBigDecimal(BigDecimal value) {
+    _bigDecimal = value;
   }
 
   @Override
@@ -245,8 +250,18 @@ public class MySample implements MySampleMBean {
   }
 
   @Override
-  public void setStringArray(String[] inStringArray) {
-    _stringArray = inStringArray;
+  public void setStringArray(String[] value) {
+    _stringArray = value;
+  }
+
+  @Override
+  public List<String> getStringList() {
+    return _stringList;
+  }
+
+  @Override
+  public void setStringList(List<String> value) {
+    _stringList = value;
   }
 
   // ========================================
