@@ -1,3 +1,6 @@
+===1.2.5 - (xx.xx.2014)===
+  * MBean write operations use HTTP POST instead of GET to prevent duplicate actions in case of browser-refreshes
+
 ===1.2.4 - (08.03.2014)===
   * MBean attribute-change/operation-call exceptions are displayed inside the MBean view with a red block instead of the general white error page
   * New callback methods on the MBeanAccessControl interface to treat attribute-change/operation-call exceptions
