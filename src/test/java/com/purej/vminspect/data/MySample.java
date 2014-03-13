@@ -289,6 +289,11 @@ public class MySample implements MySampleMBean {
   }
 
   @Override
+  public String echoString(String inValue) {
+    return inValue;
+  }
+
+  @Override
   public String[] echoStringArray(String[] inValue) {
     return inValue;
   }

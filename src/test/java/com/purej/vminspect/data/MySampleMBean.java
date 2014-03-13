@@ -109,6 +109,8 @@ public interface MySampleMBean {
 
   BigDecimal echoBigDecimal(BigDecimal value);
 
+  String echoString(String value);
+
   String[] echoStringArray(String[] value);
 
   void allocateMemory(int mbs);
