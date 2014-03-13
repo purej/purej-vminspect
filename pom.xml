@@ -22,8 +22,8 @@
   </properties>
 
   <scm>
-    <connection>scm:svn:http://purej-vminspect.googlecode.com/svn/trunk</connection>
-    <url>http://purej-vminspect.googlecode.com/svn/trunk</url>
+    <connection>scm:svn:http://purej-vminspect.googlecode.com/svn/tags/purej-vminspect-1.2.5</connection>
+    <url>http://purej-vminspect.googlecode.com/svn/tags/purej-vminspect-1.2.5</url>
   </scm>
 
   <dependencies>
