@@ -8,6 +8,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,10 +58,10 @@ final class RequestExecutor implements Runnable {
           // Create the request, process it and write the response:
           HttpRequest request = parseRequest(in);
           if (request == null) {
-            LOGGER.debug("Non HTTP GET request from {}, will be ignored", _socket.getRemoteSocketAddress());
+            LOGGER.debug("Non valid HTTP request from {}, will be ignored", _socket.getRemoteSocketAddress());
           }
           else {
-            LOGGER.debug("HTTP GET request from {} with parameters {}", _socket.getRemoteSocketAddress(), request.getParameters());
+            LOGGER.debug("HTTP request from {} with parameters {}", _socket.getRemoteSocketAddress(), request.getParameters());
             try {
               HttpResponse httpResponse = _controller.process(request, _mBeanAccessControl);
               writeResponse(httpResponse, out);
@@ -90,23 +92,57 @@ final class RequestExecutor implements Runnable {
 
   private static HttpRequest parseRequest(InputStream input) throws Exception {
     BufferedReader in = new BufferedReader(new InputStreamReader(input, "UTF-8"));
-    HttpRequest request = new HttpRequest();
-    boolean getContained = false;
+    List<String> header = readHttpHeader(in);
+    if (header.size() > 0) {
+      String firstLine = header.get(0);
+      if (firstLine.startsWith("GET ")) {
+        // HTTP GET request, parse it and search for optional cookies:
+        HttpRequest request = new HttpRequest();
+        parseGet(firstLine, request);
+        String cookies = getLine(header, "Cookie: ");
+        if (cookies != null) {
+          parseCookies(cookies, request);
+        }
+        return request;
+      }
+      else if (firstLine.startsWith("POST ")) {
+        String length = getLine(header, "Content-Length: ");
+        if (length != null) {
+          int contentLength = Integer.parseInt(length.substring("Content-Length: ".length()));
+          char[] data = new char[contentLength];
+          int read = in.read(data);
+          if (read == contentLength) {
+            HttpRequest request = new HttpRequest();
+            parsePost(new String(data), request);
+            return request;
+          }
+        }
+      }
+    }
+    // Invalid / incomplete request:
+    return null;
+  }
+
+  private static List<String> readHttpHeader(BufferedReader in) throws IOException {
+    List<String> result = new ArrayList<String>();
     while (true) {
       String line = in.readLine();
       line = line != null ? line.trim() : line;
       if (line == null || line.length() == 0) {
-        break; // End of request...
+        break; // End of header or no more data...
       }
-      else if (line.startsWith("GET ")) {
-        getContained = true;
-        parseGet(line, request);
-      }
-      else if (line.startsWith("Cookie: ")) {
-        parseCookies(line, request);
+      result.add(line);
+    }
+    return result;
+  }
+
+  private static String getLine(List<String> lines, String prefix) {
+    for (String line : lines) {
+      if (line.startsWith(prefix)) {
+        return line;
       }
     }
-    return getContained ? request : null;
+    return null;
   }
 
   private static void parseGet(String line, HttpRequest request) throws Exception {
@@ -116,6 +152,12 @@ final class RequestExecutor implements Runnable {
       String[] params = line.substring(idx + 1, line.lastIndexOf(' ')).split("&");
       splitKeyValues(params, request.getParameters());
     }
+  }
+
+  private static void parsePost(String line, HttpRequest request) throws Exception {
+    // Format is: list of parameters=values (all encoded)
+    String[] params = line.split("&");
+    splitKeyValues(params, request.getParameters());
   }
 
   private static void parseCookies(String line, HttpRequest request) throws Exception {

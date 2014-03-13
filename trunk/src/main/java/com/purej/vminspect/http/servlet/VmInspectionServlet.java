@@ -12,12 +12,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.purej.vminspect.data.statistics.StatisticsCollector;
+import com.purej.vminspect.http.DefaultMBeanAccessControl;
 import com.purej.vminspect.http.HttpRequest;
 import com.purej.vminspect.http.HttpResponse;
 import com.purej.vminspect.http.MBeanAccessControl;
 import com.purej.vminspect.http.RequestController;
 import com.purej.vminspect.http.RequestParams;
-import com.purej.vminspect.http.DefaultMBeanAccessControl;
 import com.purej.vminspect.util.Utils;
 
 /**
@@ -107,7 +107,13 @@ public final class VmInspectionServlet extends HttpServlet {
   }
 
   @Override
-  protected void doGet(final HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    // Same logic as for HTTP get...
+    doGet(request, response);
+  }
+
+  @Override
+  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     try {
       // Create the request, process it and write the response:
       HttpRequest httpRequest = createHttpRequest(request);
