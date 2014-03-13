@@ -252,7 +252,8 @@ public final class StatisticsCollector {
   private synchronized void collect() {
     try {
       _lastCollectTimestamp = System.currentTimeMillis();
-      Runtime.getRuntime().gc(); // Free unused memory before measuring stats...
+      // Note: Freeing memory with System.gc() before measuring stats might be cool but the performance
+      // impact is huge (collect() becomes 10x slower and consumes a lot of CPU). Therefore we don't run it here anymore...
       collectData(new SystemData());
 
       // Calculate disk usage or memory size:
