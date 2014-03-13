@@ -1,5 +1,6 @@
 ===1.2.5 - (xx.xx.2014)===
   * MBean write operations use HTTP POST instead of GET to prevent duplicate actions in case of browser-refreshes
+  * Removed explicit garbage collector call before statistics measure as it produced high and unwanted CPU load on some platforms/VMs
 
 ===1.2.4 - (08.03.2014)===
   * MBean attribute-change/operation-call exceptions are displayed inside the MBean view with a red block instead of the general white error page
