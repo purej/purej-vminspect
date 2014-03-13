@@ -16,7 +16,7 @@ import com.purej.vminspect.http.DefaultMBeanAccessControl;
 
 /**
  * This standalone server allows PureJ VM Inspection to be used without a servlet-container or other type of
- * web-server. It implements a very basic and lightweight HTTP server that handles only HTTP/1.0/1.1 GET requests
+ * web-server. It implements a very basic and lightweight HTTP server that handles only HTTP/1.0/1.1 GET/PUT requests
  * used by the VM Inspection functionality.
  * <p/>
  * Note: This class starts some listener threads and opens a server-socket so it should NEVER be used inside JEE

@@ -36,7 +36,7 @@ public class MBeansInvokeAttributeView extends AbstractMBeansView {
     }
 
     // Write the form with a table:
-    writeln("<form name='mbeanAttribute' method='get' action=''><br/>");
+    writeln("<form name='mbeanAttribute' method='post' action=''><br/>");
     HtmlTable table = new HtmlTable("MBean Attribute");
     table.nextRow();
     table.addValue(img("icons/books-16.png", "MBean Attribute") + "<b>&nbsp;Attribute</b>");
