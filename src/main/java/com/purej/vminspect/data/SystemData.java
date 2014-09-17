@@ -22,21 +22,19 @@ import java.util.Map;
  * @author Stefan Mueller
  */
 public class SystemData {
-  /**
-   * The host name and IP address.
-   */
-  public static final String HOST;
+  // Host name and IP:
+  private static final String HOST_IP;
 
   static {
-    String hostName;
+    String hostIp;
     try {
       InetAddress localHost = InetAddress.getLocalHost();
-      hostName = localHost.getHostName() + "@" + localHost.getHostAddress();
+      hostIp = localHost.getHostName() + " (" + localHost.getHostAddress() + ")";
     }
     catch (Exception e) {
-      hostName = "127.0.0.1";
+      hostIp = "Unknown";
     }
-    HOST = hostName;
+    HOST_IP = hostIp;
   }
 
   private final String _rtInfo;
@@ -264,6 +262,13 @@ public class SystemData {
    */
   public String getCLLibraryPath() {
     return _rtb.getLibraryPath();
+  }
+
+  /**
+   * The host name and IP.
+   */
+  public String getOsHostIp() {
+    return HOST_IP;
   }
 
   /**
