@@ -96,6 +96,8 @@ public interface MySampleMBean {
 
   void setStringList(List<String> value);
 
+  String getThatThrowsUp();
+
   // ========================================
   // Methods
   // ========================================
