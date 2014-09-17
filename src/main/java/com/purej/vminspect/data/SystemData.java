@@ -10,7 +10,10 @@ import java.lang.management.RuntimeMXBean;
 import java.lang.management.ThreadMXBean;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -164,12 +167,17 @@ public class SystemData {
    * Returns the current system properties.
    */
   public String getRtSystemProperties() {
-    StringBuilder result = new StringBuilder();
+    List<String> lines = new ArrayList<String>();
     for (Map.Entry<Object, Object> entry : System.getProperties().entrySet()) {
+      lines.add(entry.getKey() + "=" + entry.getValue());
+    }
+    Collections.sort(lines);
+    StringBuilder result = new StringBuilder();
+    for (String line : lines) {
       if (result.length() > 0) {
         result.append('\n');
       }
-      result.append(entry.getKey()).append('=').append(entry.getValue());
+      result.append(line);
     }
     return result.toString();
   }
