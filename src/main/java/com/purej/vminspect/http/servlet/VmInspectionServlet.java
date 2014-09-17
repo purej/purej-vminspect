@@ -126,7 +126,7 @@ public final class VmInspectionServlet extends HttpServlet {
       writeHttpResponse(httpResponse, request.getRequestURI(), response);
     }
     catch (Exception e) {
-      LOGGER.debug("An error occurred processing get request!", e);
+      LOGGER.warn("An error occurred processing request!", e);
       response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, Utils.getExceptionInfo(e));
     }
     finally {
