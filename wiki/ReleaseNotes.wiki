@@ -5,6 +5,12 @@ https://purej-vminspect.googlecode.com/svn/wiki/pics/purej-logo-48.png
 </p>
 
 
+===1.2.6 - (17.09.2014)===
+  * System properties sorted by alphabet
+  * Display hostname / IP on system page
+  * Display open/max file-descriptors (available only on unix-platforms)
+  * Optimized exception handling for some cases, little layout optimizations
+
 ===1.2.5 - (13.03.2014)===
   * MBean write operations use HTTP POST instead of GET to prevent duplicate actions in case of browser-refreshes
   * Removed explicit garbage collector call before statistics measure as it produced high and unwanted CPU load on some platforms/VMs
