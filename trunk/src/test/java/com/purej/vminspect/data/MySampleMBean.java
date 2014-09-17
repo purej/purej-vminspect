@@ -108,6 +108,10 @@ public interface MySampleMBean {
 
   void myVoidMethod(String value1, String value2, String value3);
 
+  String myStringMethod();
+
+  List<String> myListMethod(String value);
+
   char echoChar(char value);
 
   byte echoByte(byte value);
