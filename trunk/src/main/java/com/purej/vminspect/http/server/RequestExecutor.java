@@ -71,7 +71,7 @@ final class RequestExecutor implements Runnable {
               LOGGER.debug("Socket closed by remote host: {}", e.getMessage());
             }
             catch (Exception e) {
-              LOGGER.debug("Could not handle HTTP request!", e);
+              LOGGER.debug("An error occurred processing request!", e);
               writeErrorResponse(e, "500 Server Error", out);
             }
           }

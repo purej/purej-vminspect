@@ -27,8 +27,8 @@ import com.purej.vminspect.html.SystemMainView;
 import com.purej.vminspect.html.ThreadsDumpView;
 import com.purej.vminspect.html.ThreadsMainView;
 import com.purej.vminspect.util.Message;
-import com.purej.vminspect.util.Utils;
 import com.purej.vminspect.util.Message.MessageType;
+import com.purej.vminspect.util.Utils;
 
 /**
  * This is the controller that dispatches each request depending on the request-parameters to the correct view.
@@ -251,8 +251,11 @@ public class RequestController {
           msg = new Message(okMsg + " No operation result (void).", MessageType.OK);
         }
         else {
-          msg = new Message(okMsg + " Operation result is <b>" + Utils.htmlEncode(result != null ? result.toString() : "null") + "</b>.",
-              MessageType.OK);
+          String resultTxt = result != null ? result.toString() : "null";
+          if (resultTxt.indexOf("\n") > 0) {
+            resultTxt = "\n" + resultTxt; // If multi-line content, begin result on new line...
+          }
+          msg = new Message(okMsg + " Operation result: <b>" + Utils.htmlEncode(resultTxt) + "</b>", MessageType.OK);
         }
       }
       catch (Exception e) {
