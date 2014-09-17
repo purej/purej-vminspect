@@ -52,6 +52,8 @@ public class SystemData {
   private final long _processCpuTimeMillis;
   private final double _processCpuLoadPct;
   private final double _systemCpuLoadPct;
+  private final long _openFileDescriptorCount;
+  private final long _maxFileDescriptorCount;
 
   /**
    * Creates a new instance of this class.
@@ -107,6 +109,10 @@ public class SystemData {
     Object systemLoad = getHiddenInfo(_osb, "getSystemCpuLoad");
     double systemCpuLoadPct = systemLoad != null ? ((Double) systemLoad).doubleValue() : -1;
     _systemCpuLoadPct = systemCpuLoadPct < 0 ? systemCpuLoadPct : systemCpuLoadPct * 100;
+
+    // Open/Max file descriptor count:
+    _openFileDescriptorCount = getHiddenInfoLong(_osb, "getOpenFileDescriptorCount");
+    _maxFileDescriptorCount = getHiddenInfoLong(_osb, "getMaxFileDescriptorCount");
   }
 
   private static long getHiddenInfoLong(Object object, String methodName) {
@@ -199,6 +205,20 @@ public class SystemData {
    */
   public String getVmVersion() {
     return _rtb.getVmVersion();
+  }
+
+  /**
+   * The open file descriptors.
+   */
+  public long getOpenFileDescriptorCount() {
+    return _openFileDescriptorCount;
+  }
+
+  /**
+   * The max file descriptors.
+   */
+  public long getMaxFileDescriptorCount() {
+    return _maxFileDescriptorCount;
   }
 
   /**

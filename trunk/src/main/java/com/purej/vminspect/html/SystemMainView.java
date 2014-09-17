@@ -70,6 +70,8 @@ public final class SystemMainView extends AbstractHtmlView {
     table.nextRow("VM Startup Time", formatDateTime(_sysData.getRtProcessStartup()));
     table.nextRow("VM Startup Arguments", toShowLinkWithHiddenDiv("vmArgs", _sysData.getRtProcessArguments()));
     table.nextRow("VM System Properties", toShowLinkWithHiddenDiv("sProps", _sysData.getRtSystemProperties()));
+    table.nextRow("VM File Descriptors",
+        "Open: " + formatNumber(_sysData.getOpenFileDescriptorCount()) + " / Max: " + formatNumber(_sysData.getMaxFileDescriptorCount()));
     String processCpuPct = _sysData.getProcessCpuLoadPct() < 0 ? "n/a" : formatPct(_sysData.getProcessCpuLoadPct());
     String systemCpuPct = _sysData.getSystemCpuLoadPct() < 0 ? "n/a" : formatPct(_sysData.getSystemCpuLoadPct());
     table.nextRow("VM CPU Load", processCpuPct + ", Total CPU Time: " + formatNumber(_sysData.getProcessCpuTimeMillis() / 1000) + "s");
