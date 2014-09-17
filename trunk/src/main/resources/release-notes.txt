@@ -2,6 +2,7 @@
   * System properties sorted by alphabet
   * Display hostname / IP on system page
   * Display open/max file-descriptors (available only on unix-platforms)
+  * Optimized exception handling for various cases
 
 ===1.2.5 - (13.03.2014)===
   * MBean write operations use HTTP POST instead of GET to prevent duplicate actions in case of browser-refreshes

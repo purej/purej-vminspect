@@ -25,6 +25,7 @@ import javax.management.ObjectName;
 import javax.management.openmbean.CompositeData;
 import javax.management.openmbean.TabularData;
 import com.purej.vminspect.data.MBeanOperation.Impact;
+import com.purej.vminspect.util.Utils;
 
 /**
  * Helper class for MBean operations.
@@ -176,10 +177,10 @@ public final class MBeanUtils {
         value = convertValueIfNeeded(o);
       }
       catch (Exception e) {
-        value = "Exception reading attribute value: " + e.toString();
+        // Skip wrapper exception (MBeanException, ReflectionException) as it contains all info twice:
+        value = "Exception reading attribute value: " + Utils.getExceptionInfo(e.getCause() != null ? e.getCause() : e);
       }
     }
-
     // Convert arrays to readable stuff:
     String type = getTypeDescription(attributeInfo.getType());
     return new MBeanAttribute(attributeInfo.getName(), value, getDescription(attributeInfo), type, attributeInfo.isWritable());
