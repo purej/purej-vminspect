@@ -61,6 +61,7 @@ public final class SystemMainView extends AbstractHtmlView {
   private void writeRuntimeTable() throws IOException {
     writeln("<h3>" + img("icons/cup-24.png", "Runtime") + "&nbsp;Runtime</h3>");
     CandyHtmlTable table = new CandyHtmlTable("Runtime", "Name", "Value");
+    table.nextRow("Host", _sysData.getOsHostIp());
     table.nextRow("OS", _sysData.getOsName() + ", Architecture: " + _sysData.getOsArchitecture() + ", Version: " + _sysData.getOsVersion()
         + ", Processors: " + _sysData.getOsAvailableProcessors());
     table.nextRow("Java", _sysData.getRtInfo());

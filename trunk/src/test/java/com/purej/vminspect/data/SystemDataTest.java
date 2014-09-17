@@ -44,6 +44,7 @@ public class SystemDataTest {
   @Test
   public void testOsData() throws Exception {
     SystemData data = new SystemData();
+    Assert.assertNotNull(data.getOsHostIp());
     Assert.assertNotNull(data.getOsName());
     Assert.assertNotNull(data.getOsArchitecture());
     Assert.assertNotNull(data.getOsVersion());
