@@ -156,7 +156,7 @@ public abstract class AbstractHtmlView {
    * Writes the given html to the writer.
    */
   protected final void writeln(String html) throws IOException {
-    _output.append(html);
+    write(html);
     _output.append('\n');
   }
 
