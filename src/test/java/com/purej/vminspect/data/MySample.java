@@ -264,6 +264,16 @@ public class MySample implements MySampleMBean {
     _stringList = value;
   }
 
+  @Override
+  public String getThatThrowsUp() {
+    try {
+      throw new NullPointerException("inner");
+    }
+    catch (Exception e) {
+      throw new IllegalStateException("outer", e);
+    }
+  }
+
   // ========================================
   // Methods
   // ========================================
