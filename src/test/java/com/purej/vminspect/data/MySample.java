@@ -294,6 +294,20 @@ public class MySample implements MySampleMBean {
   }
 
   @Override
+  public String myStringMethod() {
+    return "First Line\nSecond Line\nThird Line";
+  }
+
+  @Override
+  public List<String> myListMethod(String value) {
+    List<String> result = new ArrayList<String>();
+    for (int i = 0; i < 10; i++) {
+      result.add(value);
+    }
+    return result;
+  }
+
+  @Override
   public char echoChar(char inValue) {
     return inValue;
   }
