@@ -124,7 +124,7 @@ public final class StatisticsCollector {
             }
           });
 
-      // Register the load statistics:
+      // Register the load/files statistics:
       registerStatistics("vmLoad", "VM CPU Load", "%%", "Recent VM CPU load (all CPUs)", new ValueProvider() {
         @Override
         public double getValue(SystemData data) {
@@ -135,6 +135,12 @@ public final class StatisticsCollector {
         @Override
         public double getValue(SystemData data) {
           return data.getSystemCpuLoadPct();
+        }
+      });
+      registerStatistics("fileDescriptors", "Open File Descriptors", "", "Number of open file descriptors", new ValueProvider() {
+        @Override
+        public double getValue(SystemData data) {
+          return data.getOpenFileDescriptorCount();
         }
       });
     }
