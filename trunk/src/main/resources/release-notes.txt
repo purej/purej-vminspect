@@ -1,5 +1,5 @@
-===current===
-  * Display optimizations (for example display java.lang types without java.lang)
+===1.2.8 - (26.10.2014)===
+  * Some display optimizations (for example display java.lang types without java.lang)
   * VmInspectionServlet is not final anymore to allow subclassing
 
 ===1.2.7 - (18.09.2014)===
