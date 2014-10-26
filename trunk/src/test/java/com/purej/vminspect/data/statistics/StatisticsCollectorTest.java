@@ -26,7 +26,7 @@ public class StatisticsCollectorTest {
       // Check measures after collect run:
       Assert.assertEquals(0, collector.getDiskUsage()); // no disk usage as in memory!
       Assert.assertTrue(collector.getEstimatedMemorySize() > 100000);
-      Assert.assertTrue(collector.getLastCollectDurationMs() > 0);
+      //Assert.assertTrue(collector.getLastCollectDurationMs() > 0); might be 0 if on a fast machine...
       Assert.assertTrue(collector.getLastCollectTimestamp() > 0);
 
       // Check stats retrieve:
