@@ -4,6 +4,7 @@ package com.purej.vminspect.html;
 import java.io.IOException;
 import com.purej.vminspect.data.MBeanAttribute;
 import com.purej.vminspect.data.MBeanData;
+import com.purej.vminspect.data.MBeanUtils;
 
 /**
  * Displays the view to edit an attribute of an MBean.
@@ -42,7 +43,7 @@ public class MBeansInvokeAttributeView extends AbstractMBeansView {
     table.addValue(img("icons/books-16.png", "MBean Attribute") + "<b>&nbsp;Attribute</b>");
     table.addValue("<b>" + htmlEncode(_attribute.getName()) + "</b>");
     table.nextRow("Description", htmlEncode(_attribute.getDescription()));
-    table.nextRow("Type", htmlEncode(_attribute.getType()));
+    table.nextRow("Type", htmlEncode(MBeanUtils.toDisplayType(_attribute.getType())));
     table.nextRow("Current Value&nbsp;&nbsp;&nbsp;&nbsp;");
     write("<td>");
     writeMBeanValue(_attribute.getValue(), false);

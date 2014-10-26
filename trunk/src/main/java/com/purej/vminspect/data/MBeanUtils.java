@@ -33,8 +33,20 @@ import com.purej.vminspect.util.Utils;
  * @author Stefan Mueller
  */
 public final class MBeanUtils {
+  private static final String JAVA_LANG = "java.lang.";
+  private static final int JAVA_LANG_LENGTH = JAVA_LANG.length();
 
   private MBeanUtils() {
+  }
+
+  /**
+   * Returns the parameter type to be displayed (eg. without java.lang).
+   */
+  public static String toDisplayType(String type) {
+    if (type != null && type.startsWith(JAVA_LANG)) {
+      return type.substring(JAVA_LANG_LENGTH);
+    }
+    return type;
   }
 
   /**
