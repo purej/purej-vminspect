@@ -9,7 +9,7 @@ Maven users just need to add the following dependency, it will download the requ
   <dependency>
     <groupId>com.purej</groupId>
     <artifactId>purej-vminspect</artifactId>
-    <version>1.2.7</version>
+    <version>1.2.8</version>
   </dependency>
 }}}
 
@@ -20,14 +20,20 @@ Maven users just need to add the following dependency, it will download the requ
 
 ==Newest stable version==
 
+*Version 1.2.8 (26.10.2014)*
+|| *File* || *Size* || *Summary* ||
+||[https://purej-vminspect.googlecode.com/svn/wiki/downloads/1.2.8/purej-vminspect-1.2.8.jar purej-vminspect-1.2.8.jar]||155kb||Binary||
+||[https://purej-vminspect.googlecode.com/svn/wiki/downloads/1.2.8/purej-vminspect-1.2.8-sources.jar purej-vminspect-1.2.8-sources.jar]||110kb||Sources||
+||[https://purej-vminspect.googlecode.com/svn/wiki/downloads/1.2.8/purej-vminspect-1.2.8-javadoc.jar purej-vminspect-1.2.8-javadoc.jar]||322kb||Javadoc||
+
+
+==Older stable Versions==
+
 *Version 1.2.7 (18.09.2014)*
 || *File* || *Size* || *Summary* ||
 ||[https://purej-vminspect.googlecode.com/svn/wiki/downloads/1.2.7/purej-vminspect-1.2.7.jar purej-vminspect-1.2.7.jar]||155kb||Binary||
 ||[https://purej-vminspect.googlecode.com/svn/wiki/downloads/1.2.7/purej-vminspect-1.2.7-sources.jar purej-vminspect-1.2.7-sources.jar]||110kb||Sources||
 ||[https://purej-vminspect.googlecode.com/svn/wiki/downloads/1.2.7/purej-vminspect-1.2.7-javadoc.jar purej-vminspect-1.2.7-javadoc.jar]||322kb||Javadoc||
-
-
-==Older stable Versions==
 
 *Version 1.2.5 (13.03.2014)*
 || *File* || *Size* || *Summary* ||
