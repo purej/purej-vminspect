@@ -36,7 +36,7 @@ import com.purej.vminspect.util.Utils;
  *
  * @author Stefan Mueller
  */
-public final class VmInspectionServlet extends HttpServlet {
+public class VmInspectionServlet extends HttpServlet {
   private static final Logger LOGGER = LoggerFactory.getLogger(VmInspectionServlet.class);
   private static final long serialVersionUID = 1L;
 

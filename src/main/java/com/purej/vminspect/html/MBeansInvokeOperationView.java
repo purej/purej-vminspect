@@ -5,6 +5,7 @@ import java.io.IOException;
 import com.purej.vminspect.data.MBeanData;
 import com.purej.vminspect.data.MBeanOperation;
 import com.purej.vminspect.data.MBeanParameter;
+import com.purej.vminspect.data.MBeanUtils;
 
 /**
  * Displays the view to invoke an operation of an MBean.
@@ -47,13 +48,13 @@ public class MBeansInvokeOperationView extends AbstractMBeansView {
     table.addValue("<b>" + htmlEncode(_operation.getName()) + "</b>");
     table.nextRow("Description", htmlEncode(_operation.getDescription()));
     table.nextRow("Impact", htmlEncode(_operation.getImpact().name()));
-    table.nextRow("Return Type", htmlEncode(_operation.getReturnType()));
+    table.nextRow("Return Type", htmlEncode(MBeanUtils.toDisplayType(_operation.getReturnType())));
     for (int i = 0; i < _operation.getParameters().length; i++) {
       table.nextRow("<br/>", "");
       MBeanParameter parameter = _operation.getParameters()[i];
       table.nextRow("<b>Parameter</b>", "<b>" + parameter.getName() + "</b>");
       table.nextRow("Description", parameter.getDescription());
-      table.nextRow("Type", parameter.getType());
+      table.nextRow("Type", MBeanUtils.toDisplayType(parameter.getType()));
       if (_confirm.isNow()) {
         table.nextRow("Value", _parameters[i] + "<input type='hidden' name='mbOpValue" + i + "' value='" + htmlEncode(_parameters[i]) + "'/>");
       }

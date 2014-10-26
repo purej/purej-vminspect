@@ -6,6 +6,7 @@ import com.purej.vminspect.data.MBeanAttribute;
 import com.purej.vminspect.data.MBeanData;
 import com.purej.vminspect.data.MBeanOperation;
 import com.purej.vminspect.data.MBeanParameter;
+import com.purej.vminspect.data.MBeanUtils;
 import com.purej.vminspect.http.MBeanAccessControl;
 import com.purej.vminspect.util.Message;
 
@@ -48,7 +49,7 @@ public class MBeansDetailView extends AbstractMBeansView {
       write("<td>");
       writeMBeanValue(attribute.getValue(), true);
       write("</td>");
-      table.addValue(htmlEncode(attribute.getType()));
+      table.addValue(htmlEncode(MBeanUtils.toDisplayType(attribute.getType())));
       table.addValue(htmlEncode(attribute.getDescription()));
       if (attribute.isWritable()) {
         if (_mbeanAccessControl.isChangeAllowed(_mbean, attribute)) {
@@ -74,7 +75,7 @@ public class MBeansDetailView extends AbstractMBeansView {
       table.nextRow();
       table.addValue(htmlEncode(operation.getName()));
       table.addValue(operation.getImpact().name());
-      table.addValue(htmlEncode(operation.getReturnType()));
+      table.addValue(htmlEncode(MBeanUtils.toDisplayType(operation.getReturnType())));
       write("<td>");
       for (int j = 0; j < operation.getParameters().length; j++) {
         MBeanParameter parameter = operation.getParameters()[j];
@@ -82,7 +83,7 @@ public class MBeansDetailView extends AbstractMBeansView {
           write("<br/>");
         }
         write(htmlEncode(parameter.getName()) + ": ");
-        write(htmlEncode(parameter.getType()));
+        write(htmlEncode(MBeanUtils.toDisplayType(parameter.getType())));
       }
       write("</td>");
       table.addValue(htmlEncode(operation.getDescription()));

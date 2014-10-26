@@ -56,7 +56,7 @@ public class HtmlPageView extends AbstractHtmlView {
   private void writeHtmlFooter() throws IOException {
     writeln("<br/><div style='font-size:8pt;'>");
     writeln("Display date: " + formatDateTime(new Date(_startTimestamp)) + "<br/>");
-    writeln("Display duration: " + formatNumber(System.currentTimeMillis() - _startTimestamp) + " ms<br/>");
+    writeln("Display duration: " + formatNumber(System.currentTimeMillis() - _startTimestamp) + "ms<br/>");
     writeln("Powered by: <a href='http://www.adopus.com/purej' target='_blank'>adopus consulting gmbh</a>");
     writeln("</div>");
     writeln("</body></html>");
