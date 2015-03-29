@@ -115,7 +115,7 @@ public class VmInspectionServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     try {
-      // Create the request, process it and write the response:
+      // Create the request, process it and render the response:
       HttpRequest httpRequest = createHttpRequest(request);
       MBeanAccessControl mbeanAccessControl = null;
       if (httpRequest.getParameter(RequestParams.MBEAN_NAME) != null) {
@@ -123,14 +123,19 @@ public class VmInspectionServlet extends HttpServlet {
         mbeanAccessControl = _mbeanAccessControlFactory.create(request);
       }
       HttpResponse httpResponse = _controller.process(httpRequest, mbeanAccessControl);
-      writeHttpResponse(httpResponse, request.getRequestURI(), response);
+
+      // Now write the rendered output:
+      try {
+        writeHttpResponse(httpResponse, request.getRequestURI(), response);
+      }
+      catch (IOException e) {
+        // Might happen if the browser already cut the connection...
+        LOGGER.debug("Exception writing the output to the response stream!", e);
+      }
     }
     catch (Exception e) {
       LOGGER.warn("An error occurred processing request!", e);
       response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, Utils.getExceptionInfo(e));
-    }
-    finally {
-      response.flushBuffer();
     }
   }
 
