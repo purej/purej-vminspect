@@ -25,7 +25,7 @@ public class SystemDataTest {
 
     Assert.assertTrue(data.getMemoryNonHeap().getUsed() > 0);
     Assert.assertTrue(data.getMemoryNonHeap().getCommitted() > 0);
-    Assert.assertTrue(data.getMemoryNonHeap().getMax() > 0);
+    // Assert.assertTrue(data.getMemoryNonHeap().getMax() > 0); Does not work on all platforms...
 
     // Note: Does not work on some machines/jdks...
     //Assert.assertTrue(data.getMemoryPhysical().getUsed() > 0);
