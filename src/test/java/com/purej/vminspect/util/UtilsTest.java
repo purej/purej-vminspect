@@ -4,6 +4,7 @@ package com.purej.vminspect.util;
 import java.util.ArrayList;
 import java.util.List;
 import junit.framework.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import com.purej.vminspect.data.statistics.StatisticsCollector;
 
@@ -45,6 +46,24 @@ public class UtilsTest {
     private float[] _f7;
     private double[] _f8;
     private Object[] _f9;
+  }
+
+  private int _stringMemoryOverhead;
+
+  /**
+   * Setup.
+   */
+  @Before
+  public void setUp() {
+    String javaVersion = System.getProperty("java.version");
+    _stringMemoryOverhead = 28; // For older VMs
+    if (javaVersion.startsWith("1.7")) {
+      _stringMemoryOverhead = 24;
+    }
+    else if (javaVersion.startsWith("1.8")) {
+      _stringMemoryOverhead = 20;
+    }
+
   }
 
   /**
@@ -187,14 +206,11 @@ public class UtilsTest {
    */
   @Test
   public void testEstimateMemoryString() throws Exception {
-    String javaVersion = System.getProperty("java.version");
-    int expectedStringOverhead = javaVersion.startsWith("1.7") ? 24 : 28;
-
     String o = "";
-    Assert.assertEquals(expectedStringOverhead, Utils.estimateMemory(o));
+    Assert.assertEquals(_stringMemoryOverhead, Utils.estimateMemory(o));
 
     o = "abc";
-    Assert.assertEquals(expectedStringOverhead + 3 * 2, Utils.estimateMemory(o));
+    Assert.assertEquals(_stringMemoryOverhead + 3 * 2, Utils.estimateMemory(o));
   }
 
   /**
@@ -267,11 +283,9 @@ public class UtilsTest {
     int expected = 64;
     Assert.assertEquals(expected, Utils.estimateMemory(list));
 
-    String javaVersion = System.getProperty("java.version");
-    int expectedStringOverhead = javaVersion.startsWith("1.7") ? 24 : 28;
     list.add("a");
     list.add("b");
-    expected += 2 * expectedStringOverhead + 4;
+    expected += 2 * _stringMemoryOverhead + 4;
     Assert.assertEquals(expected, Utils.estimateMemory(list));
   }
 
