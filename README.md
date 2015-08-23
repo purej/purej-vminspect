@@ -1,4 +1,4 @@
-<h1><img src="https://cloud.githubusercontent.com/assets/13910123/9427455/ac87593c-497e-11e5-806c-beac4cc50ae3.png"/> VM Inspection</h1>
+<h1><img src="https://cloud.githubusercontent.com/assets/13910123/9428032/6939119e-499b-11e5-89d5-78ba70cc989b.png"/> VM Inspection</h1>
 
 **PureJ VM Inspection** offers an easy to use, feature-rich, JMX-based and embeddable Java VM monitoring tool with a web-based user-interface. 
 
