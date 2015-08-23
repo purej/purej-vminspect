@@ -52,3 +52,9 @@ Alternatively, **non-webapps**, can also use the VM inspection servlet with an e
 
 ###Statistics Detail View
 ![statistics-detail-view](https://cloud.githubusercontent.com/assets/13910123/9428041/7246b85e-499b-11e5-8a1c-91ecde920c8d.gif)
+
+###MBean View
+![mbean-view](https://cloud.githubusercontent.com/assets/13910123/9428039/7234d94a-499b-11e5-9510-65a72f5098a7.gif)
+
+###MBean Detail View
+![mbean-detail-view](https://cloud.githubusercontent.com/assets/13910123/9428038/7232c77c-499b-11e5-94cf-4ffc3ed87df6.gif)
