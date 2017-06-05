@@ -3,6 +3,7 @@ package com.purej.vminspect.html;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import javax.management.ObjectName;
 import com.purej.vminspect.data.MBeanUtils;
 
@@ -28,6 +29,18 @@ abstract class AbstractMBeansView extends AbstractHtmlView {
         write(i == 0 ? "[" : "<br/>[");
         writeMBeanValue(list.get(i), tryShowMBeanLinks);
         write("]");
+      }
+    }
+    else if (object instanceof Map) {
+      Map<?, ?> map = (Map<?, ?>) object;
+      boolean first = true;
+      for (Map.Entry<?, ?> entry : map.entrySet()) {
+        write(first ? "[" : "<br/>[");
+        writeMBeanValue(entry.getKey(), tryShowMBeanLinks);
+        write("=");
+        writeMBeanValue(entry.getValue(), tryShowMBeanLinks);
+        write("]");
+        first = false;
       }
     }
     else {

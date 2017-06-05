@@ -3,6 +3,7 @@ package com.purej.vminspect.data;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Example MBean with a lot of types.
@@ -95,6 +96,10 @@ public interface MySampleMBean {
   List<String> getStringList();
 
   void setStringList(List<String> value);
+
+  Map<String, Object> getMap();
+
+  void setMap(Map<String, Object> value);
 
   String getThatThrowsUp();
 

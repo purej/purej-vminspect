@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -239,11 +240,11 @@ public final class MBeanUtils {
     }
     else if (value instanceof CompositeData) {
       CompositeData data = (CompositeData) value;
-      Map<String, Object> values = new TreeMap<String, Object>();
+      Map<String, Object> map = new TreeMap<String, Object>();
       for (String key : data.getCompositeType().keySet()) {
-        values.put(key, convertValueIfNeeded(data.get(key)));
+        map.put(key, convertValueIfNeeded(data.get(key)));
       }
-      return values;
+      return map;
     }
     else if (value.getClass().isArray()) {
       int length = Array.getLength(value);
@@ -263,6 +264,13 @@ public final class MBeanUtils {
         list.add(convertValueIfNeeded(data));
       }
       return list;
+    }
+    else if (value instanceof Map) {
+      Map<Object, Object> map = new HashMap<Object, Object>();  
+      for (Map.Entry<?, ?>entry : ((Map<?,?>) value).entrySet()) {
+        map.put(convertValueIfNeeded(entry.getKey()), convertValueIfNeeded(entry.getValue()));
+      }
+      return map;
     }
     return value;
   }

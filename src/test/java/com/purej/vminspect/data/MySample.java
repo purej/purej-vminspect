@@ -3,7 +3,9 @@ package com.purej.vminspect.data;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Example MBean with a lot of types.
@@ -31,6 +33,7 @@ public class MySample implements MySampleMBean {
   private String _string;
   private String[] _stringArray;
   private List<String> _stringList;
+  private Map<String, Object> _map;
   private List<byte[]> _allocated = new ArrayList<byte[]>();
 
   /**
@@ -61,6 +64,11 @@ public class MySample implements MySampleMBean {
       _stringList.add("first line");
       _stringList.add("second line");
       _stringList.add("some special äöü chars <> !! %&&%");
+      _map = new HashMap<String, Object>();
+      _map.put("Key1", "Value1");
+      _map.put("Key2", Integer.valueOf(1234));
+      _map.put("Key3", _stringList);
+      _map.put("Key4", "purej.vminspect:type=my Type,id=12");
     }
   }
 
@@ -262,6 +270,16 @@ public class MySample implements MySampleMBean {
   @Override
   public void setStringList(List<String> value) {
     _stringList = value;
+  }
+
+  @Override
+  public Map<String, Object> getMap() {
+    return _map;
+  }
+
+  @Override
+  public void setMap(Map<String, Object> value) {
+    _map = value;
   }
 
   @Override
