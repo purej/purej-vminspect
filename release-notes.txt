@@ -1,5 +1,7 @@
 Version "current"
  - Moved from google-code to github, changed repository URLs, upgraded parent pom
+ - Better handling of MBean attributes of type Map (eg. displayed as multi-line key=value pairs)
+ - Upgraded to latest slf4j
 
 Version 1.2.9 - (29.03.2015)
  - More stable exception handling in case of browser connection aborts
