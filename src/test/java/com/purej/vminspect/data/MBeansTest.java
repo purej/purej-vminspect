@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Test;
 import com.purej.vminspect.data.MBeanOperation.Impact;
 
