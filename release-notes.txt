@@ -1,7 +1,11 @@
 Version "current"
+
+Version 1.3.0 - (06.12.2017)
  - Moved from google-code to github, changed repository URLs, upgraded parent pom
  - Better handling of MBean attributes of type Map (eg. displayed as multi-line key=value pairs)
  - Upgraded to latest slf4j
+ - Redundant MBean operations that are exposed as attributes too will be ignored (cause Spring JMX exposes attributes as operations too)
+ - More flexible MBean type extraction from key=value name part (for example if not first pair or if not lower-case)
 
 Version 1.2.9 - (29.03.2015)
  - More stable exception handling in case of browser connection aborts
