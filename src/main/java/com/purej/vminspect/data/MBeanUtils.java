@@ -129,6 +129,26 @@ public final class MBeanUtils {
     }
   }
 
+  private static boolean isGetter(Map<String, String> getters, MBeanOperationInfo info) {
+    // Must be zero args:
+    if (info.getSignature().length > 0) {
+      return false;
+    }
+    // Check if getter and return-type matches:
+    String type = getters.get(info.getName());
+    return type != null && type.equals(info.getReturnType());
+  }
+
+  private static boolean isSetter(Map<String, String> setters, MBeanOperationInfo info) {
+    // Must be one args and void return:
+    if (info.getSignature().length != 1 && !"void".equals(info.getReturnType())) {
+      return false;
+    }
+    // Check if setter and arg-type matches:
+    String type = setters.get(info.getName());
+    return type != null && type.equals(info.getSignature()[0].getType());
+  }
+
   /**
    * Returns the MBean for the given object name or null if the MBean could not be found.
    */
@@ -283,8 +303,8 @@ public final class MBeanUtils {
       return list;
     }
     else if (value instanceof Map) {
-      Map<Object, Object> map = new HashMap<Object, Object>();  
-      for (Map.Entry<?, ?>entry : ((Map<?,?>) value).entrySet()) {
+      Map<Object, Object> map = new HashMap<Object, Object>();
+      for (Map.Entry<?, ?> entry : ((Map<?, ?>) value).entrySet()) {
         map.put(convertValueIfNeeded(entry.getKey()), convertValueIfNeeded(entry.getValue()));
       }
       return map;
