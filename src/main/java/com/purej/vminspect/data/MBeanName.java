@@ -1,6 +1,8 @@
 // Copyright (c), 2013, adopus consulting GmbH Switzerland, all rights reserved.
 package com.purej.vminspect.data;
 
+import java.util.Hashtable;
+import java.util.Map;
 import javax.management.ObjectName;
 
 /**
@@ -22,16 +24,23 @@ public class MBeanName {
     _serverIdx = serverIdx;
     _objectName = objectName;
     _domain = objectName.getDomain();
-    String properties = objectName.getKeyPropertyListString();
-    if (properties != null && properties.startsWith("type=")) {
-      int idx = properties.indexOf(',');
-      _type = idx > 0 ? properties.substring(5, idx) : properties.substring(5);
-      _otherKeyValues = idx > 0 ? properties.substring(idx + 1) : "";
+
+    // Build type and the other key=value pairs from full-name:
+    String type = "Unknown";
+    StringBuilder otherKeyValues = new StringBuilder();
+    Hashtable<String, String> keys = objectName.getKeyPropertyList();
+    for (Map.Entry<String, String> entry : keys.entrySet()) {
+      if (entry.getKey().equalsIgnoreCase("type")) {
+        type = entry.getValue();
+      } else {
+        if (otherKeyValues.length() > 0) {
+          otherKeyValues.append(',');
+        }
+        otherKeyValues.append(entry.getKey()).append('=').append(entry.getValue());
+      }
     }
-    else {
-      _type = "Unknown";
-      _otherKeyValues = properties;
-    }
+    _type = type;
+    _otherKeyValues = otherKeyValues.toString();
   }
 
   /**
