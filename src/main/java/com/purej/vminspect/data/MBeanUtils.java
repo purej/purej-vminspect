@@ -89,20 +89,37 @@ public final class MBeanUtils {
       MBeanServer server = getMBeanServer(mbName.getServerIdx());
       MBeanInfo mbeanInfo = server.getMBeanInfo(mbName.getObjectName());
 
+      // The set of attribute getter/setters to hide redundant operations
+      // later on - this is required as some frameworks (for example Spring)
+      // exposes Attributes as operations too (which makes it redundant)...
+      Map<String, String> getters = new HashMap<String, String>();
+      Map<String, String> setters = new HashMap<String, String>();
+
       // Create the list of attributes:
       MBeanAttributeInfo[] attributeInfos = mbeanInfo.getAttributes();
       MBeanAttribute[] attributes = new MBeanAttribute[attributeInfos.length];
       for (int i = 0; i < attributes.length; i++) {
-        attributes[i] = createAttribute(server, mbName.getObjectName(), attributeInfos[i]);
+        MBeanAttributeInfo info = attributeInfos[i];
+        if (info.isReadable()) {
+          getters.put(info.isIs() ? "is" + info.getName() : "get" + info.getName(), info.getType());
+        }
+        if (info.isWritable()) {
+          setters.put("set" + info.getName(), info.getType());
+        }
+        attributes[i] = createAttribute(server, mbName.getObjectName(), info);
       }
       Arrays.sort(attributes, new MBeanAttributeComparator());
 
       // Create the list of operations:
       MBeanOperationInfo[] operationInfos = mbeanInfo.getOperations();
-      MBeanOperation[] operations = new MBeanOperation[operationInfos.length];
+      List<MBeanOperation> ops = new ArrayList<MBeanOperation>(operationInfos.length);
       for (int i = 0; i < operationInfos.length; i++) {
-        operations[i] = createOperation(operationInfos[i]);
+        MBeanOperationInfo info = operationInfos[i];
+        if (!isGetter(getters, info) && !isSetter(setters, info)) {
+          ops.add(createOperation(info));
+        }
       }
+      MBeanOperation[] operations = ops.toArray(new MBeanOperation[ops.size()]);
       Arrays.sort(operations, new MBeanOperationComparator());
 
       return new MBeanData(mbName, mbeanInfo.getDescription(), attributes, operations);
