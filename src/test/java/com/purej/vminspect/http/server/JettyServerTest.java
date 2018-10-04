@@ -2,12 +2,15 @@
 package com.purej.vminspect.http.server;
 
 import java.lang.management.ManagementFactory;
+
 import javax.management.ObjectName;
+
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.nio.SelectChannelConnector;
+import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+
 import com.purej.vminspect.data.MySample;
 import com.purej.vminspect.http.servlet.VmInspectionServlet;
 
@@ -30,10 +33,10 @@ public final class JettyServerTest {
       System.exit(-1);
     }
 
-    SelectChannelConnector connector = new SelectChannelConnector();
+    Server server = new Server();
+    ServerConnector connector = new ServerConnector(server);
     connector.setReuseAddress(false);
     connector.setPort(Integer.parseInt(args[0]));
-    Server server = new Server();
     server.setConnectors(new Connector[] {connector});
 
     // Init 1: Direct init

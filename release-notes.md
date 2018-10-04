@@ -1,5 +1,10 @@
 Version "current"
 
+Version 1.4.0 - (04.10.2018)
+ - Requires jdk 1.8
+ - Added automatic-module-name to manifest for java 9 and higher support
+ - Using newer version of jrobin to prevent errors on java 9 and higher
+
 Version 1.3.0 - (06.12.2017)
  - Moved from google-code to github, changed repository URLs, upgraded parent pom
  - Better handling of MBean attributes of type Map (eg. displayed as multi-line key=value pairs)
