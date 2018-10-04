@@ -59,7 +59,7 @@ public final class StatisticsCollector {
 
     // Create the JRobin backend factory:
     try {
-      if (storageDir == null) {
+      if (storageDir == null || storageDir.isEmpty()) {
         _storageDir = null;
         _rrdBackendFactory = RrdBackendFactory.getFactory(RrdMemoryBackendFactory.NAME);
       }
