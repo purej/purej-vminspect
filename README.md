@@ -39,6 +39,17 @@ Alternatively, **non-webapps**, can also use the VM inspection servlet with an e
   server.start();
 ```
 
+Optional properties might be set to configure some aspects:
+
+| Property | Default Value | Description |
+|----|----|----|
+| vminspect.mbeans.readonly | false | Specifies if VmInspect is allowed to edit MBean values or invoke non-info operations |
+| vminspect.mbeans.writeConfirmation | false | Specifies if a confirmation screen is displayed before edit MBean attributes or invoke MBean operations |
+| vminspect.mbeans.accessControlFactory | none | Fully qualified class name of an implementation of the {@link MBeanAccessControlFactory} interface |
+| vminspect.statistics.collection.frequencyMs | 60'000 | Number of milliseconds for the statistics collection timer |
+| vminspect.statistics.storage.dir | none | Optional Path where to store the statistics files. If no storage directory is configured, the statistics will be kept in-memory and thus will be lost after a VM restart. |
+
+
 ## Screenshots
 
 ### System View
