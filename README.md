@@ -49,6 +49,20 @@ Optional properties might be set to configure some aspects:
 | vminspect.statistics.collection.frequencyMs | 60'000 | Number of milliseconds for the statistics collection timer |
 | vminspect.statistics.storage.dir | none | Optional Path where to store the statistics files. If no storage directory is configured, the statistics will be kept in-memory and thus will be lost after a VM restart. |
 
+### Requisites
+
+  * Java 1.8 or higher
+
+Maven users just need to add the following dependency:
+
+```
+  <dependency>
+    <groupId>com.purej</groupId>
+    <artifactId>purej-vminspect</artifactId>
+    <version>1.4</version>
+  </dependency>
+```
+
 
 ## Screenshots
 
