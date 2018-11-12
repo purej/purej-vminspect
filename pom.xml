@@ -9,7 +9,7 @@
   </parent>
 
   <artifactId>purej-vminspect</artifactId>
-  <version>1.4.0</version>
+  <version>1.4.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>PureJ VM Inspection</name>
@@ -43,7 +43,7 @@
     <dependency>
       <groupId>com.purej</groupId>
       <artifactId>jrobin</artifactId>
-      <version>1.7.0</version>
+      <version>1.7.1</version>
     </dependency>
 
     <dependency>
