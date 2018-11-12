@@ -1,5 +1,8 @@
 Version "current"
 
+Version 1.4.1 - (12.11.2018)
+ - Upgrade to latest jrobin with fixed unit-dependency scope
+
 Version 1.4.0 - (04.10.2018)
  - Requires jdk 1.8
  - Added automatic-module-name to manifest for java 9 and higher support
