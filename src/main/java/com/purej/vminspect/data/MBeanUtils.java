@@ -123,8 +123,7 @@ public final class MBeanUtils {
       Arrays.sort(operations, new MBeanOperationComparator());
 
       return new MBeanData(mbName, mbeanInfo.getDescription(), attributes, operations);
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       throw new RuntimeException("MBean with name '" + mbName + "' could not be resolved!", e);
     }
   }
@@ -155,8 +154,7 @@ public final class MBeanUtils {
   public static MBeanData getMBean(int mbServerIdx, String mbName) {
     try {
       return getMBean(new MBeanName(mbServerIdx, new ObjectName(mbName)));
-    }
-    catch (MalformedObjectNameException e) {
+    } catch (MalformedObjectNameException e) {
       throw new RuntimeException("MBean with name '" + mbName + "' could not be resolved!", e);
     }
   }
@@ -170,8 +168,7 @@ public final class MBeanUtils {
     Attribute attr = new Attribute(attribute.getName(), objectValue);
     try {
       getMBeanServer(mbeanName.getServerIdx()).setAttribute(objectName, attr);
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       throw new RuntimeException("An error occurred setting attribute '" + attribute.getName() + "' to value '" + value + "'!", e);
     }
     return convertValueIfNeeded(objectValue);
@@ -195,8 +192,7 @@ public final class MBeanUtils {
       }
       Object result = getMBeanServer(mbeanName.getServerIdx()).invoke(objectName, operation.getName(), typedParams, types);
       return convertValueIfNeeded(result);
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       throw new RuntimeException("An error occurred invoking operation '" + operation.getName() + "'!", e);
     }
   }
@@ -209,8 +205,7 @@ public final class MBeanUtils {
       // Make sure platform server is created!
       ManagementFactory.getPlatformMBeanServer();
       return MBeanServerFactory.findMBeanServer(null);
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       throw new RuntimeException("Could not access MBean servers!", e);
     }
   }
@@ -225,8 +220,7 @@ public final class MBeanUtils {
       try {
         Object o = server.getAttribute(name, attributeInfo.getName());
         value = convertValueIfNeeded(o);
-      }
-      catch (Exception e) {
+      } catch (Exception e) {
         // Skip wrapper exception (MBeanException, ReflectionException) as it contains all info twice:
         value = "Exception reading attribute value: " + Utils.getExceptionInfo(e.getCause() != null ? e.getCause() : e);
       }
@@ -274,35 +268,30 @@ public final class MBeanUtils {
   private static Object convertValueIfNeeded(Object value) {
     if (value == null) {
       return null;
-    }
-    else if (value instanceof CompositeData) {
+    } else if (value instanceof CompositeData) {
       CompositeData data = (CompositeData) value;
       Map<String, Object> map = new TreeMap<String, Object>();
       for (String key : data.getCompositeType().keySet()) {
         map.put(key, convertValueIfNeeded(data.get(key)));
       }
       return map;
-    }
-    else if (value.getClass().isArray()) {
+    } else if (value.getClass().isArray()) {
       int length = Array.getLength(value);
       List<Object> list = new ArrayList<Object>(length);
       for (int i = 0; i < length; i++) {
         list.add(convertValueIfNeeded(Array.get(value, i)));
       }
       return list;
-    }
-    else if (value instanceof TabularData) {
+    } else if (value instanceof TabularData) {
       TabularData tabularData = (TabularData) value;
       return convertValueIfNeeded(tabularData.values());
-    }
-    else if (value instanceof Collection) {
+    } else if (value instanceof Collection) {
       List<Object> list = new ArrayList<Object>();
       for (Object data : (Collection<?>) value) {
         list.add(convertValueIfNeeded(data));
       }
       return list;
-    }
-    else if (value instanceof Map) {
+    } else if (value instanceof Map) {
       Map<Object, Object> map = new HashMap<Object, Object>();
       for (Map.Entry<?, ?> entry : ((Map<?, ?>) value).entrySet()) {
         map.put(convertValueIfNeeded(entry.getKey()), convertValueIfNeeded(entry.getValue()));
@@ -316,40 +305,29 @@ public final class MBeanUtils {
     try {
       if (value == null || value.length() == 0) {
         return null;
-      }
-      else if (type.equals("java.lang.String")) {
+      } else if (type.equals("java.lang.String")) {
         return value;
-      }
-      else if (type.equals("java.lang.Character") || type.equals("char")) {
-        return new Character(value.charAt(0));
-      }
-      else if (type.equals("java.lang.Boolean") || type.equals("boolean")) {
+      } else if (type.equals("java.lang.Character") || type.equals("char")) {
+        return Character.valueOf(value.charAt(0));
+      } else if (type.equals("java.lang.Boolean") || type.equals("boolean")) {
         return Boolean.valueOf(value);
-      }
-      else if (type.equals("java.lang.Byte") || type.equals("byte")) {
-        return new Byte(value);
-      }
-      else if (type.equals("java.lang.Short") || type.equals("short")) {
-        return new Short(value);
-      }
-      else if (type.equals("java.lang.Integer") || type.equals("int")) {
-        return new Integer(value);
-      }
-      else if (type.equals("java.lang.Long") || type.equals("long")) {
-        return new Long(value);
-      }
-      else if (type.equals("java.lang.Float") || type.equals("float")) {
-        return new Float(value);
-      }
-      else if (type.equals("java.lang.Double") || type.equals("double")) {
-        return new Double(value);
-      }
-      else if (type.equals("java.math.BigDecimal")) {
+      } else if (type.equals("java.lang.Byte") || type.equals("byte")) {
+        return Byte.valueOf(value);
+      } else if (type.equals("java.lang.Short") || type.equals("short")) {
+        return Short.valueOf(value);
+      } else if (type.equals("java.lang.Integer") || type.equals("int")) {
+        return Integer.valueOf(value);
+      } else if (type.equals("java.lang.Long") || type.equals("long")) {
+        return Long.valueOf(value);
+      } else if (type.equals("java.lang.Float") || type.equals("float")) {
+        return Float.valueOf(value);
+      } else if (type.equals("java.lang.Double") || type.equals("double")) {
+        return Double.valueOf(value);
+      } else if (type.equals("java.math.BigDecimal")) {
         return new BigDecimal(value);
       }
       throw new UnsupportedOperationException("Type '" + type + "' is currently not supported!");
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       throw new IllegalArgumentException("The value '" + value + "' could not be converted to type '" + type + "'!", e);
     }
   }
