@@ -58,13 +58,11 @@ public class VmInspectionServlet extends HttpServlet {
     MBeanAccessControlFactory accessControlFactory;
     if (accessControlFactoryClz != null) {
       try {
-        accessControlFactory = (MBeanAccessControlFactory) Class.forName(accessControlFactoryClz).newInstance();
-      }
-      catch (Exception e) {
+        accessControlFactory = (MBeanAccessControlFactory) Class.forName(accessControlFactoryClz).getDeclaredConstructor().newInstance();
+      } catch (Exception e) {
         throw new ServletException("Could not load configured MBeanAccessControlFactory class '" + accessControlFactoryClz + "'!");
       }
-    }
-    else {
+    } else {
       // Create a default static MBeanAccessControlFactory instance using the boolean attributes:
       final MBeanAccessControl accessControl = new DefaultMBeanAccessControl(mbeansReadonly, mbeansWriteConfirmation);
       accessControlFactory = new MBeanAccessControlFactory() {
@@ -127,13 +125,11 @@ public class VmInspectionServlet extends HttpServlet {
       // Now write the rendered output:
       try {
         writeHttpResponse(httpResponse, request.getRequestURI(), response);
-      }
-      catch (IOException e) {
+      } catch (IOException e) {
         // Might happen if the browser already cut the connection...
         LOGGER.debug("Exception writing the output to the response stream!", e);
       }
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       LOGGER.warn("An error occurred processing request!", e);
       response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, Utils.getExceptionInfo(e));
     }
@@ -176,8 +172,7 @@ public class VmInspectionServlet extends HttpServlet {
     // b) Caching:
     if (httpResponse.getCacheSeconds() > 0) {
       response.addHeader("Cache-Control", "max-age=" + httpResponse.getCacheSeconds());
-    }
-    else {
+    } else {
       response.addHeader("Cache-Control", "no-cache");
       response.addHeader("Pragma", "no-cache");
       response.addHeader("Expires", "-1");
