@@ -28,13 +28,13 @@ public class SystemDataTest {
     // Assert.assertTrue(data.getMemoryNonHeap().getMax() > 0); Does not work on all platforms...
 
     // Note: Does not work on some machines/jdks...
-    //Assert.assertTrue(data.getMemoryPhysical().getUsed() > 0);
-    //Assert.assertTrue(data.getMemoryPhysical().getCommitted() > 0);
+    Assert.assertTrue(data.getMemoryPhysical().getUsed() > 0);
+    // Assert.assertTrue(data.getMemoryPhysical().getCommitted() > 0);
     Assert.assertTrue(data.getMemoryPhysical().getMax() > 0);
 
     // Note: Does not work on some machines/jdks...
-    //Assert.assertTrue(data.getMemorySwap().getUsed() > 0);
-    //Assert.assertTrue(data.getMemorySwap().getCommitted() > 0);
+    Assert.assertTrue(data.getMemorySwap().getUsed() > 0);
+    // Assert.assertTrue(data.getMemorySwap().getCommitted() > 0);
     Assert.assertTrue(data.getMemorySwap().getMax() > 0);
   }
 
@@ -51,8 +51,8 @@ public class SystemDataTest {
     Assert.assertTrue(data.getOsAvailableProcessors() > 0);
     Assert.assertTrue(data.getProcessCpuTimeMillis() > 0);
     // Note: Does not work on some machines/jdks...
-    //Assert.assertTrue(data.getProcessCpuLoadPct() > 0);
-    //Assert.assertTrue(data.getSystemCpuLoadPct() > 0);
+    // Assert.assertTrue(data.getProcessCpuLoadPct() > -1);
+    // Assert.assertTrue(data.getSystemCpuLoadPct() > 0);
   }
 
   /**
@@ -87,12 +87,16 @@ public class SystemDataTest {
       Assert.assertNotNull(td.getStackTraceString());
       Assert.assertNotNull(td.getState());
       Assert.assertEquals(false, td.isDeadlocked());
-      //System.out.println("VmInfos - Threads[" + i + "] - Name: " + td.getName());
-      //System.out.println("VmInfos - Threads[" + i + "] - Priority: " + td.getPriority());
-      //System.out.println("VmInfos - Threads[" + i + "] - State: " + td.getState());
-      //System.out.println("VmInfos - Threads[" + i + "] - StackTrace: " + td.getStackTrace().length);
-      //System.out.println("VmInfos - Threads[" + i + "] - CpuTimeMillis: " + td.getCpuTimeMillis());
-      //System.out.println("VmInfos - Threads[" + i + "] - UserTimeMillis: " + td.getUserTimeMillis());
+      // System.out.println("VmInfos - Threads[" + i + "] - Name: " + td.getName());
+      // System.out.println("VmInfos - Threads[" + i + "] - Priority: " +
+      // td.getPriority());
+      // System.out.println("VmInfos - Threads[" + i + "] - State: " + td.getState());
+      // System.out.println("VmInfos - Threads[" + i + "] - StackTrace: " +
+      // td.getStackTrace().length);
+      // System.out.println("VmInfos - Threads[" + i + "] - CpuTimeMillis: " +
+      // td.getCpuTimeMillis());
+      // System.out.println("VmInfos - Threads[" + i + "] - UserTimeMillis: " +
+      // td.getUserTimeMillis());
     }
   }
 
@@ -108,7 +112,7 @@ public class SystemDataTest {
     Assert.assertTrue(data.getCLLoadedClassCount() > 0);
     Assert.assertTrue(data.getCLTotalLoadedClassCount() > 0);
     // Note: gc execution cannot be forced...
-    //Assert.assertTrue(data.getGcCollectionCount() > 0);
-    //Assert.assertTrue(data.getGcCollectionTimeMillis() > 0);
+    // Assert.assertTrue(data.getGcCollectionCount() > 0);
+    // Assert.assertTrue(data.getGcCollectionTimeMillis() > 0);
   }
 }

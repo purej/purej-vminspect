@@ -8,7 +8,6 @@ import java.lang.management.MemoryMXBean;
 import java.lang.management.OperatingSystemMXBean;
 import java.lang.management.RuntimeMXBean;
 import java.lang.management.ThreadMXBean;
-import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,11 +15,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.sun.management.UnixOperatingSystemMXBean;
+
 /**
  * Provides information about the virtual machine currently running in.
  *
  * @author Stefan Mueller
  */
+@SuppressWarnings("restriction")
 public class SystemData {
   // Host name and IP:
   private static final String HOST_IP;
@@ -30,8 +32,7 @@ public class SystemData {
     try {
       InetAddress localHost = InetAddress.getLocalHost();
       hostIp = localHost.getHostName() + " (" + localHost.getHostAddress() + ")";
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       hostIp = "Unknown";
     }
     HOST_IP = hostIp;
@@ -87,48 +88,46 @@ public class SystemData {
     _memoryHeap = new MemoryData(mb.getHeapMemoryUsage());
     _memoryNonHeap = new MemoryData(mb.getNonHeapMemoryUsage());
 
-    // Physical / swap memory - is hidden, type is long (eg. bytes):
+    // Physical / swap memory - Note: This is hidden in sun-classes, try to down-cast as reflection does not work anymore...:
     _osb = ManagementFactory.getOperatingSystemMXBean();
-    long memPhysTotal = getHiddenInfoLong(_osb, "getTotalPhysicalMemorySize");
-    long memPhysFree = getHiddenInfoLong(_osb, "getFreePhysicalMemorySize");
-    _memoryPhysical = new MemoryData(memPhysTotal != -1 ? memPhysTotal - memPhysFree : -1, -1, memPhysTotal);
-    long memSwapTotal = getHiddenInfoLong(_osb, "getTotalSwapSpaceSize");
-    long memSwapFree = getHiddenInfoLong(_osb, "getFreeSwapSpaceSize");
-    _memorySwap = new MemoryData(memSwapTotal != -1 ? memSwapTotal - memSwapFree : -1, -1, memSwapTotal);
+    if (_osb instanceof com.sun.management.OperatingSystemMXBean) {
+      com.sun.management.OperatingSystemMXBean osb = (com.sun.management.OperatingSystemMXBean) _osb;
 
-    // Process Cpu time is hidden - value is in nanoseconds:
-    Object cpuTime = getHiddenInfo(_osb, "getProcessCpuTime");
-    _processCpuTimeMillis = cpuTime != null ? ((Long) cpuTime).longValue() / 1000000 : -1;
+      long memPhysTotal = osb.getTotalPhysicalMemorySize();
+      long memPhysFree = osb.getFreePhysicalMemorySize();
+      _memoryPhysical = new MemoryData(memPhysTotal != -1 ? memPhysTotal - memPhysFree : -1, -1, memPhysTotal);
+      long memSwapTotal = osb.getTotalSwapSpaceSize();
+      long memSwapFree = osb.getFreeSwapSpaceSize();
+      _memorySwap = new MemoryData(memSwapTotal != -1 ? memSwapTotal - memSwapFree : -1, -1, memSwapTotal);
 
-    // Process Cpu load is hidden - value is a double between 0..1:
-    Object cpuLoad = getHiddenInfo(_osb, "getProcessCpuLoad");
-    double processCpuLoadPct = cpuLoad != null ? ((Double) cpuLoad).doubleValue() : -1;
-    _processCpuLoadPct = processCpuLoadPct < 0 ? processCpuLoadPct : processCpuLoadPct * 100;
+      // Process Cpu time - value is in nanoseconds:
+      long cpuTime = osb.getProcessCpuTime();
+      _processCpuTimeMillis = cpuTime > 0 ? cpuTime / 1000000 : -1;
 
-    // System Cpu load is hidden - value is a double between 0..1:
-    Object systemLoad = getHiddenInfo(_osb, "getSystemCpuLoad");
-    double systemCpuLoadPct = systemLoad != null ? ((Double) systemLoad).doubleValue() : -1;
-    _systemCpuLoadPct = systemCpuLoadPct < 0 ? systemCpuLoadPct : systemCpuLoadPct * 100;
+      // Process Cpu load - value is a double between 0..1:
+      double cpuLoad = osb.getProcessCpuLoad();
+      _processCpuLoadPct = cpuLoad < 0 ? cpuLoad : cpuLoad * 100;
+
+      // System Cpu load - value is a double between 0..1:
+      double systemLoad = osb.getSystemCpuLoad();
+      _systemCpuLoadPct = systemLoad < 0 ? systemLoad : systemLoad * 100;
+    } else {
+      // Cannot access all the hidden infos (reflection does not work anymore from java 9 onwards...)
+      _memoryPhysical = new MemoryData(-1, -1, -1);
+      _memorySwap = new MemoryData(-1, -1, -1);
+      _processCpuTimeMillis = -1;
+      _processCpuLoadPct = -1;
+      _systemCpuLoadPct = -1;
+    }
 
     // Open/Max file descriptor count:
-    _openFileDescriptorCount = getHiddenInfoLong(_osb, "getOpenFileDescriptorCount");
-    _maxFileDescriptorCount = getHiddenInfoLong(_osb, "getMaxFileDescriptorCount");
-  }
-
-  private static long getHiddenInfoLong(Object object, String methodName) {
-    Object hiddenInfo = getHiddenInfo(object, methodName);
-    return hiddenInfo != null ? ((Long) hiddenInfo).longValue() : -1;
-  }
-
-  private static Object getHiddenInfo(Object object, String methodName) {
-    try {
-      Method method = object.getClass().getMethod(methodName, new Class<?>[0]);
-      method.setAccessible(true);
-      return method.invoke(object, new Object[0]);
-    }
-    catch (Exception e) {
-      // Ignore, info might not exist on this platform:
-      return null;
+    if (_osb instanceof UnixOperatingSystemMXBean) {
+      UnixOperatingSystemMXBean usb = (UnixOperatingSystemMXBean) _osb;
+      _openFileDescriptorCount = usb.getOpenFileDescriptorCount();
+      _maxFileDescriptorCount = usb.getMaxFileDescriptorCount();
+    } else {
+      _openFileDescriptorCount = -1;
+      _maxFileDescriptorCount = -1;
     }
   }
 

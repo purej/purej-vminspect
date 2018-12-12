@@ -105,7 +105,7 @@ public final class SystemMainView extends AbstractHtmlView {
     String bar = toMemoryBar(memory);
     String used = "Used: " + formatMb(memory.getUsed() / 1024d / 1024d);
     String commited = memory.getCommitted() > 0 ? " / Alloc: " + formatMb(memory.getCommitted() / 1024d / 1024d) : "";
-    String max = " / Max: " + formatMb(memory.getMax() / 1024d / 1024d);
+    String max = memory.getMax() > 0 ? " / Max: " + formatMb(memory.getMax() / 1024d / 1024d) : "";
     table.nextRow(label, used + commited + max, bar);
   }
 
@@ -120,18 +120,28 @@ public final class SystemMainView extends AbstractHtmlView {
     pics.add(new MemoryBarPic("grey", BAR_PIXELS));
     pics.add(new MemoryBarPic("grey-end", 3));
 
-    // Add commited (optional):
-    String title = "";
-    if (memory.getCommitted() > 0) {
-      double pct = pct(memory.getCommitted(), memory.getMax());
-      title = " / " + formatPct(pct);
-      overlayBarPics(pics, "blue", pct);
+    // Note: commited and/or max might be missing!
+    String title = "0%";
+    if (memory.getUsed() > 0) {
+      if (memory.getMax() > 0) {
+        // Calc against max:
+        if (memory.getCommitted() > 0) {
+          double pct = pct(memory.getCommitted(), memory.getMax());
+          title = " / " + formatPct(pct);
+          overlayBarPics(pics, "blue", pct);
+        } else {
+          title = "";
+        }
+        double pct = pct(memory.getUsed(), memory.getMax());
+        title = formatPct(pct) + title;
+        overlayBarPics(pics, "violet", pct);
+      } else if (memory.getCommitted() > 0) {
+        // Calc against commited:
+        double pct = pct(memory.getUsed(), memory.getCommitted());
+        title = formatPct(pct);
+        overlayBarPics(pics, "violet", pct);
+      }
     }
-
-    // Add used:
-    double pct = pct(memory.getUsed(), memory.getMax());
-    title = formatPct(pct) + title;
-    overlayBarPics(pics, "violet", pct);
 
     // Now render the complete bar:
     StringBuilder result = new StringBuilder();
