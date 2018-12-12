@@ -106,7 +106,8 @@ public class SystemDataTest {
   @Test
   public void testCLData() throws Exception {
     SystemData data = new SystemData();
-    Assert.assertNotNull(data.getCLBootClassPath());
+    // Note: Not supported by all java versions
+    //Assert.assertNotNull(data.getCLBootClassPath());
     Assert.assertNotNull(data.getCLClassPath());
     Assert.assertNotNull(data.getCLLibraryPath());
     Assert.assertTrue(data.getCLLoadedClassCount() > 0);

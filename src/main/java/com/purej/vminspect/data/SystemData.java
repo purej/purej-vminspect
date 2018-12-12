@@ -277,7 +277,7 @@ public class SystemData {
   }
 
   /**
-   * Returns the boot class path that is used by the bootstrap class loader.
+   * Returns the java library path.
    */
   public String getCLLibraryPath() {
     return _rtb.getLibraryPath();
