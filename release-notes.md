@@ -1,5 +1,10 @@
 Version "current"
 
+Version 1.5.0 - (12.12.2018)
+ - Removed memory-estimate for in-memory statistics collections as of problems with java 11 (restricted reflection access)
+ - Changed the way of accessing hidden memory and CPU data as of problems with java 11 (restricted reflection access)
+ - Replaced some methods deprecated with java 9 and onwards
+
 Version 1.4.1 - (12.11.2018)
  - Upgrade to latest jrobin with fixed unit-dependency scope
 
