@@ -1,12 +1,8 @@
 // Copyright (c), 2013, adopus consulting GmbH Switzerland, all rights reserved.
 package com.purej.vminspect.util;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-import com.purej.vminspect.data.statistics.StatisticsCollector;
 
 /**
  * Tests the named functionality.
@@ -14,57 +10,6 @@ import com.purej.vminspect.data.statistics.StatisticsCollector;
  * @author Stefan Mueller
  */
 public class UtilsTest {
-
-  private static class MyEmpty {
-    // Empty...
-  }
-
-  @SuppressWarnings("unused")
-  private static class MyPrimitives {
-    private boolean _f1;
-    private char _f2;
-    private byte _f3;
-    private short _f4;
-    private int _f5;
-    private long _f6;
-    private float _f7;
-    private double _f8;
-  }
-
-  private static class MyO {
-    private Object _o;
-  }
-
-  @SuppressWarnings("unused")
-  private static class MyArrays {
-    private boolean[] _f1;
-    private char[] _f2;
-    private byte[] _f3;
-    private short[] _f4;
-    private int[] _f5;
-    private long[] _f6;
-    private float[] _f7;
-    private double[] _f8;
-    private Object[] _f9;
-  }
-
-  private int _stringMemoryOverhead;
-
-  /**
-   * Setup.
-   */
-  @Before
-  public void setUp() {
-    String javaVersion = System.getProperty("java.version");
-    _stringMemoryOverhead = 28; // For older VMs
-    if (javaVersion.startsWith("1.7")) {
-      _stringMemoryOverhead = 24;
-    }
-    else if (javaVersion.startsWith("1.8")) {
-      _stringMemoryOverhead = 20;
-    }
-
-  }
 
   /**
    * Tests the named functionality.
@@ -75,8 +20,7 @@ public class UtilsTest {
     try {
       Utils.checkNotNull(null);
       Assert.fail();
-    }
-    catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException e) {
       // Expected...
     }
   }
@@ -183,124 +127,5 @@ public class UtilsTest {
     Assert.assertEquals(false, Utils.wildCardMatch(s5, "* mit des *"));
     Assert.assertEquals(false, Utils.wildCardMatch(s5, "*tantzt"));
     Assert.assertEquals(false, Utils.wildCardMatch(s5, "*er*dm *nzt*"));
-  }
-
-  /**
-   * Tests the named functionality.
-   */
-  @Test
-  public void testEstimateMemoryEmpty() throws Exception {
-    Assert.assertEquals(8, Utils.estimateMemory(new MyEmpty()));
-  }
-
-  /**
-   * Tests the named functionality.
-   */
-  @Test
-  public void testEstimateMemoryPrimitives() throws Exception {
-    Assert.assertEquals(38, Utils.estimateMemory(new MyPrimitives()));
-  }
-
-  /**
-   * Tests the named functionality.
-   */
-  @Test
-  public void testEstimateMemoryString() throws Exception {
-    String o = "";
-    Assert.assertEquals(_stringMemoryOverhead, Utils.estimateMemory(o));
-
-    o = "abc";
-    Assert.assertEquals(_stringMemoryOverhead + 3 * 2, Utils.estimateMemory(o));
-  }
-
-  /**
-   * Tests the named functionality.
-   */
-  @Test
-  public void testEstimateMemoryInteger() throws Exception {
-    Integer o = Integer.valueOf(0);
-    Assert.assertEquals(12, Utils.estimateMemory(o));
-
-    o = Integer.valueOf(1234567);
-    Assert.assertEquals(12, Utils.estimateMemory(o));
-  }
-
-  /**
-   * Tests the named functionality.
-   */
-  @Test
-  public void testEstimateMemoryO() throws Exception {
-    MyO root = new MyO();
-    Assert.assertEquals(12, Utils.estimateMemory(root));
-
-    root._o = root; // cycle
-    Assert.assertEquals(12, Utils.estimateMemory(root));
-
-    root._o = new MyO(); // nested
-    Assert.assertEquals(24, Utils.estimateMemory(root));
-
-    ((MyO) root._o)._o = root; // nested cycle
-    Assert.assertEquals(24, Utils.estimateMemory(root));
-  }
-
-  /**
-   * Tests the named functionality.
-   */
-  @Test
-  public void testEstimateMemoryArrays() throws Exception {
-    // Test empty:
-    MyArrays arrays = new MyArrays();
-    int expected = 44; // --> 9x 4 bytes + 8 bytes
-    Assert.assertEquals(expected, Utils.estimateMemory(arrays));
-
-    // Test with booleans[]:
-    arrays._f1 = new boolean[0];
-    expected += 4; // --> + 4 bytes for the array instance
-    Assert.assertEquals(expected, Utils.estimateMemory(arrays));
-
-    // Test with byte[]:
-    arrays._f3 = new byte[1024];
-    expected += 1028; // --> + 4 bytes for the array instance + 1024 bytes for content
-    Assert.assertEquals(expected, Utils.estimateMemory(arrays));
-
-    // Test with char[]:
-    arrays._f2 = new char[3];
-    expected += 10; // --> + 4 bytes for the array instance + 6 bytes for content
-    Assert.assertEquals(expected, Utils.estimateMemory(arrays));
-
-    // Test with Object[]:
-    arrays._f9 = new Object[0];
-    expected += 4; // --> + 4 bytes for the array instance
-    Assert.assertEquals(expected, Utils.estimateMemory(arrays));
-  }
-
-  /**
-   * Tests the named functionality.
-   */
-  @Test
-  public void testEstimateMemoryList() throws Exception {
-    List<Object> list = new ArrayList<Object>(10);
-    int expected = 64;
-    Assert.assertEquals(expected, Utils.estimateMemory(list));
-
-    list.add("a");
-    list.add("b");
-    expected += 2 * _stringMemoryOverhead + 4;
-    Assert.assertEquals(expected, Utils.estimateMemory(list));
-  }
-
-  /**
-   * Tests the named functionality.
-   */
-  @Test
-  public void testEstimateStatisticsCollector() throws Exception {
-    StatisticsCollector collector = StatisticsCollector.init(null, 10000, this);
-    try {
-      System.out.println("Memory of the collector: " + Utils.estimateMemory(collector));
-      Assert.assertTrue(Utils.estimateMemory(collector) > 1000000);
-    }
-    finally {
-      StatisticsCollector.destroy(this);
-    }
   }
 }

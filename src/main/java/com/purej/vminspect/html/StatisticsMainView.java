@@ -56,10 +56,8 @@ public final class StatisticsMainView extends AbstractStatisticsView {
     writeln("<br/>Last statistics collection time: " + formatDateTime(new Date(_statistics.getLastCollectTimestamp())));
     writeln("<br/>Last statistics collection duration: " + formatNumber(_statistics.getLastCollectDurationMs()) + "ms");
     if (_statistics.getStatisticsStorageDir() == null) {
-      writeln("<br/>Statistics memory overhead: " + formatMb(_statistics.getEstimatedMemorySize() / 1024d / 1024d));
       writeln("<br/><b><font color='red'>Note: No statistics directory configured, measuring statistics in-memory without persistence!</font></b>");
-    }
-    else {
+    } else {
       writeln("<br/>Statistics directory: " + _statistics.getStatisticsStorageDir());
       writeln("<br/>Statistics disk usage: " + formatMb(_statistics.getDiskUsage() / 1024d / 1024d));
     }

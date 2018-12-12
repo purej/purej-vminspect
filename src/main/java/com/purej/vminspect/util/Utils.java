@@ -1,16 +1,11 @@
 // Copyright (c), 2013, adopus consulting GmbH Switzerland, all rights reserved.
 package com.purej.vminspect.util;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Contains some utility methods for different purposes.
@@ -93,8 +88,7 @@ public final class Utils {
   public static String urlEncode(String value) {
     try {
       return value != null ? URLEncoder.encode(value, "UTF-8") : "";
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       throw new RuntimeException("Encoding '" + value + "' failed!", e);
     }
   }
@@ -105,8 +99,7 @@ public final class Utils {
   public static String urlDecode(String value) {
     try {
       return value != null ? URLDecoder.decode(value, "UTF-8") : value;
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       throw new RuntimeException("Decoding '" + value + "' failed!", e);
     }
   }
@@ -128,8 +121,7 @@ public final class Utils {
   public static <T extends Comparable<T>> int compareTo(T c1, T c2) {
     if (c1 != null) {
       return c2 != null ? c1.compareTo(c2) : -1;
-    }
-    else {
+    } else {
       return c2 != null ? 1 : 0;
     }
   }
@@ -169,19 +161,16 @@ public final class Utils {
       if (isFirst && patternIdx == -1) {
         // First pattern equals last pattern <> *, txt must be equals:
         return text.equals(matchTagString);
-      }
-      else if (isFirst) {
+      } else if (isFirst) {
         // First pattern part <> *, txt must start with matchTag:
         if (!text.startsWith(matchTagString)) {
           return false;
         }
         txtIdx = matchTag.length();
-      }
-      else if (patternIdx == -1) {
+      } else if (patternIdx == -1) {
         // Last pattern part <> *, txt must end with matchTag:
         return text.endsWith(matchTagString);
-      }
-      else {
+      } else {
         // Pattern in between, txt must contain it:
         txtIdx = text.indexOf(matchTagString, txtIdx);
         if (txtIdx == -1) {
@@ -197,91 +186,10 @@ public final class Utils {
       char c = pattern.charAt(i);
       if (c == '*') {
         return i + 1;
-      }
-      else {
+      } else {
         tag.append(c);
       }
     }
     return -1;
-  }
-
-  /**
-   * Returns the size of the given object and all contained content (eg. transitives) in bytes.
-   * <p/>
-   * Note: Static fields will NOT be measured, only instance fields.
-   * <p/>
-   * Note: This is just an estimate and might different depending on the VM implementation.
-   *
-   * @param o the object graph to be measured
-   * @return the estimated number of bytes
-   */
-  public static long estimateMemory(Object o) throws Exception {
-    Set<Object> measured = new HashSet<Object>();
-    measured.add(o);
-    return guessObjectMemory(o, measured);
-  }
-
-  private static long guessObjectMemory(Object o, Set<Object> measured) throws IllegalAccessException {
-    long memory = 8; // Base overhead of an object...
-
-    // Iterate from sub to super-class:
-    Class<?> clz = o.getClass();
-    while (clz != null) {
-      // Iterate over all fields:
-      Field[] fields = clz.getDeclaredFields();
-      for (Field field : fields) {
-        if (Modifier.isStatic(field.getModifiers())) {
-          continue; // static stuff is not measured...
-        }
-        if (field.getType().isPrimitive()) {
-          memory += getPrimitiveSize(field.getType());
-        }
-        else {
-          field.setAccessible(true);
-          Object fieldValue = field.get(o);
-          memory += guessFieldMemory(fieldValue, measured);
-        }
-      }
-      clz = clz.getSuperclass();
-    }
-    return memory;
-  }
-
-  private static long guessFieldMemory(Object o, Set<Object> measured) throws IllegalAccessException {
-    long memory = 4; // 4 bytes for the ref to the none-primitive object...
-    if (o == null || !measured.add(o)) { // Add prevents cyclic loops...
-      return memory;
-    }
-    if (o.getClass().isArray()) {
-      memory += 4; // 4 bytes for the none-null array instance
-      Class<?> entryClz = o.getClass().getComponentType();
-      int size = Array.getLength(o);
-      if (entryClz.isPrimitive()) {
-        memory += size * getPrimitiveSize(entryClz);
-      }
-      else {
-        for (int i = 0; i < size; i++) {
-          Object entry = Array.get(o, i);
-          memory += guessFieldMemory(entry, measured);
-        }
-      }
-    }
-    else {
-      memory += guessObjectMemory(o, measured);
-    }
-    return memory;
-  }
-
-  private static int getPrimitiveSize(Class<?> primitiveClass) {
-    if (primitiveClass == long.class || primitiveClass == double.class) {
-      return 8;
-    }
-    else if (primitiveClass == int.class || primitiveClass == float.class) {
-      return 4;
-    }
-    else if (primitiveClass == short.class || primitiveClass == char.class) {
-      return 2;
-    }
-    return 1;
   }
 }

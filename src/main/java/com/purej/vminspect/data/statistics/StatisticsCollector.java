@@ -10,14 +10,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import org.jrobin.core.RrdBackendFactory;
 import org.jrobin.core.RrdException;
 import org.jrobin.core.RrdMemoryBackendFactory;
 import org.jrobin.core.RrdNioBackendFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import com.purej.vminspect.data.SystemData;
-import com.purej.vminspect.util.Utils;
 
 /**
  * This class holds the different {@link Statistics} instances and provides a timer to
@@ -47,7 +48,6 @@ public final class StatisticsCollector {
   // Will be changed with each collect-call:
   private volatile long _lastCollectTimestamp;
   private volatile long _lastCollectDurationMs;
-  private volatile long _estimatedMemorySize;
   private volatile long _diskUsage;
 
   private StatisticsCollector(String storageDir, int collectionFrequencyMillis) {
@@ -62,8 +62,7 @@ public final class StatisticsCollector {
       if (storageDir == null || storageDir.isEmpty()) {
         _storageDir = null;
         _rrdBackendFactory = RrdBackendFactory.getFactory(RrdMemoryBackendFactory.NAME);
-      }
-      else {
+      } else {
         // Create the storage dir if not existing:
         File rrdFilesDir = new File(storageDir);
         if (!rrdFilesDir.exists() && !rrdFilesDir.mkdirs()) {
@@ -72,8 +71,7 @@ public final class StatisticsCollector {
         _storageDir = rrdFilesDir.getAbsolutePath();
         _rrdBackendFactory = RrdBackendFactory.getFactory(RrdNioBackendFactory.NAME);
       }
-    }
-    catch (RrdException e) {
+    } catch (RrdException e) {
       throw new RuntimeException("Could not created JRobin backend factory!", e);
     }
 
@@ -143,8 +141,7 @@ public final class StatisticsCollector {
           return data.getOpenFileDescriptorCount();
         }
       });
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
       throw new RuntimeException("Could not initialize the default statistics!", e);
     }
   }
@@ -242,13 +239,6 @@ public final class StatisticsCollector {
   }
 
   /**
-   * Returns the estimated VM memory used for the statistics data.
-   */
-  public long getEstimatedMemorySize() {
-    return _estimatedMemorySize;
-  }
-
-  /**
    * Returns the size of this statistics files on disk.
    */
   public long getDiskUsage() {
@@ -278,14 +268,10 @@ public final class StatisticsCollector {
         }
         _diskUsage = sum;
       }
-      else {
-        _estimatedMemorySize = Utils.estimateMemory(_rrdBackendFactory);
-      }
 
       // Collect done:
       _lastCollectDurationMs = System.currentTimeMillis() - _lastCollectTimestamp;
-    }
-    catch (Throwable t) {
+    } catch (Throwable t) {
       LOG.warn("Exception while collecting data", t);
     }
   }
