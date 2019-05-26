@@ -10,15 +10,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import org.jrobin.core.RrdBackendFactory;
-import org.jrobin.core.RrdException;
-import org.jrobin.core.RrdMemoryBackendFactory;
-import org.jrobin.core.RrdNioBackendFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.purej.vminspect.data.SystemData;
+import com.purej.vminspect.data.statistics.rrd.Rrd;
+import com.purej.vminspect.data.statistics.rrd.RrdProvider;
 
 /**
  * This class holds the different {@link Statistics} instances and provides a timer to
@@ -38,12 +34,11 @@ public final class StatisticsCollector {
 
   // Instance members:
   private final List<Statistics> _statistics = new ArrayList<Statistics>();
-  private final String _storageDir;
   private final int _collectionFrequencyMillis;
   private final Timer _timer;
 
-  // The JRobin backend factory, only created once for all statistics:
-  private final RrdBackendFactory _rrdBackendFactory;
+  // The RRD provider:
+  private final RrdProvider _rrdProvider;
 
   // Will be changed with each collect-call:
   private volatile long _lastCollectTimestamp;
@@ -55,25 +50,10 @@ public final class StatisticsCollector {
     _collectionFrequencyMillis = collectionFrequencyMillis;
 
     // Create a timer and timer tasks:
-    _timer = new Timer("PureJ VM Inspection Statistics Collector Timer", true);
+    _timer = new Timer("PureJ VM Inspection Statistics Collector", true);
 
-    // Create the JRobin backend factory:
-    try {
-      if (storageDir == null || storageDir.isEmpty()) {
-        _storageDir = null;
-        _rrdBackendFactory = RrdBackendFactory.getFactory(RrdMemoryBackendFactory.NAME);
-      } else {
-        // Create the storage dir if not existing:
-        File rrdFilesDir = new File(storageDir);
-        if (!rrdFilesDir.exists() && !rrdFilesDir.mkdirs()) {
-          throw new RuntimeException("Statistics storage directory '" + storageDir + "' could not be created!");
-        }
-        _storageDir = rrdFilesDir.getAbsolutePath();
-        _rrdBackendFactory = RrdBackendFactory.getFactory(RrdNioBackendFactory.NAME);
-      }
-    } catch (RrdException e) {
-      throw new RuntimeException("Could not created JRobin backend factory!", e);
-    }
+    // Create the RRD provider:
+    _rrdProvider = new RrdProvider(storageDir, _collectionFrequencyMillis);
 
     // Register default statistics:
     try {
@@ -194,8 +174,8 @@ public final class StatisticsCollector {
    * @throws IOException if the {@link Statistics} instance could not be created for example if the JRobin file could not be created
    */
   public void registerStatistics(String name, String label, String unit, String description, ValueProvider valueProvider) throws IOException {
-    Statistics stats = new Statistics(name, label, unit, description, valueProvider, _storageDir, _collectionFrequencyMillis / 1000,
-        _rrdBackendFactory);
+    Rrd rrd = _rrdProvider.create(name);
+    Statistics stats = new Statistics(name, label, unit, description, valueProvider, rrd);
     _statistics.add(stats);
   }
 
@@ -214,7 +194,7 @@ public final class StatisticsCollector {
    * Returns the storage directory or null if no persistent store.
    */
   public String getStatisticsStorageDir() {
-    return _storageDir;
+    return _rrdProvider.getStorageDir();
   }
 
   /**
@@ -253,9 +233,9 @@ public final class StatisticsCollector {
       collectData(new SystemData());
 
       // Calculate disk usage or memory size:
-      if (_storageDir != null) {
+      if (_rrdProvider.getStorageDir() != null) {
         long sum = 0;
-        File[] files = new File(_storageDir).listFiles(new FilenameFilter() {
+        File[] files = new File(_rrdProvider.getStorageDir()).listFiles(new FilenameFilter() {
           @Override
           public boolean accept(File dir, String name) {
             return name != null && name.endsWith(".rrd");

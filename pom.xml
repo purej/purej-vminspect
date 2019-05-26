@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -9,7 +10,7 @@
   </parent>
 
   <artifactId>purej-vminspect</artifactId>
-  <version>1.5.1-SNAPSHOT</version>
+  <version>1.6.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>PureJ VM Inspection</name>
@@ -17,7 +18,7 @@
 
   <properties>
     <module.name>purej.vminspect</module.name>
-    <jettyVersion>9.4.12.v20180830</jettyVersion>
+    <jettyVersion>9.4.18.v20190429</jettyVersion>
   </properties>
 
   <scm>
@@ -40,10 +41,18 @@
       <version>1.7.25</version>
     </dependency>
 
+    <!-- By default, VmInspect uses RRD4J as round-robin-db implementation, see https://github.com/rrd4j/rrd4j -->
+    <dependency>
+      <groupId>org.rrd4j</groupId>
+      <artifactId>rrd4j</artifactId>
+      <version>3.4</version>
+    </dependency>
+    <!-- Optionally JRobin as RRD implementation, must be provided by user -->
     <dependency>
       <groupId>com.purej</groupId>
       <artifactId>jrobin</artifactId>
       <version>1.7.1</version>
+      <optional>true</optional>
     </dependency>
 
     <dependency>
