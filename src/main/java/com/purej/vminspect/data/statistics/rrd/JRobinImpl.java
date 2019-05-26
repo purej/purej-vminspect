@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.lang.reflect.Field;
 import java.util.Calendar;
-import java.util.Date;
 import org.jrobin.core.RrdBackend;
 import org.jrobin.core.RrdBackendFactory;
 import org.jrobin.core.RrdDb;
@@ -31,17 +30,12 @@ import com.purej.vminspect.util.Utils;
  *
  * @author Stefan Mueller
  */
-public class JRobinImpl implements Rrd {
+public class JRobinImpl extends AbstractRrdImpl {
   private static final Logger LOG = LoggerFactory.getLogger(JRobinImpl.class);
   private static final String FUNCTION_AVG = "AVERAGE";
   private static final String FUNCTION_MAX = "MAX";
-  private static final int HOUR = 60 * 60;
-  private static final int DAY = 24 * HOUR;
 
-  private final String _name;
-  private final int _resolutionSeconds;
   private final RrdBackendFactory _rrdBackendFactory;
-  private final String _rrdPath;
   private RrdDb _rrdDb; // Note: Might be reopend if broken...
   private RandomAccessFile _raf; // Underlying file or null, depending on RrdDb subclass
 
@@ -55,10 +49,8 @@ public class JRobinImpl implements Rrd {
    * @throws IOException if a RRD file access error occurred
    */
   public JRobinImpl(String name, String storageDir, int resolutionSeconds, Object rrdBackendFactory) throws IOException {
-    _name = Utils.checkNotNull(name);
-    _resolutionSeconds = resolutionSeconds;
-    _rrdBackendFactory = (RrdBackendFactory)Utils.checkNotNull(rrdBackendFactory);
-    _rrdPath = storageDir != null ? new File(storageDir, name + ".rrd").getCanonicalPath() : name + ".rrd";
+    super(name, storageDir, resolutionSeconds);
+    _rrdBackendFactory = (RrdBackendFactory) Utils.checkNotNull(rrdBackendFactory);
     initRrdDb(false);
   }
 
@@ -119,7 +111,7 @@ public class JRobinImpl implements Rrd {
       graphDef.setHeight(height);
 
       setGraphStartEndTime(graphDef, range);
-      setGraphTitle(graphDef, label, range, width);
+      graphDef.setTitle(getGraphTitle(label, range, width));
 
       return new RrdGraph(graphDef).getRrdGraphInfo().getBytes();
     } catch (final RrdException e) {
@@ -152,17 +144,25 @@ public class JRobinImpl implements Rrd {
   private void initRrdDb(boolean overwrite) throws IOException {
     try {
       _raf = null; // Reset underlying file...
+      RrdDef def = createRrdDef();
       if (_rrdBackendFactory instanceof RrdMemoryBackendFactory) {
-        _rrdDb = new RrdDb(createRrdDef(), _rrdBackendFactory);
+        _rrdDb = new RrdDb(def, _rrdBackendFactory);
       } else {
         // File backend:
         File rrdFile = new File(_rrdPath);
         if (overwrite || !rrdFile.exists() || rrdFile.length() == 0) {
           // Create a new one:
-          _rrdDb = new RrdDb(createRrdDef(), _rrdBackendFactory);
+          _rrdDb = new RrdDb(def, _rrdBackendFactory);
         } else {
           // Open existing:
           _rrdDb = new RrdDb(_rrdPath, false, _rrdBackendFactory);
+          // Sanity check - compare only step (eg. frequency) for now:
+          if (def.getStep() != _rrdDb.getRrdDef().getStep()) {
+            LOG.warn("Step size changed for {}, creating new one...", _rrdPath);
+            _rrdDb.close();
+            renameRrd(rrdFile);
+            _rrdDb = new RrdDb(def, _rrdBackendFactory);
+          }
         }
 
         // Try get the underlying RandomAccessFile:
@@ -196,18 +196,5 @@ public class JRobinImpl implements Rrd {
     graphDef.setStartTime(startTime);
     graphDef.setEndTime(endTime);
     graphDef.setFirstDayOfWeek(Calendar.getInstance().getFirstDayOfWeek());
-  }
-
-  private static void setGraphTitle(RrdGraphDef graphDef, String label, Range range, int width) {
-    String titleStart = label + " - " + range.getPeriod().getLabel();
-    String titleEnd = "";
-    if (width > 400) {
-      if (range.getPeriod().equals(Period.CUSTOM)) {
-        titleEnd = " - " + Utils.formatDate(range.getStartDate()) + " - " + Utils.formatDate(range.getEndDate());
-      } else {
-        titleEnd = " - " + Utils.formatDate(new Date());
-      }
-    }
-    graphDef.setTitle(titleStart + titleEnd);
   }
 }
