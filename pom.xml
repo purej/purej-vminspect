@@ -10,7 +10,7 @@
   </parent>
 
   <artifactId>purej-vminspect</artifactId>
-  <version>1.6.0-SNAPSHOT</version>
+  <version>1.6.0</version>
   <packaging>jar</packaging>
 
   <name>PureJ VM Inspection</name>
