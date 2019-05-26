@@ -1,5 +1,9 @@
 Version "current"
 
+Version 1.6.0 - (26.05.2019)
+ - Statistics keeps the RRD database open to prevent creating / garbage-collecting alot of objects
+ - Changed RRD provider from JRobin to RRD4J as of lower memory- and CPU consumption
+
 Version 1.5.0 - (12.12.2018)
  - Removed memory-estimate for in-memory statistics collections as of problems with java 11 (restricted reflection access)
  - Changed the way of accessing hidden memory and CPU data as of problems with java 11 (restricted reflection access)

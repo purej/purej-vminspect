@@ -54,6 +54,7 @@ public class Rrd4JTest {
     gDef.line("speed-average", Color.BLUE, "Speed In");
     gDef.hrule(2568, Color.GREEN, "hrule");
     gDef.setImageFormat("png");
+    gDef.setFilename("-"); // Important for in-memory generation!
 
     // then actually draw the graph
     byte[] bytes = new RrdGraph(gDef).getRrdGraphInfo().getBytes();

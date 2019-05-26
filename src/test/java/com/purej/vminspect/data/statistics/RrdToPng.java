@@ -20,16 +20,21 @@ import com.purej.vminspect.util.Utils;
  *
  * @author Stefan Mueller
  */
-public class Rrd4JDbToPng {
+public class RrdToPng {
   private static final ConsolFun FUNCTION_AVG = ConsolFun.AVERAGE;
   private static final ConsolFun FUNCTION_MAX = ConsolFun.MAX;
 
-  public static void main(String[] args) throws Exception {
-    RrdRandomAccessFileBackendFactory factory = new RrdRandomAccessFileBackendFactory();
-
+  public static void main(String[] args) throws IOException {
+    RrdBackendFactory factory = new RrdRandomAccessFileBackendFactory();
     File dir = new File("target/stats");
+    process(dir, factory);
+  }
+
+  private static void process(File dir, RrdBackendFactory factory) throws IOException {
     for (File file : dir.listFiles()) {
-      if (!file.isDirectory()) {
+      if (file.isDirectory()) {
+        process(file, factory);
+      } else {
         if (file.getName().endsWith(".rrd")) {
           String name = file.getName().replace(".rrd", "");
           String path = file.getCanonicalPath();
@@ -61,12 +66,16 @@ public class Rrd4JDbToPng {
 
     // Set graphics stuff:
     graphDef.setImageFormat("png");
-    graphDef.area("average", new GradientPaint(0, 0, Color.RED, 0, height, Color.GREEN, false), "Mean");
-    graphDef.line("max", Color.BLUE, "Maximum");
-    graphDef.gprint("average", FUNCTION_AVG, "Mean: %9.0f xx\\r");
-    graphDef.gprint("max", FUNCTION_MAX, "Maximum: %9.0f xx\\r");
+    graphDef.area("average", new GradientPaint(0, 0, Color.RED, 0, height, Color.GREEN, false), "Avg");
+    graphDef.line("max", Color.BLUE, "Max");
     graphDef.setWidth(width);
     graphDef.setHeight(height);
+
+    // Print Avg/Max under the chart:
+    graphDef.datasource("vavg", "average", FUNCTION_AVG.getVariable());
+    graphDef.datasource("vmax", "max", FUNCTION_MAX.getVariable());
+    graphDef.gprint("vavg", "Avg: %9.0f x\\r");
+    graphDef.gprint("vmax", "Max: %9.0f x\\r");
 
     setGraphStartEndTime(graphDef, range);
     setGraphTitle(graphDef, name + " Label", range, width);

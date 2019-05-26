@@ -106,12 +106,16 @@ public class Rrd4jImpl extends AbstractRrdImpl {
 
       // Set graphics stuff:
       graphDef.setImageFormat("png");
-      graphDef.area("average", new GradientPaint(0, 0, Color.RED, 0, height, Color.GREEN, false), "Mean");
-      graphDef.line("max", Color.BLUE, "Maximum");
-      graphDef.gprint("average", FUNCTION_AVG, "Mean: %9.0f " + unit + "\\r");
-      graphDef.gprint("max", FUNCTION_MAX, "Maximum: %9.0f " + unit + "\\r");
+      graphDef.area("average", new GradientPaint(0, 0, Color.RED, 0, height, Color.GREEN, false), "Avg");
+      graphDef.line("max", Color.BLUE, "Max");
       graphDef.setWidth(width);
       graphDef.setHeight(height);
+
+      // Print Avg/Max under the chart:
+      graphDef.datasource("vavg", "average", FUNCTION_AVG.getVariable());
+      graphDef.datasource("vmax", "max", FUNCTION_MAX.getVariable());
+      graphDef.gprint("vavg", "Avg: %9.0f " + unit + "\\r");
+      graphDef.gprint("vmax", "Max: %9.0f " + unit + "\\r");
 
       setGraphStartEndTime(graphDef, range);
       graphDef.setTitle(getGraphTitle(label, range, width));

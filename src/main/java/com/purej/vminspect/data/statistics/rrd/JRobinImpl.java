@@ -103,10 +103,10 @@ public class JRobinImpl extends AbstractRrdImpl {
 
       // Set graphics stuff:
       graphDef.setImageFormat("png");
-      graphDef.area("average", new GradientPaint(0, 0, Color.RED, 0, height, Color.GREEN, false), "Mean");
-      graphDef.line("max", Color.BLUE, "Maximum");
-      graphDef.gprint("average", FUNCTION_AVG, "Mean: %9.0f " + unit + "\\r");
-      graphDef.gprint("max", FUNCTION_MAX, "Maximum: %9.0f " + unit + "\\r");
+      graphDef.area("average", new GradientPaint(0, 0, Color.RED, 0, height, Color.GREEN, false), "Avg");
+      graphDef.line("max", Color.BLUE, "Max");
+      graphDef.gprint("average", FUNCTION_AVG, "Avg: %9.0f " + unit + "\\r");
+      graphDef.gprint("max", FUNCTION_MAX, "Max: %9.0f " + unit + "\\r");
       graphDef.setWidth(width);
       graphDef.setHeight(height);
 
