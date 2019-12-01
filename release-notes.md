@@ -1,7 +1,7 @@
 Version "current"
 
 Version 1.6.1 - (01.12.2019)
- - Increase system-startup times by initializing the underlying files and collection lazily
+ - Decrease system-startup times by initializing the underlying files and collection lazily
 
 Version 1.6.0 - (26.05.2019)
  - Statistics keeps the RRD database open to prevent creating / garbage-collecting alot of objects
