@@ -180,8 +180,8 @@ public final class StatisticsCollector {
   }
 
   private void startTimer() {
-    // Execute a first collect to have minimal data ready:
-    collect();
+    // We used to execute a first collect() call before starting the timer
+    // but to reduce startup / init times of applications, we removed it...
     _timer.schedule(new TimerTask() {
       @Override
       public void run() {
@@ -225,7 +225,11 @@ public final class StatisticsCollector {
     return _diskUsage;
   }
 
-  private synchronized void collect() {
+  /**
+   * Collects all statistics. Will be called by the timer on a regular frequency,
+   * so there is usually no need to call the collect() method directly.
+   */
+  public synchronized void collect() {
     try {
       _lastCollectTimestamp = System.currentTimeMillis();
       // Note: Freeing memory with System.gc() before measuring stats might be cool but the performance

@@ -39,8 +39,8 @@ public class Rrd4jImpl extends AbstractRrdImpl {
   private static final ConsolFun FUNCTION_MAX = ConsolFun.MAX;
 
   private final RrdBackendFactory _rrdBackendFactory;
-  private RrdDb _rrdDb; // Note: Might be reopend if broken...
-  private RandomAccessFile _raf; // Underlying file or null, depending on RrdDb subclass
+  private volatile RrdDb _rrdDb; // Note: Might be reopend if broken...
+  private volatile RandomAccessFile _raf; // Underlying file or null, depending on RrdDb subclass
 
   /**
    * Creates a new instance of this class.
@@ -54,7 +54,6 @@ public class Rrd4jImpl extends AbstractRrdImpl {
   public Rrd4jImpl(String name, String storageDir, int resolutionSeconds, Object rrdBackendFactory) throws IOException {
     super(name, storageDir, resolutionSeconds);
     _rrdBackendFactory = (RrdBackendFactory) Utils.checkNotNull(rrdBackendFactory);
-    initRrdDb(false);
   }
 
   @Override
@@ -64,6 +63,9 @@ public class Rrd4jImpl extends AbstractRrdImpl {
 
   @Override
   public void addValue(double value) throws IOException {
+    if (_rrdDb == null) {
+      initRrdDb(false);
+    }
     try {
       doAddValue(value);
     } catch (FileNotFoundException e) {
@@ -93,6 +95,9 @@ public class Rrd4jImpl extends AbstractRrdImpl {
 
   @Override
   public byte[] createPng(String label, String unit, Range range, int width, int height) throws IOException {
+    if (_rrdDb == null) {
+      initRrdDb(false);
+    }
     try {
       // Create the graph definition:
       RrdGraphDef graphDef = new RrdGraphDef();
@@ -148,7 +153,7 @@ public class Rrd4jImpl extends AbstractRrdImpl {
     return rrdDef;
   }
 
-  private void initRrdDb(boolean overwrite) throws IOException {
+  private synchronized void initRrdDb(boolean overwrite) throws IOException {
     try {
       _raf = null; // Reset underlying file
       RrdDef def = createRrdDef();

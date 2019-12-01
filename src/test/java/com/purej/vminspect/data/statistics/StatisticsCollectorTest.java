@@ -25,7 +25,11 @@ public class StatisticsCollectorTest {
       Assert.assertEquals(10000, collector.getCollectionFrequencyMillis());
       // Check measures after collect run:
       Assert.assertEquals(0, collector.getDiskUsage()); // no disk usage as in memory!
-      // Assert.assertTrue(collector.getLastCollectDurationMs() > 0); might be 0 if on a fast machine...
+      Assert.assertEquals(0, collector.getLastCollectDurationMs()); // no more direct collect
+      Assert.assertEquals(0, collector.getLastCollectTimestamp()); // no more direct collect
+
+      // Make a collect call:
+      collector.collect();
       Assert.assertTrue(collector.getLastCollectTimestamp() > 0);
 
       // Check stats retrieve:
@@ -56,8 +60,13 @@ public class StatisticsCollectorTest {
       Assert.assertNotNull(collector.getStatisticsStorageDir());
       Assert.assertEquals(10000, collector.getCollectionFrequencyMillis());
       // Check measures again after collect run:
+      Assert.assertEquals(0, collector.getDiskUsage());
+      Assert.assertEquals(0, collector.getLastCollectDurationMs()); // no more direct collect
+      Assert.assertEquals(0, collector.getLastCollectTimestamp()); // no more direct collect
+
+      // Make a collect call:
+      collector.collect();
       Assert.assertTrue(collector.getDiskUsage() > 0);
-      // Assert.assertTrue(collector.getLastCollectDurationMs() > 0); // Note: This assert sometimes fails for fast machines...
       Assert.assertTrue(collector.getLastCollectTimestamp() > 0);
 
       // Check stats retrieve:
