@@ -18,7 +18,7 @@
 
   <properties>
     <module.name>purej.vminspect</module.name>
-    <jettyVersion>9.4.22.v20191022</jettyVersion>
+    <jettyVersion>9.4.24.v20191120</jettyVersion>
   </properties>
 
   <scm>

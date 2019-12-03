@@ -53,7 +53,8 @@ public final class StatisticsMainView extends AbstractStatisticsView {
     writeln("<a name='bottom'></a>");
     writeln("<br/><div style='font-size:8pt;'>");
     writeln("Statistics collection frequency: " + formatNumber(_statistics.getCollectionFrequencyMillis()) + "ms");
-    writeln("<br/>Last statistics collection time: " + formatDateTime(new Date(_statistics.getLastCollectTimestamp())));
+    String time = _statistics.getLastCollectTimestamp() > 0 ? formatDateTime(new Date(_statistics.getLastCollectTimestamp())) : "-";
+    writeln("<br/>Last statistics collection time: " + time);
     writeln("<br/>Last statistics collection duration: " + formatNumber(_statistics.getLastCollectDurationMs()) + "ms");
     if (_statistics.getStatisticsStorageDir() == null) {
       writeln("<br/><b><font color='red'>Note: No statistics directory configured, measuring statistics in-memory without persistence!</font></b>");
