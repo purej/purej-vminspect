@@ -33,6 +33,7 @@ public class MySample implements MySampleMBean {
   private String _string;
   private String[] _stringArray;
   private List<String> _stringList;
+  private MyEnum _myEnum;
   private Map<String, Object> _map;
   private List<byte[]> _allocated = new ArrayList<byte[]>();
 
@@ -64,6 +65,7 @@ public class MySample implements MySampleMBean {
       _stringList.add("first line");
       _stringList.add("second line");
       _stringList.add("some special äöü chars <> !! %&&%");
+      _myEnum = MyEnum.B;
       _map = new HashMap<String, Object>();
       _map.put("Key1", "Value1");
       _map.put("Key2", Integer.valueOf(1234));
@@ -286,10 +288,19 @@ public class MySample implements MySampleMBean {
   public String getThatThrowsUp() {
     try {
       throw new NullPointerException("inner");
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       throw new IllegalStateException("outer", e);
     }
+  }
+
+  @Override
+  public MyEnum getMyEnum() {
+    return _myEnum;
+  }
+
+  @Override
+  public void setMyEnum(MyEnum e) {
+    _myEnum = e;
   }
 
   // ========================================
@@ -353,6 +364,11 @@ public class MySample implements MySampleMBean {
   @Override
   public String[] echoStringArray(String[] inValue) {
     return inValue;
+  }
+
+  @Override
+  public MyEnum echoEnum(MyEnum e) {
+    return e;
   }
 
   @Override

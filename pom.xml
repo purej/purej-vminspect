@@ -31,14 +31,14 @@
     <dependency>
       <groupId>jakarta.servlet</groupId>
       <artifactId>jakarta.servlet-api</artifactId>
-      <version>4.0.3</version>
+      <version>4.0.4</version>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.7.25</version>
+      <version>1.7.30</version>
     </dependency>
 
     <!-- By default, VmInspect uses RRD4J as round-robin-db implementation, see https://github.com/rrd4j/rrd4j -->
@@ -58,7 +58,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.13.1</version>
+      <version>4.13.2</version>
       <scope>test</scope>
     </dependency>
 

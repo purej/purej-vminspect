@@ -103,6 +103,10 @@ public interface MySampleMBean {
 
   String getThatThrowsUp();
 
+  MyEnum getMyEnum();
+
+  void setMyEnum(MyEnum e);
+
   // ========================================
   // Methods
   // ========================================
@@ -128,6 +132,8 @@ public interface MySampleMBean {
   String echoString(String value);
 
   String[] echoStringArray(String[] value);
+
+  MyEnum echoEnum(MyEnum e);
 
   void allocateMemory(int mbs);
 

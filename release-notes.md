@@ -1,5 +1,9 @@
 Version "current"
 
+Version 1.7.0 - (02.03.2021)
+ - Support for enums-types in MBean attributes/operations
+ - Upgraded dependencies to latest versions
+
 Version 1.6.1 - (01.12.2019)
  - Decrease system-startup times by initializing the underlying files and collection lazily
 

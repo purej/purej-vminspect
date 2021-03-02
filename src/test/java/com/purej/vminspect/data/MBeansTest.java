@@ -88,6 +88,7 @@ public class MBeansTest {
       doTestGetSetAttribute(name, "DoubleO", "234.345", "-456.88");
       doTestGetSetAttribute(name, "BigDecimal", "12343.778", "2143.5436");
       doTestGetSetAttribute(name, "String", "abc def", " xx yy zz ");
+      doTestGetSetAttribute(name, "MyEnum", "B", "C");
     }
     finally {
       ManagementFactory.getPlatformMBeanServer().unregisterMBean(new ObjectName(name));
@@ -116,6 +117,7 @@ public class MBeansTest {
       doTestInvokeOperation(name, "echoBigDecimal", new String[] {null}, null);
       doTestInvokeOperation(name, "echoBigDecimal", new String[] {""}, null);
       doTestInvokeOperation(name, "echoBigDecimal", new String[] {"22.334455"}, "22.334455");
+      doTestInvokeOperation(name, "echoEnum", new String[] {"B"}, "B");
     }
     finally {
       ManagementFactory.getPlatformMBeanServer().unregisterMBean(new ObjectName(name));

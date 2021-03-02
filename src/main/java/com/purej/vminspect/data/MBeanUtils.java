@@ -301,6 +301,7 @@ public final class MBeanUtils {
     return value;
   }
 
+  @SuppressWarnings({"unchecked", "rawtypes"})
   private static Object toTypedValue(String value, String type) {
     try {
       if (value == null || value.length() == 0) {
@@ -325,6 +326,11 @@ public final class MBeanUtils {
         return Double.valueOf(value);
       } else if (type.equals("java.math.BigDecimal")) {
         return new BigDecimal(value);
+      }
+      // Check if enum and convert:
+      Class<?> clz = Class.forName(type);
+      if (clz.isEnum()) {
+        return Enum.valueOf((Class<Enum>) clz, value);
       }
       throw new UnsupportedOperationException("Type '" + type + "' is currently not supported!");
     } catch (Exception e) {
