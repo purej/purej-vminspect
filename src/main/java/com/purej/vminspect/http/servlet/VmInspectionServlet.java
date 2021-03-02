@@ -45,26 +45,53 @@ public class VmInspectionServlet extends HttpServlet {
   private RequestController _controller;
   private MBeanAccessControlFactory _mbeanAccessControlFactory;
 
+  /**
+   * Returns if this servlet is already initalized.
+   */
+  public boolean isInitialized() {
+    return _collector != null;
+  }
+
+  /**
+   * Auto-initializes this instance based on servlet-lifecycle. Does nothing if already initialized.
+   */
   @Override
   public void init() throws ServletException {
-    // Load configuration from init parameters:
-    boolean mbeansReadonly = Boolean.parseBoolean(getServletConfig().getInitParameter("vminspect.mbeans.readonly"));
-    boolean mbeansWriteConfirmation = Boolean.parseBoolean(getServletConfig().getInitParameter("vminspect.mbeans.writeConfirmation"));
-    String accessControlFactoryClz = getServletConfig().getInitParameter("vminspect.mbeans.accessControlFactory");
-    String collectionFrequency = getServletConfig().getInitParameter("vminspect.statistics.collection.frequencyMs");
-    String storageDir = getServletConfig().getInitParameter("vminspect.statistics.storage.dir");
+    if (!isInitialized()) {
+      // Load configuration from init parameters:
+      boolean mbeansReadonly = Boolean.parseBoolean(getServletConfig().getInitParameter("vminspect.mbeans.readonly"));
+      boolean mbeansWriteConfirmation = Boolean.parseBoolean(getServletConfig().getInitParameter("vminspect.mbeans.writeConfirmation"));
+      String accessControlFactoryClz = getServletConfig().getInitParameter("vminspect.mbeans.accessControlFactory");
+      String collectionFrequency = getServletConfig().getInitParameter("vminspect.statistics.collection.frequencyMs");
+      String storageDir = getServletConfig().getInitParameter("vminspect.statistics.storage.dir");
+      init(accessControlFactoryClz, mbeansReadonly, mbeansWriteConfirmation,
+          collectionFrequency != null ? Integer.parseInt(collectionFrequency) : 60000, storageDir);
+    }
+  }
 
+  /**
+   * Initializes this VM inspection instance programmatically.
+   * Note: Initialize can only be called once for this instance!
+   *
+   * @param mbeanAccessControlFactoryClz the optional {@link MBeanAccessControl} class, if null a default instance will be used
+   * @param mbeansReadonly if MBeans should be readonly
+   * @param mbeansWriteConfirmation if MBean operation calls need a confirmation
+   * @param statisticsCollectionFrequencyMs the statistics collection frequency in milliseconds (60'000 recommended)
+   * @param statisticsStorageDir the optional statistics storage directory
+   */
+  public void init(String mbeanAccessControlFactoryClz, boolean mbeansReadonly, boolean mbeansWriteConfirmation, int statisticsCollectionFrequencyMs,
+      String statisticsStorageDir) {
     // Create the correct MBeanAccessControlFactory instance (custom or default):
     MBeanAccessControlFactory accessControlFactory;
-    if (accessControlFactoryClz != null) {
+    if (mbeanAccessControlFactoryClz != null) {
       try {
-        accessControlFactory = (MBeanAccessControlFactory) Class.forName(accessControlFactoryClz).getDeclaredConstructor().newInstance();
+        accessControlFactory = (MBeanAccessControlFactory) Class.forName(mbeanAccessControlFactoryClz).getDeclaredConstructor().newInstance();
       } catch (Exception e) {
-        throw new ServletException("Could not load configured MBeanAccessControlFactory class '" + accessControlFactoryClz + "'!");
+        throw new RuntimeException("Could not load configured MBeanAccessControlFactory class '" + mbeanAccessControlFactoryClz + "'!");
       }
     } else {
       // Create a default static MBeanAccessControlFactory instance using the boolean attributes:
-      final MBeanAccessControl accessControl = new DefaultMBeanAccessControl(mbeansReadonly, mbeansWriteConfirmation);
+      MBeanAccessControl accessControl = new DefaultMBeanAccessControl(mbeansReadonly, mbeansWriteConfirmation);
       accessControlFactory = new MBeanAccessControlFactory() {
         @Override
         public MBeanAccessControl create(HttpServletRequest request) {
@@ -72,29 +99,28 @@ public class VmInspectionServlet extends HttpServlet {
         }
       };
     }
-
-    // Call the init:
-    init(accessControlFactory, collectionFrequency != null ? Integer.parseInt(collectionFrequency) : 60000, storageDir);
+    init(accessControlFactory, statisticsCollectionFrequencyMs, statisticsStorageDir);
   }
 
   /**
-   * Initializes this servlet instance or does nothing if already initialized.
-   * This method can be used to programmatically initialize the servlet.
+   * Initializes this VM inspection instance programmatically.
+   * Note: Initialize can only be called once for this instance!
    *
    * @param mbeanAccessControlFactory the factory to create {@link MBeanAccessControl} instances for fine-grained MBeans access control
    * @param statisticsCollectionFrequencyMs the statistics collection frequency in milliseconds (60'000 recommended)
    * @param statisticsStorageDir the optional statistics storage directory
    */
   public void init(MBeanAccessControlFactory mbeanAccessControlFactory, int statisticsCollectionFrequencyMs, String statisticsStorageDir) {
-    if (_collector == null) {
-      if (mbeanAccessControlFactory == null) {
-        throw new IllegalArgumentException("MBeanAccessControlFactory is null!");
-      }
-      // Get or create collector, create controller:
-      _collector = StatisticsCollector.init(statisticsStorageDir, statisticsCollectionFrequencyMs, this);
-      _controller = new RequestController(_collector);
-      _mbeanAccessControlFactory = mbeanAccessControlFactory;
+    if (isInitialized()) {
+      throw new IllegalStateException("This instance is already initialized, cannot initialize twice!");
     }
+    if (mbeanAccessControlFactory == null) {
+      throw new IllegalArgumentException("MBeanAccessControlFactory is null!");
+    }
+    // Get or create collector, create controller:
+    _collector = StatisticsCollector.init(statisticsStorageDir, statisticsCollectionFrequencyMs, this);
+    _controller = new RequestController(_collector);
+    _mbeanAccessControlFactory = mbeanAccessControlFactory;
   }
 
   @Override
