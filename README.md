@@ -49,7 +49,7 @@ Alternatively, **non-webapps**, can also use the VM inspection servlet with an e
   server.start();
 ```
 
-Optional properties might be set to configure some aspects:
+Optional properties might be set to configure some aspects (either as spring-environment properties or servlet-init-parameters):
 
 | Property | Default Value | Description |
 |----|----|----|
