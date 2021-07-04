@@ -18,7 +18,7 @@
 
   <properties>
     <module.name>purej.vminspect</module.name>
-    <jettyVersion>9.4.24.v20191120</jettyVersion>
+    <jettyVersion>10.0.5</jettyVersion>
   </properties>
 
   <scm>
@@ -59,7 +59,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot</artifactId>
-      <version>2.4.3</version>
+      <version>2.4.8</version>
       <optional>true</optional>
     </dependency>
     <dependency>
