@@ -1,5 +1,8 @@
 Version "current"
 
+Version 1.8.0 - (04.07.2021)
+ - Prevent ClassNotFoundException if running on VMs without access to sun-classes (eg. com.sun.management.OperatingSystemMXBean)
+
 Version 1.7.0 - (02.03.2021)
  - Upgraded dependencies to latest versions
  - Support for enums-types in MBean attributes/operations

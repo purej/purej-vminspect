@@ -70,11 +70,19 @@ public final class SystemMainView extends AbstractHtmlView {
     table.nextRow("VM Startup Time", formatDateTime(_sysData.getRtProcessStartup()));
     table.nextRow("VM Startup Arguments", toShowLinkWithHiddenDiv("vmArgs", _sysData.getRtProcessArguments()));
     table.nextRow("VM System Properties", toShowLinkWithHiddenDiv("sProps", _sysData.getRtSystemProperties()));
-    table.nextRow("VM File Descriptors",
-        "Open: " + formatNumber(_sysData.getOpenFileDescriptorCount()) + " / Max: " + formatNumber(_sysData.getMaxFileDescriptorCount()));
-    String processCpuPct = _sysData.getProcessCpuLoadPct() < 0 ? "n/a" : formatPct(_sysData.getProcessCpuLoadPct());
+    if (_sysData.getMaxFileDescriptorCount() < 0) {
+      table.nextRow("VM File Descriptors", "n/a");
+    } else {
+      table.nextRow("VM File Descriptors",
+          "Open: " + formatNumber(_sysData.getOpenFileDescriptorCount()) + " / Max: " + formatNumber(_sysData.getMaxFileDescriptorCount()));
+    }
+    if (_sysData.getProcessCpuLoadPct() < 0) {
+      table.nextRow("VM CPU Load", "n/a");
+    } else {
+      String processCpuPct = formatPct(_sysData.getProcessCpuLoadPct());
+      table.nextRow("VM CPU Load", processCpuPct + ", Total CPU Time: " + formatNumber(_sysData.getProcessCpuTimeMillis() / 1000) + "s");
+    }
     String systemCpuPct = _sysData.getSystemCpuLoadPct() < 0 ? "n/a" : formatPct(_sysData.getSystemCpuLoadPct());
-    table.nextRow("VM CPU Load", processCpuPct + ", Total CPU Time: " + formatNumber(_sysData.getProcessCpuTimeMillis() / 1000) + "s");
     table.nextRow("System CPU Load", systemCpuPct);
     table.endTable();
     writeln("<br/>");
@@ -102,11 +110,17 @@ public final class SystemMainView extends AbstractHtmlView {
   }
 
   private static void writeMemoryRow(CandyHtmlTable table, String label, MemoryData memory) throws IOException {
+    String value;
+    if (memory == MemoryData.UNKNOWN) {
+      value = "n/a";
+    } else {
+      String used = "Used: " + formatMb(memory.getUsed() / 1024d / 1024d);
+      String commited = memory.getCommitted() > 0 ? " / Alloc: " + formatMb(memory.getCommitted() / 1024d / 1024d) : "";
+      String max = memory.getMax() > 0 ? " / Max: " + formatMb(memory.getMax() / 1024d / 1024d) : "";
+      value = used + commited + max;
+    }
     String bar = toMemoryBar(memory);
-    String used = "Used: " + formatMb(memory.getUsed() / 1024d / 1024d);
-    String commited = memory.getCommitted() > 0 ? " / Alloc: " + formatMb(memory.getCommitted() / 1024d / 1024d) : "";
-    String max = memory.getMax() > 0 ? " / Max: " + formatMb(memory.getMax() / 1024d / 1024d) : "";
-    table.nextRow(label, used + commited + max, bar);
+    table.nextRow(label, value, bar);
   }
 
   private static String toShowLinkWithHiddenDiv(String divId, String txt) {

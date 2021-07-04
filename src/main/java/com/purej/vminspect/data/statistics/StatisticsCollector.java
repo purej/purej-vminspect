@@ -234,7 +234,7 @@ public final class StatisticsCollector {
       _lastCollectTimestamp = System.currentTimeMillis();
       // Note: Freeing memory with System.gc() before measuring stats might be cool but the performance
       // impact is huge (collect() becomes 10x slower and consumes a lot of CPU). Therefore we don't run it here anymore...
-      collectData(new SystemData());
+      collectData(SystemData.create());
 
       // Calculate disk usage or memory size:
       if (_rrdProvider.getStorageDir() != null) {

@@ -223,7 +223,7 @@ final class RequestExecutor implements Runnable {
     builder.append("\r\nContent-Type: text/html; charset=utf-8");
     builder.append("\r\n\r\n<html><head><title>Error ").append(errorPart).append("</title>");
     builder.append("<body><h2>").append(errorPart).append("</h2>");
-    builder.append("<p><pre>").append(details).append("</pre></p><hr/><i><small>Powered by adopus consulting gmbh</small></i></body>");
+    builder.append("<p><pre>").append(details).append("</pre></p><hr/></body>");
     out.write(builder.toString().getBytes("UTF-8"));
   }
 

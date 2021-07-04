@@ -137,7 +137,7 @@ public class RequestController {
     }
     else {
       // For all other cases (eg. page=system or page missing) we show system page:
-      view = new SystemMainView(response.getOutput(), new SystemData());
+      view = new SystemMainView(response.getOutput(), SystemData.create());
     }
 
     // Create the page template and render:

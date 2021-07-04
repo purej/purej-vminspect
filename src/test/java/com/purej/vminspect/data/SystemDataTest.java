@@ -17,6 +17,7 @@ public class SystemDataTest {
    */
   @Test
   public void testMemoryData() throws Exception {
+    // Test with default system-data (no sun-infos):
     SystemData data = new SystemData();
 
     Assert.assertTrue(data.getMemoryHeap().getUsed() > 0);
@@ -26,13 +27,16 @@ public class SystemDataTest {
     Assert.assertTrue(data.getMemoryNonHeap().getUsed() > 0);
     Assert.assertTrue(data.getMemoryNonHeap().getCommitted() > 0);
     // Assert.assertTrue(data.getMemoryNonHeap().getMax() > 0); Does not work on all platforms...
+    Assert.assertSame(data.getMemoryPhysical(), MemoryData.UNKNOWN);
+    Assert.assertSame(data.getMemorySwap(), MemoryData.UNKNOWN);
 
-    // Note: Does not work on some machines/jdks...
+    // Now test sun-class:
+    data = new SunSystemData();
+
     Assert.assertTrue(data.getMemoryPhysical().getUsed() > 0);
     // Assert.assertTrue(data.getMemoryPhysical().getCommitted() > 0);
     Assert.assertTrue(data.getMemoryPhysical().getMax() > 0);
 
-    // Note: Does not work on some machines/jdks...
     Assert.assertTrue(data.getMemorySwap().getUsed() > 0);
     // Assert.assertTrue(data.getMemorySwap().getCommitted() > 0);
     Assert.assertTrue(data.getMemorySwap().getMax() > 0);
@@ -43,16 +47,21 @@ public class SystemDataTest {
    */
   @Test
   public void testOsData() throws Exception {
+    // Test without sun-classes:
     SystemData data = new SystemData();
     Assert.assertNotNull(data.getOsHostIp());
     Assert.assertNotNull(data.getOsName());
     Assert.assertNotNull(data.getOsArchitecture());
     Assert.assertNotNull(data.getOsVersion());
     Assert.assertTrue(data.getOsAvailableProcessors() > 0);
+    Assert.assertEquals(data.getProcessCpuTimeMillis(), -1);
+
+    // Test sun-infos:
+    data = new SunSystemData();
     Assert.assertTrue(data.getProcessCpuTimeMillis() > 0);
     // Note: Does not work on some machines/jdks...
-    // Assert.assertTrue(data.getProcessCpuLoadPct() > -1);
-    // Assert.assertTrue(data.getSystemCpuLoadPct() > 0);
+    Assert.assertTrue(data.getProcessCpuLoadPct() > -1);
+    //Assert.assertTrue(data.getSystemCpuLoadPct() > 0);
   }
 
   /**
@@ -107,7 +116,7 @@ public class SystemDataTest {
   public void testCLData() throws Exception {
     SystemData data = new SystemData();
     // Note: Not supported by all java versions
-    //Assert.assertNotNull(data.getCLBootClassPath());
+    // Assert.assertNotNull(data.getCLBootClassPath());
     Assert.assertNotNull(data.getCLClassPath());
     Assert.assertNotNull(data.getCLLibraryPath());
     Assert.assertTrue(data.getCLLoadedClassCount() > 0);

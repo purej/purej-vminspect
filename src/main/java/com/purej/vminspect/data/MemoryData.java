@@ -9,6 +9,11 @@ import java.lang.management.MemoryUsage;
  * @author Stefan Mueller
  */
 public final class MemoryData {
+  /**
+   * An instance with -1 as values.
+   */
+  public static final MemoryData UNKNOWN = new MemoryData(-1, -1, -1);
+
   private final long _used;
   private final long _committed;
   private final long _max;

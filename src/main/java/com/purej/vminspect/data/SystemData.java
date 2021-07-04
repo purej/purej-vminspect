@@ -15,19 +15,18 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import com.sun.management.UnixOperatingSystemMXBean;
-
 /**
  * Provides information about the virtual machine currently running in.
  *
  * @author Stefan Mueller
  */
-@SuppressWarnings("restriction")
 public class SystemData {
   // Host name and IP:
   private static final String HOST_IP;
-
+  // If sun-classes exists in classpath:
+  private static final boolean SUN_CLASSES_EXIST;
   static {
+    // Calc localhost:
     String hostIp;
     try {
       InetAddress localHost = InetAddress.getLocalHost();
@@ -36,11 +35,22 @@ public class SystemData {
       hostIp = "Unknown";
     }
     HOST_IP = hostIp;
+
+    // Calc sun-classes:
+    boolean sunexists = false;
+    try {
+      Class.forName("com.sun.management.OperatingSystemMXBean");
+      Class.forName("com.sun.management.UnixOperatingSystemMXBean");
+      sunexists = true;
+    } catch (Throwable t) {
+      // Ignore...
+    }
+    SUN_CLASSES_EXIST = sunexists;
   }
 
   private final String _rtInfo;
   private final RuntimeMXBean _rtb;
-  private final OperatingSystemMXBean _osb;
+  protected final OperatingSystemMXBean _osb;
   private final int _threadCurrentCount;
   private final int _clLoadedClassCount;
   private final long _clTotalLoadedClassCount;
@@ -48,18 +58,26 @@ public class SystemData {
   private final long _gcCollectionTimeMillis;
   private final MemoryData _memoryHeap;
   private final MemoryData _memoryNonHeap;
-  private final MemoryData _memoryPhysical;
-  private final MemoryData _memorySwap;
-  private final long _processCpuTimeMillis;
-  private final double _processCpuLoadPct;
-  private final double _systemCpuLoadPct;
-  private final long _openFileDescriptorCount;
-  private final long _maxFileDescriptorCount;
+  // Those values might be set by subclasses:
+  protected MemoryData _memoryPhysical;
+  protected MemoryData _memorySwap;
+  protected long _processCpuTimeMillis;
+  protected double _processCpuLoadPct;
+  protected double _systemCpuLoadPct;
+  protected long _openFileDescriptorCount;
+  protected long _maxFileDescriptorCount;
+
+  /**
+   * Creates a new instanceof of the correct SystemData instance.
+   */
+  public static SystemData create() {
+    return SUN_CLASSES_EXIST ? new SunSystemData() : new SystemData();
+  }
 
   /**
    * Creates a new instance of this class.
    */
-  public SystemData() {
+  protected SystemData() {
     // Store runtime-infos:
     _rtInfo = System.getProperty("java.runtime.name") + ", " + System.getProperty("java.runtime.version");
     _rtb = ManagementFactory.getRuntimeMXBean();
@@ -88,47 +106,16 @@ public class SystemData {
     _memoryHeap = new MemoryData(mb.getHeapMemoryUsage());
     _memoryNonHeap = new MemoryData(mb.getNonHeapMemoryUsage());
 
-    // Physical / swap memory - Note: This is hidden in sun-classes, try to down-cast as reflection does not work anymore...:
+    // Physical / swap memory - Note: Most info is hidden in sun-classes, cannot check instance-of here
+    // to prevent class-not-found-exception for VMs without sun-classes! See dedicated sub-class SunSystemData.
     _osb = ManagementFactory.getOperatingSystemMXBean();
-    if (_osb instanceof com.sun.management.OperatingSystemMXBean) {
-      com.sun.management.OperatingSystemMXBean osb = (com.sun.management.OperatingSystemMXBean) _osb;
-
-      long memPhysTotal = osb.getTotalPhysicalMemorySize();
-      long memPhysFree = osb.getFreePhysicalMemorySize();
-      _memoryPhysical = new MemoryData(memPhysTotal != -1 ? memPhysTotal - memPhysFree : -1, -1, memPhysTotal);
-      long memSwapTotal = osb.getTotalSwapSpaceSize();
-      long memSwapFree = osb.getFreeSwapSpaceSize();
-      _memorySwap = new MemoryData(memSwapTotal != -1 ? memSwapTotal - memSwapFree : -1, -1, memSwapTotal);
-
-      // Process Cpu time - value is in nanoseconds:
-      long cpuTime = osb.getProcessCpuTime();
-      _processCpuTimeMillis = cpuTime > 0 ? cpuTime / 1000000 : -1;
-
-      // Process Cpu load - value is a double between 0..1:
-      double cpuLoad = osb.getProcessCpuLoad();
-      _processCpuLoadPct = cpuLoad < 0 ? cpuLoad : cpuLoad * 100;
-
-      // System Cpu load - value is a double between 0..1:
-      double systemLoad = osb.getSystemCpuLoad();
-      _systemCpuLoadPct = systemLoad < 0 ? systemLoad : systemLoad * 100;
-    } else {
-      // Cannot access all the hidden infos (reflection does not work anymore from java 9 onwards...)
-      _memoryPhysical = new MemoryData(-1, -1, -1);
-      _memorySwap = new MemoryData(-1, -1, -1);
-      _processCpuTimeMillis = -1;
-      _processCpuLoadPct = -1;
-      _systemCpuLoadPct = -1;
-    }
-
-    // Open/Max file descriptor count:
-    if (_osb instanceof UnixOperatingSystemMXBean) {
-      UnixOperatingSystemMXBean usb = (UnixOperatingSystemMXBean) _osb;
-      _openFileDescriptorCount = usb.getOpenFileDescriptorCount();
-      _maxFileDescriptorCount = usb.getMaxFileDescriptorCount();
-    } else {
-      _openFileDescriptorCount = -1;
-      _maxFileDescriptorCount = -1;
-    }
+    _memoryPhysical = MemoryData.UNKNOWN;
+    _memorySwap = MemoryData.UNKNOWN;
+    _processCpuTimeMillis = -1;
+    _processCpuLoadPct = -1;
+    _systemCpuLoadPct = -1;
+    _openFileDescriptorCount = -1;
+    _maxFileDescriptorCount = -1;
   }
 
   /**
