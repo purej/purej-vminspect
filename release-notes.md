@@ -3,6 +3,10 @@ Version "current"
 Version 2.0.0 - (04.03.2023)
 - Upgraded to jakarta-servlet 6.0.0 which renames javax.servlet to jakarta.servlet packages
 
+Version 1.9.1 - (04.03.2023)
+- Fix incorrect parent-pom version
+- Upgraded to spring-boot 2.7.6 and matching slf4j/logback
+
 Version 1.9.0 - (04.03.2023)
 - Updated all dependencies and plugins to latest versions
 - Added garbage collector names to main page
