@@ -235,7 +235,7 @@ public abstract class AbstractHtmlView {
   }
 
   protected static final String showHideLink(String divId, String label) {
-    return "<a href=\"javascript:showHide('" + divId + "');\"><img id='" + divId + "Img' src='?resource=bullets/plus.png' alt=''/> " + label + "</a>";
+    return "<a showHide='" + divId + "'><img id='" + divId + "Img' src='?resource=bullets/plus.png' alt=''/> " + label + "</a>";
   }
 
   protected static final String tooltip(String label, String txt) {

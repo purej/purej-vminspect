@@ -1,14 +1,32 @@
-// Simple function to show or hide the element with the given id
+window.addEventListener('load', () => {
+  registerShowHide();
+});
+
+// Register the show/hide links
+function registerShowHide() {
+  let links = document.querySelectorAll('[showHide]');
+  for (const link of links) {
+    const id = link.getAttribute('showHide');
+    link.addEventListener('click', function(event) {
+      showHide(id);
+    });
+  }
+}
+
 function showHide(id) {
-  if (document.getElementById(id).style.display=='none') {
-    if (document.getElementById(id + 'Img') != null) {
-      document.getElementById(id + 'Img').src='?resource=bullets/minus.png';
+  const el = document.getElementById(id);
+  if (el) {
+    const imgEl = document.getElementById(id + 'Img');
+    if (el.classList.contains('hidden')) {
+      el.classList.remove('hidden');
+      if (imgEl) {
+        imgEl.src='?resource=bullets/minus.png';
+      }
+    } else {
+      el.classList.add('hidden');
+      if (imgEl) {
+        imgEl.src='?resource=bullets/plus.png';
+      }
     }
-    document.getElementById(id).style.display='inline';
-  } else {
-    if (document.getElementById(id + 'Img') != null) {
-      document.getElementById(id + 'Img').src='?resource=bullets/plus.png';
-    }
-    document.getElementById(id).style.display='none';
   }
 }

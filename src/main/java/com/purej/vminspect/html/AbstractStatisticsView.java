@@ -60,8 +60,8 @@ abstract class AbstractStatisticsView extends AbstractHtmlView {
     writeln("Choice of period :&nbsp;");
     for (Period myPeriod : Period.values()) {
       if (myPeriod == Period.CUSTOM) {
-        writeln("<a href=\"javascript:showHide('customPeriod');\" ");
-        writeln("title='Choice of period Customized for charts and requests statistics'>");
+        write("\n<a showHide='customPeriod' ");
+        write("title='Choice of period Customized for charts and requests statistics'>");
         writeln(img(myPeriod.getIconName(), "Customized") + "&nbsp;Customized</a>");
       }
       else {
@@ -76,7 +76,7 @@ abstract class AbstractStatisticsView extends AbstractHtmlView {
   }
 
   private void writeCustomPeriodDiv(String graphDetailName, int statsWidth, int statsHeight) throws IOException {
-    writeln("<div id='customPeriod' style='display: none;'>");
+    writeln("<div id='customPeriod' class='hidden'>");
     writeln("<br/><br/>");
     writeln("<form name='customPeriodForm' method='get' action=''>");
     write("<br/><b>From</b>&nbsp;&nbsp;<input type='text' size='10' name='statsFromDate' ");

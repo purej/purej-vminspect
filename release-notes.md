@@ -2,6 +2,7 @@ Version "current"
 - Updated all dependencies and plugins to latest versions
 - Added garbage collector names to main page
 - More compact html output by using better stylesheets (hovers, odd/even row-selection)
+- No more inline-styles and inline-javascript to allow using a very strict CSP policy
 
 Version 1.8.0 - (04.07.2021)
  - Upgraded dependencies to latest versions

@@ -51,7 +51,7 @@ public final class StatisticsMainView extends AbstractStatisticsView {
 
   private void writeDurationAndOverhead() throws IOException {
     writeln("<a name='bottom'></a>");
-    writeln("<br/><div style='font-size:8pt;'>");
+    writeln("<br/><div class='footer'>");
     writeln("Statistics collection frequency: " + formatNumber(_statistics.getCollectionFrequencyMillis()) + "ms");
     String time = _statistics.getLastCollectTimestamp() > 0 ? formatDateTime(new Date(_statistics.getLastCollectTimestamp())) : "-";
     writeln("<br/>Last statistics collection time: " + time);

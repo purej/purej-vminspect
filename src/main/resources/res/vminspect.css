@@ -99,3 +99,6 @@ form {background-color:#F5F5F5;}
 div#okMsg {background-color:#99FF99;}
 div#warnMsg {background-color:#FFFF99;}
 div#errorMsg {background-color:#FF6666;}
+
+.footer {font-size:8pt;}
+.hidden {display:none;}

@@ -54,7 +54,7 @@ public class HtmlPageView extends AbstractHtmlView {
   }
 
   private void writeHtmlFooter() throws IOException {
-    writeln("<br/><div style='font-size:8pt;'>");
+    writeln("<br/><div class='footer'>");
     writeln("Display date: " + formatDateTime(new Date(_startTimestamp)) + "<br/>");
     writeln("Display duration: " + formatNumber(System.currentTimeMillis() - _startTimestamp) + "ms<br/>");
     writeln("</div>");
