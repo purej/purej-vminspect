@@ -6,7 +6,7 @@
   <parent>
     <groupId>com.purej</groupId>
     <artifactId>purej-parent</artifactId>
-    <version>1.5</version>
+    <version>1.6-SNAPSHOT</version>
   </parent>
 
   <artifactId>purej-vminspect</artifactId>
@@ -37,7 +37,7 @@
     <dependency>
       <groupId>org.rrd4j</groupId>
       <artifactId>rrd4j</artifactId>
-      <version>3.4</version>
+      <version>3.8.2</version>
     </dependency>
     <!-- Optionally JRobin as RRD implementation, must be provided by user -->
     <dependency>

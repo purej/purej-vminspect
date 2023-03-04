@@ -91,8 +91,9 @@ public final class SystemMainView extends AbstractHtmlView {
   private void writeGcTable() throws IOException {
     writeln("<h3>" + img("icons/garbage-24.png", "Garbage Collector") + "&nbsp;Garbage Collector</h3>");
     CandyHtmlTable table = new CandyHtmlTable("Garbage Collector", "Name", "Value");
+    table.nextRow("Names", _sysData.getGcName());
     table.nextRow("Number of Collections", formatNumber(_sysData.getGcCollectionCount()));
-    table.nextRow("Total Collection Time", formatNumber(_sysData.getGcCollectionTimeMillis() / 1000) + "s");
+    table.nextRow("Total Collection Time", formatDecimal(_sysData.getGcCollectionTimeMillis() / 1000d) + "s");
     table.endTable();
     writeln("<br/>");
   }

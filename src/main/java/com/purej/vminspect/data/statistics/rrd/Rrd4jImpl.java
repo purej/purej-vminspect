@@ -99,8 +99,20 @@ public class Rrd4jImpl extends AbstractRrdImpl {
       initRrdDb(false);
     }
     try {
+      // Calc start/end time:
+      long endTime; // Current timestamp or custom end-date
+      long startTime; // Depending on the range and end-date
+      if (range.getPeriod().equals(Period.CUSTOM)) {
+        // Custom period:
+        endTime = Math.min(range.getEndDate().getTime() / 1000, Util.getTime());
+        startTime = range.getStartDate().getTime() / 1000;
+      } else {
+        endTime = Util.getTime();
+        startTime = endTime - range.getPeriod().getDurationSeconds();
+      }
+
       // Create the graph definition:
-      RrdGraphDef graphDef = new RrdGraphDef();
+      RrdGraphDef graphDef = new RrdGraphDef(startTime, endTime);
       graphDef.setPoolUsed(true);
       graphDef.setFilename("-"); // Important for in-memory generation!
 
@@ -123,6 +135,7 @@ public class Rrd4jImpl extends AbstractRrdImpl {
       graphDef.gprint("vmax", "Max: %9.0f " + unit + "\\r");
 
       setGraphStartEndTime(graphDef, range);
+      graphDef.setFirstDayOfWeek(Calendar.getInstance().getFirstDayOfWeek());
       graphDef.setTitle(getGraphTitle(label, range, width));
 
       return new RrdGraph(graphDef).getRrdGraphInfo().getBytes();
@@ -158,22 +171,22 @@ public class Rrd4jImpl extends AbstractRrdImpl {
       _raf = null; // Reset underlying file
       RrdDef def = createRrdDef();
       if (_rrdBackendFactory instanceof RrdMemoryBackendFactory) {
-        _rrdDb = new RrdDb(def, _rrdBackendFactory);
+        _rrdDb = RrdDb.getBuilder().setRrdDef(def).setBackendFactory(_rrdBackendFactory).build();
       } else {
         // File backend:
         File rrdFile = new File(_rrdPath);
         if (overwrite || !rrdFile.exists() || rrdFile.length() == 0) {
           // Create a new one:
-          _rrdDb = new RrdDb(def, _rrdBackendFactory);
+          _rrdDb = RrdDb.getBuilder().setRrdDef(def).setBackendFactory(_rrdBackendFactory).build();
         } else {
           // Open existing:
-          _rrdDb = new RrdDb(_rrdPath, false, _rrdBackendFactory);
+          _rrdDb = RrdDb.getBuilder().setPath(_rrdPath).setBackendFactory(_rrdBackendFactory).build();
           // Sanity check - compare only step (eg. frequency) for now:
           if (def.getStep() != _rrdDb.getRrdDef().getStep()) {
             LOG.warn("Step size changed for {}, creating new one...", _rrdPath);
             _rrdDb.close();
             renameRrd(rrdFile);
-            _rrdDb = new RrdDb(def, _rrdBackendFactory);
+            _rrdDb = RrdDb.getBuilder().setRrdDef(def).setBackendFactory(_rrdBackendFactory).build();
           }
         }
 

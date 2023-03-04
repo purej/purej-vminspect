@@ -54,8 +54,20 @@ public class RrdToPng {
     int width = 1000;
     int height = 400;
 
+    // Calc start/end time:
+    long endTime; // Current timestamp or custom end-date
+    long startTime; // Depending on the range and end-date
+    if (range.getPeriod().equals(Period.CUSTOM)) {
+      // Custom period:
+      endTime = Math.min(range.getEndDate().getTime() / 1000, Util.getTime());
+      startTime = range.getStartDate().getTime() / 1000;
+    } else {
+      endTime = Util.getTime();
+      startTime = endTime - range.getPeriod().getDurationSeconds();
+    }
+
     // Create the graph definition:
-    RrdGraphDef graphDef = new RrdGraphDef();
+    RrdGraphDef graphDef = new RrdGraphDef(startTime, endTime);
     graphDef.setPoolUsed(true);
     graphDef.setFilename("-"); // Important for in-memory generation!
 
@@ -77,26 +89,10 @@ public class RrdToPng {
     graphDef.gprint("vavg", "Avg: %9.0f x\\r");
     graphDef.gprint("vmax", "Max: %9.0f x\\r");
 
-    setGraphStartEndTime(graphDef, range);
+    graphDef.setFirstDayOfWeek(Calendar.getInstance().getFirstDayOfWeek());
     setGraphTitle(graphDef, name + " Label", range, width);
 
     return new RrdGraph(graphDef).getRrdGraphInfo().getBytes();
-  }
-
-  private static void setGraphStartEndTime(RrdGraphDef graphDef, Range range) {
-    long endTime; // Current timestamp or custom end-date
-    long startTime; // Depending on the range and end-date
-    if (range.getPeriod().equals(Period.CUSTOM)) {
-      // Custom period:
-      endTime = Math.min(range.getEndDate().getTime() / 1000, Util.getTime());
-      startTime = range.getStartDate().getTime() / 1000;
-    } else {
-      endTime = Util.getTime();
-      startTime = endTime - range.getPeriod().getDurationSeconds();
-    }
-    graphDef.setStartTime(startTime);
-    graphDef.setEndTime(endTime);
-    graphDef.setFirstDayOfWeek(Calendar.getInstance().getFirstDayOfWeek());
   }
 
   private static void setGraphTitle(RrdGraphDef graphDef, String label, Range range, int width) {

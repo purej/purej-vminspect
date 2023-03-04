@@ -54,6 +54,7 @@ public class SystemData {
   private final int _threadCurrentCount;
   private final int _clLoadedClassCount;
   private final long _clTotalLoadedClassCount;
+  private final String _gcName;
   private final long _gcCollectionCount;
   private final long _gcCollectionTimeMillis;
   private final MemoryData _memoryHeap;
@@ -91,13 +92,19 @@ public class SystemData {
     _clLoadedClassCount = clb.getLoadedClassCount();
     _clTotalLoadedClassCount = clb.getTotalLoadedClassCount();
 
-    // Build gc collection time:
+    // Build gc name and collection time:
     long tmpGcCollectionCount = 0;
     long tmpGcCollectionTimeMillis = 0;
-    for (GarbageCollectorMXBean garbageCollector : ManagementFactory.getGarbageCollectorMXBeans()) {
-      tmpGcCollectionCount += garbageCollector.getCollectionCount();
-      tmpGcCollectionTimeMillis += garbageCollector.getCollectionTime();
+    StringBuilder tmpGcName = new StringBuilder();
+    for (GarbageCollectorMXBean gc : ManagementFactory.getGarbageCollectorMXBeans()) {
+      if (tmpGcName.length() > 0) {
+        tmpGcName.append(", ");
+      }
+      tmpGcName.append(gc.getName());
+      tmpGcCollectionCount += gc.getCollectionCount();
+      tmpGcCollectionTimeMillis += gc.getCollectionTime();
     }
+    _gcName = tmpGcName.toString();
     _gcCollectionCount = tmpGcCollectionCount;
     _gcCollectionTimeMillis = tmpGcCollectionTimeMillis;
 
@@ -339,6 +346,13 @@ public class SystemData {
    */
   public long getProcessCpuTimeMillis() {
     return _processCpuTimeMillis;
+  }
+  
+  /**
+   * Returns the name of the garbage collector.
+   */
+  public String getGcName() {
+    return _gcName;
   }
 
   /**

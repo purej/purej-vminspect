@@ -1,4 +1,6 @@
 Version "current"
+- Updated all dependencies and plugins to latest versions
+- Added garbage collector names to main page
 
 Version 1.8.0 - (04.07.2021)
  - Upgraded dependencies to latest versions

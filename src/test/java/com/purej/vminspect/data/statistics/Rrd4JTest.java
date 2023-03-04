@@ -37,14 +37,14 @@ public class Rrd4JTest {
     rrdDef.addArchive(ConsolFun.MAX, 0.5, 1, 600);
 
     // then, create a RrdDb from the definition and start adding data
-    try (RrdDb rrdDb = new RrdDb(rrdDef)) {
+    try (RrdDb rrdDb = RrdDb.getBuilder().setRrdDef(rrdDef).build()) {
       Sample sample = rrdDb.createSample();
       sample.setValue("speed", 22.7);
       sample.update();
     }
 
     // then create a graph definition
-    RrdGraphDef gDef = new RrdGraphDef();
+    RrdGraphDef gDef = new RrdGraphDef(1, 2);
     gDef.setWidth(500);
     gDef.setHeight(300);
     gDef.setFilename("speed.png");
