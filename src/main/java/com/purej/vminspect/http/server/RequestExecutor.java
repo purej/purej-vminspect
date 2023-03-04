@@ -202,7 +202,7 @@ final class RequestExecutor implements Runnable {
       builder.append("\r\nCache-Control: max-age=" + response.getCacheSeconds());
     }
     else {
-      builder.append("\r\nCache-Control: no-cache\r\nPragma: no-cache\r\nExpires: -1");
+      builder.append("\r\nCache-Control: no-cache");
     }
 
     // d) Content type and length:
@@ -219,7 +219,7 @@ final class RequestExecutor implements Runnable {
     StringBuilder builder = new StringBuilder(100);
     appendResponseStatus(errorPart, builder);
     String details = Utils.getHtmlExceptionInfo(e);
-    builder.append("\r\nCache-Control: no-cache\r\nPragma: no-cache\r\nExpires: -1");
+    builder.append("\r\nCache-Control: no-cache");
     builder.append("\r\nContent-Type: text/html; charset=utf-8");
     builder.append("\r\n\r\n<html><head><title>Error ").append(errorPart).append("</title>");
     builder.append("<body><h2>").append(errorPart).append("</h2>");

@@ -200,8 +200,6 @@ public class VmInspectionServlet extends HttpServlet {
       response.addHeader("Cache-Control", "max-age=" + httpResponse.getCacheSeconds());
     } else {
       response.addHeader("Cache-Control", "no-cache");
-      response.addHeader("Pragma", "no-cache");
-      response.addHeader("Expires", "-1");
     }
 
     // c) content type and length:
