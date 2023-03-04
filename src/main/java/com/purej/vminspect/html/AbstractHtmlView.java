@@ -46,8 +46,7 @@ public abstract class AbstractHtmlView {
       if (_firstRow) {
         write("<tr>");
         _firstRow = false;
-      }
-      else {
+      } else {
         write("</tr>\n<tr>");
       }
       for (String value : values) {
@@ -124,12 +123,17 @@ public abstract class AbstractHtmlView {
     }
 
     /**
-     * Writes new row tags with a CSS class-suffix.
+     * Writes new row tags with a custom CSS class.
      */
-    public void nextRowWithClz(String classSuffix) throws IOException {
+    public void nextRowWithClz(String cssClass) throws IOException {
       write("</tr>\n");
-      String clz = _oddRow ? "odd" + classSuffix : "even" + classSuffix;
-      write("<tr class='" + clz + "' onmouseover=\"this.className='highlight'\" onmouseout=\"this.className='" + clz + "'\">\n");
+      if (cssClass != null) {
+        write("<tr class='");
+        write(cssClass);
+        write("'>");
+      } else {
+        write("<tr>");
+      }
       _oddRow = !_oddRow;
     }
   }

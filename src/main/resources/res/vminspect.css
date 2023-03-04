@@ -27,22 +27,10 @@ table {
 }
 td {font-size: 8pt;}
 table tr.header td {background-color: #BDDAEE; font-size: 10pt; font-weight:bold;}
-table tr.even td {background-color: #FFFFFF;}
-table tr.odd td {background-color: #E7F4FD;}
-table tr.evenDeadlock td {background-color: #FAB8BB;}
-table tr.oddDeadlock td {background-color: #FAB8BB;}
-table tr.highlight td {background-color: #BDDAEE;}
-
-table tr:last-child td:first-child {
-	-moz-border-radius-bottomleft:5px;
-	-webkit-border-bottom-left-radius:5px;
-	border-bottom-left-radius:5px
-}
-table tr:last-child td:last-child {
-	-moz-border-radius-bottomright:5px;
-	-webkit-border-bottom-right-radius:5px;
-	border-bottom-right-radius:5px
-}
+table tr:nth-child(even) {background-color: #FFFFFF;}
+table tr:nth-child(odd) {background-color: #E7F4FD;}
+table tr.deadlock {background-color: #FAB8BB;}
+table tr:hover {background-color: #BDDAEE;}
 
 .tooltip em {
   display:none;
