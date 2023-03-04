@@ -4,11 +4,6 @@ package com.purej.vminspect.http.servlet;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Map;
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.purej.vminspect.data.statistics.StatisticsCollector;
@@ -19,6 +14,11 @@ import com.purej.vminspect.http.MBeanAccessControl;
 import com.purej.vminspect.http.RequestController;
 import com.purej.vminspect.http.RequestParams;
 import com.purej.vminspect.util.Utils;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * This servlet allows PureJ VM Inspection to be used in servlet-containers / JEE containers. This servlet is implemented

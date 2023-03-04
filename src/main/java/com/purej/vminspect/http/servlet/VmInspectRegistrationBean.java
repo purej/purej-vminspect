@@ -1,10 +1,10 @@
 package com.purej.vminspect.http.servlet;
 
-import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.core.env.Environment;
 import com.purej.vminspect.http.MBeanAccessControl;
+import jakarta.annotation.PostConstruct;
 
 /**
  * A spring-boot registration bean to simplify adding

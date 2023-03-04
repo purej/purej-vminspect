@@ -1,8 +1,8 @@
 // Copyright (c), 2013, adopus consulting GmbH Switzerland, all rights reserved.
 package com.purej.vminspect.http.servlet;
 
-import javax.servlet.http.HttpServletRequest;
 import com.purej.vminspect.http.MBeanAccessControl;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * Factory to create custom {@link MBeanAccessControl} instances for fine-grained

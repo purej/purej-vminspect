@@ -62,7 +62,8 @@ Optional properties might be set to configure some aspects (either as spring-env
 
 ### Requisites
 
-  * Java 1.8 or higher
+  * Attention: The latest inspect-version 2.0.0 supports spring-boot 3 and uses jakarta.servlet and no more javax.servlet (latest jakarta-servlet spec 6.0) - For javax.servlet support, use the 1.9 version or older
+  * Java 17 or higher (required by jakarta-servlet / spring-boot 3)
 
 Maven users just need to add the following dependency:
 
@@ -70,7 +71,7 @@ Maven users just need to add the following dependency:
   <dependency>
     <groupId>com.purej</groupId>
     <artifactId>purej-vminspect</artifactId>
-    <version>1.9.0</version>
+    <version>2.0.0</version>
   </dependency>
 ```
 

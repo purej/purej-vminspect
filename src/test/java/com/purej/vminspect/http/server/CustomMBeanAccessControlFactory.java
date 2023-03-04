@@ -1,12 +1,12 @@
 // Copyright (c), 2013, adopus consulting GmbH Switzerland, all rights reserved.
 package com.purej.vminspect.http.server;
 
-import javax.servlet.http.HttpServletRequest;
 import com.purej.vminspect.data.MBeanAttribute;
 import com.purej.vminspect.data.MBeanData;
 import com.purej.vminspect.data.MBeanOperation;
 import com.purej.vminspect.http.MBeanAccessControl;
 import com.purej.vminspect.http.servlet.MBeanAccessControlFactory;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * A custom impl of the {@link MBeanAccessControlFactory} for test purposes.

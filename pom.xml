@@ -6,7 +6,7 @@
   <parent>
     <groupId>com.purej</groupId>
     <artifactId>purej-parent</artifactId>
-    <version>1.6-SNAPSHOT</version>
+    <version>1.6</version>
   </parent>
 
   <artifactId>purej-vminspect</artifactId>
@@ -17,8 +17,10 @@
   <description>An easy to use, feature-rich, JMX-based and embeddable Java VM monitoring tool with a web-based user-interface</description>
 
   <properties>
+    <!-- Jdk Version - Jakarta-EE and spring-boot 3 requires java 17 minimum! -->
+    <jdkVersion>17</jdkVersion>
     <module.name>purej.vminspect</module.name>
-    <jettyVersion>9.4.41.v20210516</jettyVersion>
+    <jettyVersion>11.0.14</jettyVersion>
   </properties>
 
   <scm>
@@ -30,7 +32,7 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.7.25</version>
+      <version>2.0.6</version>
     </dependency>
 
     <!-- By default, VmInspect uses RRD4J as round-robin-db implementation, see https://github.com/rrd4j/rrd4j -->
@@ -51,7 +53,7 @@
     <dependency>
       <groupId>jakarta.servlet</groupId>
       <artifactId>jakarta.servlet-api</artifactId>
-      <version>4.0.4</version>
+      <version>6.0.0</version>
       <scope>provided</scope>
     </dependency>
 
@@ -59,13 +61,13 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot</artifactId>
-      <version>2.4.8</version>
+      <version>3.0.4</version>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>jakarta.annotation</groupId>
       <artifactId>jakarta.annotation-api</artifactId>
-      <version>1.3.5</version>
+      <version>2.1.1</version>
       <optional>true</optional>
     </dependency>
 
@@ -93,7 +95,7 @@
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.2.3</version>
+      <version>1.4.5</version>
       <scope>test</scope>
     </dependency>
 
