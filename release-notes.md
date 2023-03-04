@@ -2,6 +2,7 @@ Version "current"
 
 Version 1.9.1 - (04.03.2023)
 - Fix incorrect parent-pom version
+- Upgraded to latest spring-boot and slf4j/logback
 
 Version 1.9.0 - (04.03.2023)
 - Updated all dependencies and plugins to latest versions
