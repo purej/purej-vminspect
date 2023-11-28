@@ -61,7 +61,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot</artifactId>
-      <version>3.0.4</version>
+      <version>3.0.13</version>
       <optional>true</optional>
     </dependency>
     <dependency>
