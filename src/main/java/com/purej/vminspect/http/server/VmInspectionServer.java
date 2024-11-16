@@ -71,13 +71,13 @@ public final class VmInspectionServer {
    * @param port the port where the server-socket listens for incoming HTTP requests
    * @throws IOException if the server socket could not be bound to the given port
    */
-  public VmInspectionServer(final MBeanAccessControl mBeanAccessControl, int statisticsCollectionFrequencyMs, String statisticsStorageDir, int port)
+  public VmInspectionServer(MBeanAccessControl mBeanAccessControl, int statisticsCollectionFrequencyMs, String statisticsStorageDir, int port)
       throws IOException {
     // Create the executor to handle request:
     _executor = Executors.newFixedThreadPool(3, new ThreadFactory() {
       @Override
       public Thread newThread(Runnable target) {
-        return new Thread(target, "PureJ VM Inspection HTTP request executor");
+        return new Thread(target, "VmInspect-Request-Executor");
       }
     });
 
@@ -85,7 +85,7 @@ public final class VmInspectionServer {
     _serverSocket = new ServerSocket(port, 10);
 
     // Create the listener thread:
-    _listener = new Thread("PureJ VM Inspection HTTP listener") {
+    _listener = new Thread("VmInspect-Http-Listener") {
       @Override
       public void run() {
         while (!_serverSocket.isClosed()) {

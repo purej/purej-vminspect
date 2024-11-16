@@ -50,7 +50,7 @@ public final class StatisticsCollector {
     _collectionFrequencyMillis = collectionFrequencyMillis;
 
     // Create a timer and timer tasks:
-    _timer = new Timer("PureJ VM Inspection Statistics Collector", true);
+    _timer = new Timer("VmInspect-Statistics-Collector", true);
 
     // Create the RRD provider:
     _rrdProvider = new RrdProvider(storageDir, _collectionFrequencyMillis);
