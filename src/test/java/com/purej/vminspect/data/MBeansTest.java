@@ -6,8 +6,10 @@ import java.util.List;
 import java.util.Set;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
-import org.junit.Assert;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import com.purej.vminspect.data.MBeanOperation.Impact;
 
 /**
@@ -27,7 +29,7 @@ public class MBeansTest {
       Set<ObjectName> objectNames = servers.get(i).queryNames(null, null);
       for (ObjectName name : objectNames) {
         int idx = MBeanUtils.getMBeanServerIdx(name);
-        Assert.assertEquals(i, idx);
+        Assertions.assertEquals(i, idx);
       }
     }
   }
@@ -41,7 +43,7 @@ public class MBeansTest {
       String objectName = name.getObjectNameString();
       //System.out.println("MBean objectName: " + objectName);
       MBeanData mbean = MBeanUtils.getMBean(0, objectName);
-      Assert.assertEquals(objectName, mbean.getName().getObjectNameString());
+      Assertions.assertEquals(objectName, mbean.getName().getObjectNameString());
     }
   }
 
@@ -55,8 +57,8 @@ public class MBeansTest {
       MBeanData mbean = MBeanUtils.getMBean(0, objectName);
       //System.out.println("Attributes for MBean : " + objectName);
       for (MBeanAttribute attribute : mbean.getAttributes()) {
-        Assert.assertNotNull(attribute);
-        Assert.assertNotNull(attribute.getName());
+        Assertions.assertNotNull(attribute);
+        Assertions.assertNotNull(attribute.getName());
         //System.out.println("Attribute " + attribute.getName() + "=" + attribute.getValue() + " (" + attribute.getDescription() + ")");
       }
     }
@@ -127,45 +129,45 @@ public class MBeansTest {
   private static void doTestGetSetAttribute(String objectName, String attributeName, String value1, String value2) {
     // Load & set value1:
     MBeanData mbean = MBeanUtils.getMBean(0, objectName);
-    Assert.assertNotNull(mbean);
+    Assertions.assertNotNull(mbean);
     MBeanUtils.invokeAttribute(mbean.getName(), mbean.getAttribute(attributeName), value1);
 
     // Reload & set value2:
     mbean = MBeanUtils.getMBean(0, objectName);
-    Assert.assertNotNull(mbean);
+    Assertions.assertNotNull(mbean);
     MBeanAttribute attribute = mbean.getAttribute(attributeName);
-    Assert.assertEquals(attributeName, attribute.getName());
-    Assert.assertEquals(true, attribute.isWritable());
+    Assertions.assertEquals(attributeName, attribute.getName());
+    Assertions.assertEquals(true, attribute.isWritable());
     Object v = attribute.getValue();
-    Assert.assertEquals(value1, v != null ? v.toString() : null);
+    Assertions.assertEquals(value1, v != null ? v.toString() : null);
     MBeanUtils.invokeAttribute(mbean.getName(), mbean.getAttribute(attributeName), value2);
 
     // Reload & check:
     mbean = MBeanUtils.getMBean(0, objectName);
-    Assert.assertNotNull(mbean);
+    Assertions.assertNotNull(mbean);
     v = mbean.getAttribute(attributeName).getValue();
-    Assert.assertEquals(value2, v != null ? v.toString() : null);
+    Assertions.assertEquals(value2, v != null ? v.toString() : null);
 
     // For complex objects:
     if (mbean.getAttribute(attributeName).getType().contains(".")) {
       MBeanUtils.invokeAttribute(mbean.getName(), mbean.getAttribute(attributeName), null);
       mbean = MBeanUtils.getMBean(0, objectName);
-      Assert.assertNotNull(mbean);
-      Assert.assertEquals(null, mbean.getAttribute(attributeName).getValue());
+      Assertions.assertNotNull(mbean);
+      Assertions.assertEquals(null, mbean.getAttribute(attributeName).getValue());
     }
   }
 
   private static void doTestInvokeOperation(String objectName, String operationName, String[] params, String expectedResult) {
     // Load & invoke:
     MBeanData mbean = MBeanUtils.getMBean(0, objectName);
-    Assert.assertNotNull(mbean);
+    Assertions.assertNotNull(mbean);
     MBeanOperation operation = getOperation(mbean, operationName, params.length);
-    Assert.assertEquals(Impact.Unknown, operation.getImpact());
+    Assertions.assertEquals(Impact.Unknown, operation.getImpact());
     if (operationName.indexOf("Void") < 0) {
-      Assert.assertNotNull(operation.getReturnType());
+      Assertions.assertNotNull(operation.getReturnType());
     }
     Object result = MBeanUtils.invokeOperation(mbean.getName(), operation, params);
-    Assert.assertEquals(expectedResult, result != null ? result.toString() : null);
+    Assertions.assertEquals(expectedResult, result != null ? result.toString() : null);
   }
 
   private static MBeanOperation getOperation(MBeanData mbean, String operationName, int paramCount) {

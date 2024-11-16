@@ -11,7 +11,7 @@ import org.jrobin.core.RrdDef;
 import org.jrobin.core.Sample;
 import org.jrobin.graph.RrdGraph;
 import org.jrobin.graph.RrdGraphDef;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests some JRobin stuff.

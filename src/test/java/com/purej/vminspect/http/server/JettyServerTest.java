@@ -4,8 +4,8 @@ package com.purej.vminspect.http.server;
 import java.lang.management.ManagementFactory;
 import javax.management.ObjectName;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
+import org.eclipse.jetty.ee10.servlet.ServletHolder;
 import com.purej.vminspect.data.MySample;
 import com.purej.vminspect.http.servlet.VmInspectionServlet;
 

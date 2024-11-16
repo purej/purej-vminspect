@@ -1,8 +1,8 @@
 // Copyright (c), 2013, adopus consulting GmbH Switzerland, all rights reserved.
 package com.purej.vminspect.util;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests the named functionality.
@@ -16,10 +16,10 @@ public class UtilsTest {
    */
   @Test
   public void testCheckNotNull() throws Exception {
-    Assert.assertEquals("x", Utils.checkNotNull("x"));
+	  Assertions.assertEquals("x", Utils.checkNotNull("x"));
     try {
       Utils.checkNotNull(null);
-      Assert.fail();
+      Assertions.fail();
     } catch (IllegalArgumentException e) {
       // Expected...
     }
@@ -30,20 +30,20 @@ public class UtilsTest {
    */
   @Test
   public void testUrlEncodeDecode() throws Exception {
-    Assert.assertEquals("", Utils.urlEncode(null));
-    Assert.assertEquals("", Utils.urlEncode(""));
-    Assert.assertEquals("ja%26va", Utils.urlEncode("ja&va"));
-    Assert.assertEquals("ja%3Dva", Utils.urlEncode("ja=va"));
-    Assert.assertEquals("ja%3D%22%3Bva", Utils.urlEncode("ja=\";va"));
-    Assert.assertEquals("ja+v-%3C%3Ea.*", Utils.urlEncode("ja v-<>a.*"));
+	Assertions.assertEquals("", Utils.urlEncode(null));
+	Assertions.assertEquals("", Utils.urlEncode(""));
+	Assertions.assertEquals("ja%26va", Utils.urlEncode("ja&va"));
+	Assertions.assertEquals("ja%3Dva", Utils.urlEncode("ja=va"));
+	Assertions.assertEquals("ja%3D%22%3Bva", Utils.urlEncode("ja=\";va"));
+	Assertions.assertEquals("ja+v-%3C%3Ea.*", Utils.urlEncode("ja v-<>a.*"));
 
-    Assert.assertEquals(null, Utils.urlDecode(null));
-    Assert.assertEquals("", Utils.urlDecode(""));
-    Assert.assertEquals("ja&va", Utils.urlDecode("ja%26va"));
-    Assert.assertEquals("ja=va", Utils.urlDecode("ja%3Dva"));
-    Assert.assertEquals("ja=\";va", Utils.urlDecode("ja%3D%22%3Bva"));
-    Assert.assertEquals("ja v-<>a.*", Utils.urlDecode("ja+v-%3C%3Ea.*")); // produced by encoder
-    Assert.assertEquals("ja v-<>a.*", Utils.urlDecode("ja+v-<>a.*")); // produced by html forms with get
+	Assertions.assertEquals(null, Utils.urlDecode(null));
+	Assertions.assertEquals("", Utils.urlDecode(""));
+	Assertions.assertEquals("ja&va", Utils.urlDecode("ja%26va"));
+	Assertions.assertEquals("ja=va", Utils.urlDecode("ja%3Dva"));
+	Assertions.assertEquals("ja=\";va", Utils.urlDecode("ja%3D%22%3Bva"));
+	Assertions.assertEquals("ja v-<>a.*", Utils.urlDecode("ja+v-%3C%3Ea.*")); // produced by encoder
+	Assertions.assertEquals("ja v-<>a.*", Utils.urlDecode("ja+v-<>a.*")); // produced by html forms with get
   }
 
   /**
@@ -51,13 +51,13 @@ public class UtilsTest {
    */
   @Test
   public void testHtmlEncode() throws Exception {
-    Assert.assertEquals("", Utils.htmlEncode(null));
-    Assert.assertEquals("", Utils.htmlEncode(""));
-    Assert.assertEquals(" hello ", Utils.htmlEncode(" hello "));
-    Assert.assertEquals("&amp;hello&lt;&gt;world", Utils.htmlEncode("&hello<>world"));
-    Assert.assertEquals("hello&quot;world", Utils.htmlEncode("hello\"world"));
-    Assert.assertEquals("1&#39;2&#39;3&#39;", Utils.htmlEncode("1'2'3'"));
-    Assert.assertEquals("hel<br/>lo<br/>world", Utils.htmlEncode("hel\r\nlo\nworld"));
+    Assertions.assertEquals("", Utils.htmlEncode(null));
+    Assertions.assertEquals("", Utils.htmlEncode(""));
+    Assertions.assertEquals(" hello ", Utils.htmlEncode(" hello "));
+    Assertions.assertEquals("&amp;hello&lt;&gt;world", Utils.htmlEncode("&hello<>world"));
+    Assertions.assertEquals("hello&quot;world", Utils.htmlEncode("hello\"world"));
+    Assertions.assertEquals("1&#39;2&#39;3&#39;", Utils.htmlEncode("1'2'3'"));
+    Assertions.assertEquals("hel<br/>lo<br/>world", Utils.htmlEncode("hel\r\nlo\nworld"));
   }
 
   /**
@@ -72,60 +72,60 @@ public class UtilsTest {
     String s5 = "Der mit dem Wolf tanzt";
 
     // Test with null pattern:
-    Assert.assertEquals(true, Utils.wildCardMatch(s1, null));
-    Assert.assertEquals(true, Utils.wildCardMatch(s2, null));
-    Assert.assertEquals(true, Utils.wildCardMatch(s3, null));
+    Assertions.assertEquals(true, Utils.wildCardMatch(s1, null));
+    Assertions.assertEquals(true, Utils.wildCardMatch(s2, null));
+    Assertions.assertEquals(true, Utils.wildCardMatch(s3, null));
 
     // Test with empty pattern:
-    Assert.assertEquals(true, Utils.wildCardMatch(s1, ""));
-    Assert.assertEquals(true, Utils.wildCardMatch(s2, ""));
-    Assert.assertEquals(true, Utils.wildCardMatch(s3, ""));
+    Assertions.assertEquals(true, Utils.wildCardMatch(s1, ""));
+    Assertions.assertEquals(true, Utils.wildCardMatch(s2, ""));
+    Assertions.assertEquals(true, Utils.wildCardMatch(s3, ""));
 
     // Test with wildcard only pattern:
-    Assert.assertEquals(true, Utils.wildCardMatch(s1, "*"));
-    Assert.assertEquals(true, Utils.wildCardMatch(s2, "*"));
-    Assert.assertEquals(true, Utils.wildCardMatch(s3, "*"));
+    Assertions.assertEquals(true, Utils.wildCardMatch(s1, "*"));
+    Assertions.assertEquals(true, Utils.wildCardMatch(s2, "*"));
+    Assertions.assertEquals(true, Utils.wildCardMatch(s3, "*"));
 
     // Test with simple pattern:
-    Assert.assertEquals(false, Utils.wildCardMatch(s1, "a"));
-    Assert.assertEquals(false, Utils.wildCardMatch(s2, "a"));
-    Assert.assertEquals(true, Utils.wildCardMatch(s3, "a"));
-    Assert.assertEquals(false, Utils.wildCardMatch(s4, "a"));
-    Assert.assertEquals(false, Utils.wildCardMatch(s5, "a"));
+    Assertions.assertEquals(false, Utils.wildCardMatch(s1, "a"));
+    Assertions.assertEquals(false, Utils.wildCardMatch(s2, "a"));
+    Assertions.assertEquals(true, Utils.wildCardMatch(s3, "a"));
+    Assertions.assertEquals(false, Utils.wildCardMatch(s4, "a"));
+    Assertions.assertEquals(false, Utils.wildCardMatch(s5, "a"));
 
     // Test with simple pattern with wildcard start:
-    Assert.assertEquals(false, Utils.wildCardMatch(s1, "*a"));
-    Assert.assertEquals(false, Utils.wildCardMatch(s2, "*a"));
-    Assert.assertEquals(true, Utils.wildCardMatch(s3, "*a"));
-    Assert.assertEquals(false, Utils.wildCardMatch(s4, "*a"));
-    Assert.assertEquals(false, Utils.wildCardMatch(s5, "*a"));
+    Assertions.assertEquals(false, Utils.wildCardMatch(s1, "*a"));
+    Assertions.assertEquals(false, Utils.wildCardMatch(s2, "*a"));
+    Assertions.assertEquals(true, Utils.wildCardMatch(s3, "*a"));
+    Assertions.assertEquals(false, Utils.wildCardMatch(s4, "*a"));
+    Assertions.assertEquals(false, Utils.wildCardMatch(s5, "*a"));
 
     // Test with simple pattern with wildcard end:
-    Assert.assertEquals(false, Utils.wildCardMatch(s1, "a*"));
-    Assert.assertEquals(false, Utils.wildCardMatch(s2, "a*"));
-    Assert.assertEquals(true, Utils.wildCardMatch(s3, "a*"));
-    Assert.assertEquals(true, Utils.wildCardMatch(s4, "a*"));
-    Assert.assertEquals(false, Utils.wildCardMatch(s5, "a*"));
+    Assertions.assertEquals(false, Utils.wildCardMatch(s1, "a*"));
+    Assertions.assertEquals(false, Utils.wildCardMatch(s2, "a*"));
+    Assertions.assertEquals(true, Utils.wildCardMatch(s3, "a*"));
+    Assertions.assertEquals(true, Utils.wildCardMatch(s4, "a*"));
+    Assertions.assertEquals(false, Utils.wildCardMatch(s5, "a*"));
 
     // Test with long pattern:
-    Assert.assertEquals(false, Utils.wildCardMatch(s1, "abcdefgh"));
-    Assert.assertEquals(false, Utils.wildCardMatch(s2, "abcdefgh"));
-    Assert.assertEquals(false, Utils.wildCardMatch(s3, "abcdefgh"));
-    Assert.assertEquals(false, Utils.wildCardMatch(s4, "abcdefgh"));
-    Assert.assertEquals(false, Utils.wildCardMatch(s5, "abcdefgh"));
+    Assertions.assertEquals(false, Utils.wildCardMatch(s1, "abcdefgh"));
+    Assertions.assertEquals(false, Utils.wildCardMatch(s2, "abcdefgh"));
+    Assertions.assertEquals(false, Utils.wildCardMatch(s3, "abcdefgh"));
+    Assertions.assertEquals(false, Utils.wildCardMatch(s4, "abcdefgh"));
+    Assertions.assertEquals(false, Utils.wildCardMatch(s5, "abcdefgh"));
 
     // Test with special patterns ok:
-    Assert.assertEquals(true, Utils.wildCardMatch(s5, "Der*"));
-    Assert.assertEquals(true, Utils.wildCardMatch(s5, "Der *"));
-    Assert.assertEquals(true, Utils.wildCardMatch(s5, "* mit dem *"));
-    Assert.assertEquals(true, Utils.wildCardMatch(s5, "*tanzt"));
-    Assert.assertEquals(true, Utils.wildCardMatch(s5, "*er*dem *nzt*"));
-    Assert.assertEquals(true, Utils.wildCardMatch(s5, "Der*dem*t"));
+    Assertions.assertEquals(true, Utils.wildCardMatch(s5, "Der*"));
+    Assertions.assertEquals(true, Utils.wildCardMatch(s5, "Der *"));
+    Assertions.assertEquals(true, Utils.wildCardMatch(s5, "* mit dem *"));
+    Assertions.assertEquals(true, Utils.wildCardMatch(s5, "*tanzt"));
+    Assertions.assertEquals(true, Utils.wildCardMatch(s5, "*er*dem *nzt*"));
+    Assertions.assertEquals(true, Utils.wildCardMatch(s5, "Der*dem*t"));
 
     // Test with special patterns nok:
-    Assert.assertEquals(false, Utils.wildCardMatch(s5, "Des*"));
-    Assert.assertEquals(false, Utils.wildCardMatch(s5, "* mit des *"));
-    Assert.assertEquals(false, Utils.wildCardMatch(s5, "*tantzt"));
-    Assert.assertEquals(false, Utils.wildCardMatch(s5, "*er*dm *nzt*"));
+    Assertions.assertEquals(false, Utils.wildCardMatch(s5, "Des*"));
+    Assertions.assertEquals(false, Utils.wildCardMatch(s5, "* mit des *"));
+    Assertions.assertEquals(false, Utils.wildCardMatch(s5, "*tantzt"));
+    Assertions.assertEquals(false, Utils.wildCardMatch(s5, "*er*dm *nzt*"));
   }
 }

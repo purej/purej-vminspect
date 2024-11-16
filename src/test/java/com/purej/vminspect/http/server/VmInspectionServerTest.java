@@ -3,7 +3,9 @@ package com.purej.vminspect.http.server;
 
 import java.lang.management.ManagementFactory;
 import javax.management.ObjectName;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
+
 import com.purej.vminspect.data.MySample;
 
 /**

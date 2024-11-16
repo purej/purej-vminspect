@@ -4,7 +4,7 @@ package com.purej.vminspect.data.statistics;
 import java.awt.Color;
 import java.io.File;
 import java.io.FileOutputStream;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.rrd4j.ConsolFun;
 import org.rrd4j.DsType;
 import org.rrd4j.core.RrdDb;

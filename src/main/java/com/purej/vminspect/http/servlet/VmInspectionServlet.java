@@ -147,7 +147,7 @@ public class VmInspectionServlet extends HttpServlet {
         mbeanAccessControl = _mbeanAccessControlFactory.create(request);
       }
       HttpResponse httpResponse = _controller.process(httpRequest, mbeanAccessControl);
-
+      
       // Now write the rendered output:
       try {
         writeHttpResponse(httpResponse, request.getRequestURI(), response);
