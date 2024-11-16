@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -16,62 +15,62 @@ import java.util.Set;
  * @author Stefan Mueller
  */
 public final class ThreadData {
-  private final String _name;
-  private final int _priority;
-  private final boolean _daemon;
-  private final Thread.State _state;
-  private final long _cpuTimeMillis;
-  private final long _userTimeMillis;
-  private final boolean _deadlocked;
-  private final StackTraceElement[] _stackTrace;
+  private final String name;
+  private final int priority;
+  private final boolean daemon;
+  private final Thread.State state;
+  private final long cpuTimeMillis;
+  private final long userTimeMillis;
+  private final boolean deadlocked;
+  private final StackTraceElement[] stackTrace;
 
   /**
    * Creates a new instance of this class.
    */
   public ThreadData(Thread thread, StackTraceElement[] stackTrace, long cpuTimeMillis, long userTimeMillis, boolean deadlocked) {
-    _name = thread.getName();
-    _priority = thread.getPriority();
-    _daemon = thread.isDaemon();
-    _state = thread.getState();
-    _stackTrace = stackTrace;
-    _cpuTimeMillis = cpuTimeMillis;
-    _userTimeMillis = userTimeMillis;
-    _deadlocked = deadlocked;
+    this.name = thread.getName();
+    this.priority = thread.getPriority();
+    this.daemon = thread.isDaemon();
+    this.state = thread.getState();
+    this.stackTrace = stackTrace;
+    this.cpuTimeMillis = cpuTimeMillis;
+    this.userTimeMillis = userTimeMillis;
+    this.deadlocked = deadlocked;
   }
 
   /**
    * Returns the list of all currently existing threads.
    */
   public static List<ThreadData> getAllThreads() {
-    List<ThreadData> threads = createThreadInfos(ManagementFactory.getThreadMXBean());
+    var threads = createThreadInfos(ManagementFactory.getThreadMXBean());
     Collections.sort(threads, new ThreadDataComparator());
     return threads;
   }
 
   private static List<ThreadData> createThreadInfos(ThreadMXBean threadBean) {
-    Map<Thread, StackTraceElement[]> stackTraces = Thread.getAllStackTraces();
-    List<ThreadData> result = new ArrayList<ThreadData>(stackTraces.size());
-    Set<Long> deadlockedThreadIds = getDeadlockedThreadsIds(threadBean);
-    boolean cpuTimeEnabled = threadBean.isThreadCpuTimeSupported() && threadBean.isThreadCpuTimeEnabled();
-    for (Map.Entry<Thread, StackTraceElement[]> entry : stackTraces.entrySet()) {
-      Thread t = entry.getKey();
-      long cpuTimeMillis = cpuTimeEnabled ? threadBean.getThreadCpuTime(t.getId()) / 1000000 : -1;
-      long userTimeMillis = cpuTimeEnabled ? threadBean.getThreadUserTime(t.getId()) / 1000000 : -1;
-      boolean isDeadlocked = deadlockedThreadIds.contains(Long.valueOf(t.getId()));
+    var stackTraces = Thread.getAllStackTraces();
+    var result = new ArrayList<ThreadData>(stackTraces.size());
+    var deadlockedThreadIds = getDeadlockedThreadsIds(threadBean);
+    var cpuTimeEnabled = threadBean.isThreadCpuTimeSupported() && threadBean.isThreadCpuTimeEnabled();
+    for (var entry : stackTraces.entrySet()) {
+      var t = entry.getKey();
+      var cpuTimeMillis = cpuTimeEnabled ? threadBean.getThreadCpuTime(t.getId()) / 1000000 : -1;
+      var userTimeMillis = cpuTimeEnabled ? threadBean.getThreadUserTime(t.getId()) / 1000000 : -1;
+      var isDeadlocked = deadlockedThreadIds.contains(Long.valueOf(t.getId()));
       result.add(new ThreadData(t, entry.getValue(), cpuTimeMillis, userTimeMillis, isDeadlocked));
     }
     return result;
   }
 
   private static Set<Long> getDeadlockedThreadsIds(ThreadMXBean threadBean) {
-    final long[] deadlockedThreads;
+    long[] deadlockedThreads;
     if (threadBean.isSynchronizerUsageSupported()) {
       deadlockedThreads = threadBean.findDeadlockedThreads();
     }
     else {
       deadlockedThreads = threadBean.findMonitorDeadlockedThreads();
     }
-    Set<Long> result = new HashSet<Long>();
+    var result = new HashSet<Long>();
     if (deadlockedThreads != null) {
       for (int i = 0; i < deadlockedThreads.length; i++) {
         result.add(Long.valueOf(deadlockedThreads[i]));
@@ -84,43 +83,43 @@ public final class ThreadData {
    * Returns the name of the thread.
    */
   public String getName() {
-    return _name;
+    return name;
   }
 
   /**
    * Returns the priority of the thread.
    */
   public int getPriority() {
-    return _priority;
+    return priority;
   }
 
   /**
    * Returns if the thread runs as deamon thread.
    */
   public boolean isDaemon() {
-    return _daemon;
+    return daemon;
   }
 
   /**
    * Returns the current state of the thread.
    */
   public Thread.State getState() {
-    return _state;
+    return state;
   }
 
   /**
    * Returns the list of stack trace elements.
    */
   public StackTraceElement[] getStackTrace() {
-    return _stackTrace;
+    return stackTrace;
   }
 
   /**
    * Returns the stack trace as a string.
    */
   public String getStackTraceString() {
-    StringBuilder result = new StringBuilder();
-    for (StackTraceElement element : _stackTrace) {
+    var result = new StringBuilder();
+    for (var element : stackTrace) {
       if (result.length() > 0) {
         result.append('\n');
       }
@@ -133,20 +132,20 @@ public final class ThreadData {
    * Returns the total CPU time this thread consumed so far.
    */
   public long getCpuTimeMillis() {
-    return _cpuTimeMillis;
+    return cpuTimeMillis;
   }
 
   /**
    * Returns the total user time this thread consumed so far.
    */
   public long getUserTimeMillis() {
-    return _userTimeMillis;
+    return userTimeMillis;
   }
 
   /**
    * Returns true if this thread is in a deadlock state.
    */
   public boolean isDeadlocked() {
-    return _deadlocked;
+    return deadlocked;
   }
 }

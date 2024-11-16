@@ -7,47 +7,47 @@ package com.purej.vminspect.data;
  * @author Stefan Mueller
  */
 public class MBeanData {
-  private final MBeanName _name;
-  private final String _description;
-  private final MBeanAttribute[] _attributes;
-  private final MBeanOperation[] _operations;
+  private final MBeanName name;
+  private final String description;
+  private final MBeanAttribute[] attribute;
+  private final MBeanOperation[] operations;
 
   /**
    * Creates a new instance of this class.
    */
   public MBeanData(MBeanName name, String description, MBeanAttribute[] attributes, MBeanOperation[] operations) {
-    _name = name;
-    _description = description;
-    _attributes = attributes;
-    _operations = operations;
+    this.name = name;
+    this.description = description;
+    this.attribute = attributes;
+    this.operations = operations;
   }
 
   /**
    * @return the name of this MBean
    */
   public MBeanName getName() {
-    return _name;
+    return name;
   }
 
   /**
    * @return the description
    */
   public String getDescription() {
-    return _description;
+    return description;
   }
 
   /**
    * @return the list of attributes
    */
   public MBeanAttribute[] getAttributes() {
-    return _attributes;
+    return attribute;
   }
 
   /**
    * Returns the attribute with the given name.
    */
   public MBeanAttribute getAttribute(String name) {
-    for (MBeanAttribute attribute : _attributes) {
+    for (var attribute : attribute) {
       if (name.equals(attribute.getName())) {
         return attribute;
       }
@@ -59,6 +59,6 @@ public class MBeanData {
    * Returns the list of operations.
    */
   public MBeanOperation[] getOperations() {
-    return _operations;
+    return operations;
   }
 }

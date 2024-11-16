@@ -13,7 +13,6 @@ import java.util.TimerTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.purej.vminspect.data.SystemData;
-import com.purej.vminspect.data.statistics.rrd.Rrd;
 import com.purej.vminspect.data.statistics.rrd.RrdProvider;
 
 /**
@@ -29,31 +28,31 @@ public final class StatisticsCollector {
   private static final double BYTES_PER_MB = 1024 * 1024;
 
   // This static variables ensure only one collector instance per VM:
-  private static StatisticsCollector _instance;
-  private static Set<Object> _instanceRefs = new HashSet<Object>();
+  private static StatisticsCollector instance;
+  private static Set<Object> instanceRefs = new HashSet<Object>();
 
   // Instance members:
-  private final List<Statistics> _statistics = new ArrayList<Statistics>();
-  private final int _collectionFrequencyMillis;
-  private final Timer _timer;
+  private final List<Statistics> statistics = new ArrayList<Statistics>();
+  private final int collectionFrequencyMillis;
+  private final Timer timer;
 
   // The RRD provider:
-  private final RrdProvider _rrdProvider;
+  private final RrdProvider rrdProvider;
 
   // Will be changed with each collect-call:
-  private volatile long _lastCollectTimestamp;
-  private volatile long _lastCollectDurationMs;
-  private volatile long _diskUsage;
+  private volatile long lastCollectTimestamp;
+  private volatile long lastCollectDurationMs;
+  private volatile long diskUsage;
 
   private StatisticsCollector(String storageDir, int collectionFrequencyMillis) {
     super();
-    _collectionFrequencyMillis = collectionFrequencyMillis;
+    this.collectionFrequencyMillis = collectionFrequencyMillis;
 
     // Create a timer and timer tasks:
-    _timer = new Timer("VmInspect-Statistics-Collector", true);
+    this.timer = new Timer("VmInspect-Statistics-Collector", true);
 
     // Create the RRD provider:
-    _rrdProvider = new RrdProvider(storageDir, _collectionFrequencyMillis);
+    this.rrdProvider = new RrdProvider(storageDir, this.collectionFrequencyMillis);
 
     // Register default statistics:
     try {
@@ -130,7 +129,7 @@ public final class StatisticsCollector {
    * Returns the singleton instance of this class or null if not yet initialized.
    */
   public static StatisticsCollector getInstance() {
-    return _instance;
+    return instance;
   }
 
   /**
@@ -142,12 +141,12 @@ public final class StatisticsCollector {
    * @see #destroy(Object)
    */
   public static synchronized StatisticsCollector init(String storageDir, int collectionFrequencyMillis, Object ref) {
-    if (_instance == null) {
-      _instance = new StatisticsCollector(storageDir, collectionFrequencyMillis);
-      _instance.startTimer();
+    if (instance == null) {
+      instance = new StatisticsCollector(storageDir, collectionFrequencyMillis);
+      instance.startTimer();
     }
-    _instanceRefs.add(ref);
-    return _instance;
+    instanceRefs.add(ref);
+    return instance;
   }
 
   /**
@@ -156,10 +155,10 @@ public final class StatisticsCollector {
    * @see #init(String, int, Object)
    */
   public static synchronized void destroy(Object ref) {
-    _instanceRefs.remove(ref);
-    if (_instanceRefs.size() == 0 && _instance != null) {
-      _instance._timer.cancel();
-      _instance = null;
+    instanceRefs.remove(ref);
+    if (instanceRefs.size() == 0 && instance != null) {
+      instance.timer.cancel();
+      instance = null;
     }
   }
 
@@ -174,55 +173,55 @@ public final class StatisticsCollector {
    * @throws IOException if the {@link Statistics} instance could not be created for example if the JRobin file could not be created
    */
   public void registerStatistics(String name, String label, String unit, String description, ValueProvider valueProvider) throws IOException {
-    Rrd rrd = _rrdProvider.create(name);
-    Statistics stats = new Statistics(name, label, unit, description, valueProvider, rrd);
-    _statistics.add(stats);
+    var rrd = rrdProvider.create(name);
+    var stats = new Statistics(name, label, unit, description, valueProvider, rrd);
+    statistics.add(stats);
   }
 
   private void startTimer() {
     // We used to execute a first collect() call before starting the timer
     // but to reduce startup / init times of applications, we removed it...
-    _timer.schedule(new TimerTask() {
+    timer.schedule(new TimerTask() {
       @Override
       public void run() {
         collect();
       }
-    }, _collectionFrequencyMillis, _collectionFrequencyMillis);
+    }, collectionFrequencyMillis, collectionFrequencyMillis);
   }
 
   /**
    * Returns the storage directory or null if no persistent store.
    */
   public String getStatisticsStorageDir() {
-    return _rrdProvider.getStorageDir();
+    return rrdProvider.getStorageDir();
   }
 
   /**
    * Returns the collection frequency in milliseconds.
    */
   public int getCollectionFrequencyMillis() {
-    return _collectionFrequencyMillis;
+    return collectionFrequencyMillis;
   }
 
   /**
    * Returns the last collection timestamp.
    */
   public long getLastCollectTimestamp() {
-    return _lastCollectTimestamp;
+    return lastCollectTimestamp;
   }
 
   /**
    * Returns the last collection duration in milliseconds.
    */
   public long getLastCollectDurationMs() {
-    return _lastCollectDurationMs;
+    return lastCollectDurationMs;
   }
 
   /**
    * Returns the size of this statistics files on disk.
    */
   public long getDiskUsage() {
-    return _diskUsage;
+    return diskUsage;
   }
 
   /**
@@ -231,37 +230,37 @@ public final class StatisticsCollector {
    */
   public synchronized void collect() {
     try {
-      _lastCollectTimestamp = System.currentTimeMillis();
+      lastCollectTimestamp = System.currentTimeMillis();
       // Note: Freeing memory with System.gc() before measuring stats might be cool but the performance
       // impact is huge (collect() becomes 10x slower and consumes a lot of CPU). Therefore we don't run it here anymore...
       collectData(SystemData.create());
 
       // Calculate disk usage or memory size:
-      if (_rrdProvider.getStorageDir() != null) {
+      if (rrdProvider.getStorageDir() != null) {
         long sum = 0;
-        File[] files = new File(_rrdProvider.getStorageDir()).listFiles(new FilenameFilter() {
+        var files = new File(rrdProvider.getStorageDir()).listFiles(new FilenameFilter() {
           @Override
           public boolean accept(File dir, String name) {
             return name != null && name.endsWith(".rrd");
           }
         });
         if (files != null) {
-          for (File file : files) {
+          for (var file : files) {
             sum += file.length();
           }
         }
-        _diskUsage = sum;
+        diskUsage = sum;
       }
 
       // Collect done:
-      _lastCollectDurationMs = System.currentTimeMillis() - _lastCollectTimestamp;
+      lastCollectDurationMs = System.currentTimeMillis() - lastCollectTimestamp;
     } catch (Throwable t) {
       LOG.warn("Exception while collecting data", t);
     }
   }
 
   private void collectData(SystemData data) throws IOException {
-    for (Statistics statistics : _statistics) {
+    for (var statistics : statistics) {
       statistics.collectValue(data);
     }
   }
@@ -270,7 +269,7 @@ public final class StatisticsCollector {
    * Returns the {@link Statistics} with the given name.
    */
   public Statistics getStatistics(String graphName) {
-    for (Statistics statistics : _statistics) {
+    for (var statistics : statistics) {
       if (statistics.getName().equals(graphName)) {
         return statistics;
       }
@@ -282,6 +281,6 @@ public final class StatisticsCollector {
    * Returns the list of all {@link Statistics}.
    */
   public List<Statistics> getStatistics() {
-    return _statistics;
+    return statistics;
   }
 }

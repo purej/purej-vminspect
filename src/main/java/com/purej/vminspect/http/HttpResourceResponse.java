@@ -4,7 +4,6 @@ package com.purej.vminspect.http;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * Http response that reads directly from file (eg. .png, .js, .css etc.).
@@ -12,7 +11,7 @@ import java.io.InputStream;
  * @author Stefan Mueller
  */
 public final class HttpResourceResponse extends HttpResponse {
-  private final String _resource;
+  private final String resource;
 
   /**
    * Creates a new instance of this class.
@@ -21,7 +20,7 @@ public final class HttpResourceResponse extends HttpResponse {
    */
   public HttpResourceResponse(String resource) {
     super(getContentType(resource), 14400); // 4 hour cache for resources...
-    _resource = resource.replace("..", ""); // For security reason!;
+    this.resource = resource.replace("..", ""); // For security reason!;
   }
 
   private static String getContentType(String resource) {
@@ -44,14 +43,14 @@ public final class HttpResourceResponse extends HttpResponse {
 
   @Override
   public byte[] getContentBytes() throws IOException {
-    InputStream input = HttpResourceResponse.class.getResourceAsStream("/res/" + _resource);
+    var input = HttpResourceResponse.class.getResourceAsStream("/res/" + resource);
     if (input == null) {
       return null;
     }
     try {
       // Transfer from input source to byte-array:
       input = new BufferedInputStream(input);
-      ByteArrayOutputStream out = new ByteArrayOutputStream(2048);
+      var out = new ByteArrayOutputStream(2048);
       byte[] bytes = new byte[2048];
       int length;
       while ((length = input.read(bytes)) != -1) {

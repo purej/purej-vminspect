@@ -16,24 +16,24 @@ public abstract class AbstractRrdImpl implements Rrd {
   protected static final int HOUR = 60 * 60;
   protected static final int DAY = 24 * HOUR;
 
-  protected final String _name;
-  protected final int _resolutionSeconds;
-  protected final String _rrdPath;
+  protected final String name;
+  protected final int resolutionSeconds;
+  protected final String rrdPath;
 
   protected AbstractRrdImpl(String name, String storageDir, int resolutionSeconds) throws IOException {
-    _name = Utils.checkNotNull(name);
-    _resolutionSeconds = resolutionSeconds;
-    _rrdPath = storageDir != null ? new File(storageDir, name + ".rrd").getCanonicalPath() : name + ".rrd";
+    this.name = Utils.checkNotNull(name);
+    this.resolutionSeconds = resolutionSeconds;
+    this.rrdPath = storageDir != null ? new File(storageDir, name + ".rrd").getCanonicalPath() : name + ".rrd";
   }
 
   protected void renameRrd(File file) {
-    String to = file.getName().replace(".rrd", "") + "-old-" + System.currentTimeMillis() + ".rrd";
+    var to = file.getName().replace(".rrd", "") + "-old-" + System.currentTimeMillis() + ".rrd";
     file.renameTo(new File(file.getParentFile(), to));
   }
 
   protected String getGraphTitle(String label, Range range, int width) {
-    String titleStart = label + " - " + range.getPeriod().getLabel();
-    String titleEnd = "";
+    var titleStart = label + " - " + range.getPeriod().getLabel();
+    var titleEnd = "";
     if (width > 400) {
       if (range.getPeriod().equals(Period.CUSTOM)) {
         titleEnd = " - " + Utils.formatDate(range.getStartDate()) + " - " + Utils.formatDate(range.getEndDate());

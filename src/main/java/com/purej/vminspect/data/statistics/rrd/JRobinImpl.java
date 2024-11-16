@@ -8,14 +8,12 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.lang.reflect.Field;
 import java.util.Calendar;
-import org.jrobin.core.RrdBackend;
 import org.jrobin.core.RrdBackendFactory;
 import org.jrobin.core.RrdDb;
 import org.jrobin.core.RrdDef;
 import org.jrobin.core.RrdException;
 import org.jrobin.core.RrdFileBackend;
 import org.jrobin.core.RrdMemoryBackendFactory;
-import org.jrobin.core.Sample;
 import org.jrobin.core.Util;
 import org.jrobin.graph.RrdGraph;
 import org.jrobin.graph.RrdGraphDef;
@@ -35,9 +33,9 @@ public class JRobinImpl extends AbstractRrdImpl {
   private static final String FUNCTION_AVG = "AVERAGE";
   private static final String FUNCTION_MAX = "MAX";
 
-  private final RrdBackendFactory _rrdBackendFactory;
-  private RrdDb _rrdDb; // Note: Might be reopend if broken...
-  private RandomAccessFile _raf; // Underlying file or null, depending on RrdDb subclass
+  private final RrdBackendFactory rrdBackendFactory;
+  private RrdDb rrdDb; // Note: Might be reopend if broken...
+  private RandomAccessFile raf; // Underlying file or null, depending on RrdDb subclass
 
   /**
    * Creates a new instance of this class.
@@ -50,13 +48,13 @@ public class JRobinImpl extends AbstractRrdImpl {
    */
   public JRobinImpl(String name, String storageDir, int resolutionSeconds, Object rrdBackendFactory) throws IOException {
     super(name, storageDir, resolutionSeconds);
-    _rrdBackendFactory = (RrdBackendFactory) Utils.checkNotNull(rrdBackendFactory);
+    this.rrdBackendFactory = (RrdBackendFactory) Utils.checkNotNull(rrdBackendFactory);
     initRrdDb(false);
   }
 
   @Override
   public String getName() {
-    return _name;
+    return name;
   }
 
   @Override
@@ -64,7 +62,7 @@ public class JRobinImpl extends AbstractRrdImpl {
     try {
       doAddValue(value);
     } catch (FileNotFoundException e) {
-      LOG.warn("RRD file '" + _rrdPath + "' does not exist, recreating it...");
+      LOG.warn("RRD file '" + rrdPath + "' does not exist, recreating it...");
       initRrdDb(true);
       doAddValue(value);
     }
@@ -73,16 +71,16 @@ public class JRobinImpl extends AbstractRrdImpl {
   private void doAddValue(double value) throws IOException {
     try {
       // Create sample with the current timestamp:
-      Sample sample = _rrdDb.createSample();
-      if (sample.getTime() > _rrdDb.getLastUpdateTime()) {
+      var sample = rrdDb.createSample();
+      if (sample.getTime() > rrdDb.getLastUpdateTime()) {
         sample.setValue(0, value);
         sample.update();
-        if (_raf != null) {
-          _raf.getChannel().force(true);
+        if (raf != null) {
+          raf.getChannel().force(true);
         }
       }
     } catch (RrdException e) {
-      String msg = "Accessing RRD statistics file '" + _rrdPath + "' failed! If the problem persists, delete the file so it will be recreated.";
+      String msg = "Accessing RRD statistics file '" + rrdPath + "' failed! If the problem persists, delete the file so it will be recreated.";
       LOG.error(msg, e);
       throw new IOException(msg, e);
     }
@@ -92,13 +90,13 @@ public class JRobinImpl extends AbstractRrdImpl {
   public byte[] createPng(String label, String unit, Range range, int width, int height) throws IOException {
     try {
       // Create the graph definition:
-      RrdGraphDef graphDef = new RrdGraphDef();
+      var graphDef = new RrdGraphDef();
       graphDef.setPoolUsed(true);
       graphDef.setFilename("-"); // Important for in-memory generation!
 
       // Set datasources:
-      graphDef.datasource("average", _rrdPath, _name, FUNCTION_AVG, _rrdBackendFactory.getFactoryName());
-      graphDef.datasource("max", _rrdPath, _name, FUNCTION_MAX, _rrdBackendFactory.getFactoryName());
+      graphDef.datasource("average", rrdPath, name, FUNCTION_AVG, rrdBackendFactory.getFactoryName());
+      graphDef.datasource("max", rrdPath, name, FUNCTION_MAX, rrdBackendFactory.getFactoryName());
       graphDef.setMinValue(0);
 
       // Set graphics stuff:
@@ -120,58 +118,58 @@ public class JRobinImpl extends AbstractRrdImpl {
   }
 
   private RrdDef createRrdDef() throws RrdException {
-    RrdDef rrdDef = new RrdDef(_rrdPath, _resolutionSeconds);
-    rrdDef.setStartTime(Util.getTime() - _resolutionSeconds); // Matches more or less as collect is called right after init
-    rrdDef.addDatasource(_name, "GAUGE", _resolutionSeconds * 2, 0, Double.NaN); // Single gauge
+    RrdDef rrdDef = new RrdDef(rrdPath, resolutionSeconds);
+    rrdDef.setStartTime(Util.getTime() - resolutionSeconds); // Matches more or less as collect is called right after init
+    rrdDef.addDatasource(name, "GAUGE", resolutionSeconds * 2, 0, Double.NaN); // Single gauge
 
     // Archives for average/max for each supported period:
     // 1 second for 1 hour periods:
-    rrdDef.addArchive(FUNCTION_AVG, 0.25, 1, DAY / _resolutionSeconds);
-    rrdDef.addArchive(FUNCTION_MAX, 0.25, 1, DAY / _resolutionSeconds);
+    rrdDef.addArchive(FUNCTION_AVG, 0.25, 1, DAY / resolutionSeconds);
+    rrdDef.addArchive(FUNCTION_MAX, 0.25, 1, DAY / resolutionSeconds);
     // 1 hour for 1 week periods:
-    rrdDef.addArchive(FUNCTION_AVG, 0.25, HOUR / _resolutionSeconds, 7 * 24);
-    rrdDef.addArchive(FUNCTION_MAX, 0.25, HOUR / _resolutionSeconds, 7 * 24);
+    rrdDef.addArchive(FUNCTION_AVG, 0.25, HOUR / resolutionSeconds, 7 * 24);
+    rrdDef.addArchive(FUNCTION_MAX, 0.25, HOUR / resolutionSeconds, 7 * 24);
     // 6 hours for 1 Month periods:
-    rrdDef.addArchive(FUNCTION_AVG, 0.25, 6 * HOUR / _resolutionSeconds, 31 * 4);
-    rrdDef.addArchive(FUNCTION_MAX, 0.25, 6 * HOUR / _resolutionSeconds, 31 * 4);
+    rrdDef.addArchive(FUNCTION_AVG, 0.25, 6 * HOUR / resolutionSeconds, 31 * 4);
+    rrdDef.addArchive(FUNCTION_MAX, 0.25, 6 * HOUR / resolutionSeconds, 31 * 4);
     // 2 days for year/all periods:
-    rrdDef.addArchive(FUNCTION_AVG, 0.25, 2 * DAY / _resolutionSeconds, 2 * 12 * 15);
-    rrdDef.addArchive(FUNCTION_MAX, 0.25, 2 * DAY / _resolutionSeconds, 2 * 12 * 15);
+    rrdDef.addArchive(FUNCTION_AVG, 0.25, 2 * DAY / resolutionSeconds, 2 * 12 * 15);
+    rrdDef.addArchive(FUNCTION_MAX, 0.25, 2 * DAY / resolutionSeconds, 2 * 12 * 15);
 
     return rrdDef;
   }
 
   private void initRrdDb(boolean overwrite) throws IOException {
     try {
-      _raf = null; // Reset underlying file...
-      RrdDef def = createRrdDef();
-      if (_rrdBackendFactory instanceof RrdMemoryBackendFactory) {
-        _rrdDb = new RrdDb(def, _rrdBackendFactory);
+      raf = null; // Reset underlying file...
+      var def = createRrdDef();
+      if (rrdBackendFactory instanceof RrdMemoryBackendFactory) {
+        rrdDb = new RrdDb(def, rrdBackendFactory);
       } else {
         // File backend:
-        File rrdFile = new File(_rrdPath);
+        var rrdFile = new File(rrdPath);
         if (overwrite || !rrdFile.exists() || rrdFile.length() == 0) {
           // Create a new one:
-          _rrdDb = new RrdDb(def, _rrdBackendFactory);
+          rrdDb = new RrdDb(def, rrdBackendFactory);
         } else {
           // Open existing:
-          _rrdDb = new RrdDb(_rrdPath, false, _rrdBackendFactory);
+          rrdDb = new RrdDb(rrdPath, false, rrdBackendFactory);
           // Sanity check - compare only step (eg. frequency) for now:
-          if (def.getStep() != _rrdDb.getRrdDef().getStep()) {
-            LOG.warn("Step size changed for {}, creating new one...", _rrdPath);
-            _rrdDb.close();
+          if (def.getStep() != rrdDb.getRrdDef().getStep()) {
+            LOG.warn("Step size changed for {}, creating new one...", rrdPath);
+            rrdDb.close();
             renameRrd(rrdFile);
-            _rrdDb = new RrdDb(def, _rrdBackendFactory);
+            rrdDb = new RrdDb(def, rrdBackendFactory);
           }
         }
 
         // Try get the underlying RandomAccessFile:
-        RrdBackend backend = _rrdDb.getRrdBackend();
+        var backend = rrdDb.getRrdBackend();
         if (backend.getClass() == RrdFileBackend.class) { // No instanceof check as of subclasses to be ignored...
           try {
             Field f = RrdFileBackend.class.getDeclaredField("file");
             f.setAccessible(true);
-            _raf = (RandomAccessFile) f.get(backend);
+            raf = (RandomAccessFile) f.get(backend);
           } catch (Exception e) {
             LOG.warn("Cannot get underlying RandomAccessFile of RrdBackend, no explicit file sync/flush will be performed!");
           }

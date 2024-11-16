@@ -13,11 +13,11 @@ import com.purej.vminspect.util.Utils;
  * @author Stefan Mueller
  */
 public final class Statistics {
-  private final String _label;
-  private final String _unit;
-  private final String _description;
-  private final ValueProvider _valueProvider;
-  private final Rrd _rrd;
+  private final String label;
+  private final String unit;
+  private final String description;
+  private final ValueProvider valueProvider;
+  private final Rrd rrd;
 
   /**
    * Creates a new instance of this class.
@@ -35,32 +35,32 @@ public final class Statistics {
     if (name == null || name.length() > 20) {
       throw new IllegalArgumentException("RRD name should not be empty or exceed 20 characaters!");
     }
-    _label = Utils.checkNotNull(label);
-    _unit = Utils.checkNotNull(unit);
-    _description = Utils.checkNotNull(description);
-    _valueProvider = Utils.checkNotNull(valueProvider);
-    _rrd = Utils.checkNotNull(rrd);
+    this.label = Utils.checkNotNull(label);
+    this.unit = Utils.checkNotNull(unit);
+    this.description = Utils.checkNotNull(description);
+    this.valueProvider = Utils.checkNotNull(valueProvider);
+    this.rrd = Utils.checkNotNull(rrd);
   }
 
   /**
    * Returns the technical name (JRobin datasource name).
    */
   public String getName() {
-    return _rrd.getName();
+    return rrd.getName();
   }
 
   /**
    * Returns the label for the UI.
    */
   public String getLabel() {
-    return _label;
+    return label;
   }
 
   /**
    * Returns the description for the UI.
    */
   public String getDescription() {
-    return _description;
+    return description;
   }
 
   /**
@@ -68,8 +68,8 @@ public final class Statistics {
    * This method will be called on a regular basis by the {@link StatisticsCollector}.
    */
   public void collectValue(SystemData data) throws IOException {
-    double value = _valueProvider.getValue(data);
-    _rrd.addValue(value);
+    var value = valueProvider.getValue(data);
+    rrd.addValue(value);
   }
 
   /**
@@ -82,6 +82,6 @@ public final class Statistics {
    * @throws IOException if image creation failed
    */
   public byte[] createGraph(Range range, int width, int height) throws IOException {
-    return _rrd.createPng(_label, _unit, range, width, height);
+    return rrd.createPng(label, unit, range, width, height);
   }
 }

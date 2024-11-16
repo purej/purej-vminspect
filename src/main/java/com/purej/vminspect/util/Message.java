@@ -27,22 +27,22 @@ public final class Message {
      */
     ERROR("errorMsg");
 
-    private final String _tag;
+    private final String tag;
 
     private MessageType(String tag) {
-      _tag = tag;
+      this.tag = tag;
     }
 
     /**
      * A tag for this message type.
      */
     public String getTag() {
-      return _tag;
+      return tag;
     }
   }
 
-  private final String _text;
-  private final MessageType _type;
+  private final String text;
+  private final MessageType type;
 
   /**
    * Creates a new instance of this class.
@@ -52,21 +52,21 @@ public final class Message {
    */
   public Message(String text, MessageType type) {
     super();
-    _text = text;
-    _type = type;
+    this.text = text;
+    this.type = type;
   }
 
   /**
    * Return the message text.
    */
   public String getText() {
-    return _text;
+    return text;
   }
 
   /**
    * Returns the message type.
    */
   public MessageType getType() {
-    return _type;
+    return type;
   }
 }

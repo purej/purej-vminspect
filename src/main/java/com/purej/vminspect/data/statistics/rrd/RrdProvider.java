@@ -18,10 +18,10 @@ import org.rrd4j.core.RrdRandomAccessFileBackendFactory;
  * @author Stefan Mueller
  */
 public class RrdProvider {
-  private final String _storageDir;
-  private final int _collectionFrequencySecs;
-  private final boolean _isRrd4j;
-  private final Object _backendFactory;
+  private final String storageDir;
+  private final int collectionFrequencySecs;
+  private final boolean isRrd4j;
+  private final Object backendFactory;
 
   /**
    * Creates a new instance.
@@ -30,26 +30,26 @@ public class RrdProvider {
    * @param collectionFrequencyMillis the collection frequency in milliseconds
    */
   public RrdProvider(String storageDir, int collectionFrequencyMillis) {
-    _collectionFrequencySecs = collectionFrequencyMillis / 1000;
+    this.collectionFrequencySecs = collectionFrequencyMillis / 1000;
 
     // Ensure storage-dir:
     if (storageDir == null || storageDir.isEmpty()) {
-      _storageDir = null;
+      this.storageDir = null;
     } else {
       // Create the storage dir if not existing:
       File rrdFilesDir = new File(storageDir);
       if (!rrdFilesDir.exists() && !rrdFilesDir.mkdirs()) {
         throw new RuntimeException("Statistics storage directory '" + storageDir + "' could not be created!");
       }
-      _storageDir = rrdFilesDir.getAbsolutePath();
+      this.storageDir = rrdFilesDir.getAbsolutePath();
     }
 
     // Currently only 2 providers (rrd4j, jrobin):
-    _isRrd4j = isAvailable("org.rrd4j.core.RrdBackendFactory");
-    if (_isRrd4j) {
-      _backendFactory = createRrd4JBackendFactory(_storageDir);
+    this.isRrd4j = isAvailable("org.rrd4j.core.RrdBackendFactory");
+    if (this.isRrd4j) {
+      this.backendFactory = createRrd4JBackendFactory(this.storageDir);
     } else {
-      _backendFactory = createJRobinBackendFactory(_storageDir);
+      this.backendFactory = createJRobinBackendFactory(this.storageDir);
     }
   }
 
@@ -88,7 +88,7 @@ public class RrdProvider {
    * @return the storage dir or null if no persistent storage
    */
   public String getStorageDir() {
-    return _storageDir;
+    return storageDir;
   }
 
   /**
@@ -98,10 +98,10 @@ public class RrdProvider {
    * @throws IOException if an I/O error occurred
    */
   public Rrd create(String name) throws IOException {
-    if (_isRrd4j) {
-      return new Rrd4jImpl(name, _storageDir, _collectionFrequencySecs, _backendFactory);
+    if (isRrd4j) {
+      return new Rrd4jImpl(name, storageDir, collectionFrequencySecs, backendFactory);
     } else {
-      return new JRobinImpl(name, _storageDir, _collectionFrequencySecs, _backendFactory);
+      return new JRobinImpl(name, storageDir, collectionFrequencySecs, backendFactory);
     }
   }
 }

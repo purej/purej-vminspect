@@ -1,8 +1,6 @@
 // Copyright (c), 2013, adopus consulting GmbH Switzerland, all rights reserved.
 package com.purej.vminspect.data;
 
-import java.util.Hashtable;
-import java.util.Map;
 import javax.management.ObjectName;
 
 /**
@@ -11,25 +9,25 @@ import javax.management.ObjectName;
  * @author Stefan Mueller
  */
 public class MBeanName {
-  private final int _serverIdx;
-  private final ObjectName _objectName;
-  private final String _domain;
-  private final String _type;
-  private final String _otherKeyValues;
+  private final int serverIdx;
+  private final ObjectName objectName;
+  private final String domain;
+  private final String type;
+  private final String otherKeyValues;
 
   /**
    * Creates a new instance of this class.
    */
   public MBeanName(int serverIdx, ObjectName objectName) {
-    _serverIdx = serverIdx;
-    _objectName = objectName;
-    _domain = objectName.getDomain();
+    this.serverIdx = serverIdx;
+    this.objectName = objectName;
+    this.domain = objectName.getDomain();
 
     // Build type and the other key=value pairs from full-name:
-    String type = "Unknown";
-    StringBuilder otherKeyValues = new StringBuilder();
-    Hashtable<String, String> keys = objectName.getKeyPropertyList();
-    for (Map.Entry<String, String> entry : keys.entrySet()) {
+    var type = "Unknown";
+    var otherKeyValues = new StringBuilder();
+    var keys = objectName.getKeyPropertyList();
+    for (var entry : keys.entrySet()) {
       if (entry.getKey().equalsIgnoreCase("type")) {
         type = entry.getValue();
       } else {
@@ -39,49 +37,49 @@ public class MBeanName {
         otherKeyValues.append(entry.getKey()).append('=').append(entry.getValue());
       }
     }
-    _type = type;
-    _otherKeyValues = otherKeyValues.toString();
+    this.type = type;
+    this.otherKeyValues = otherKeyValues.toString();
   }
 
   /**
    * Returns the index of the MBean server.
    */
   public int getServerIdx() {
-    return _serverIdx;
+    return serverIdx;
   }
 
   /**
    * The object name.
    */
   public ObjectName getObjectName() {
-    return _objectName;
+    return objectName;
   }
 
   /**
    * Object name as string to resolve.
    */
   public String getObjectNameString() {
-    return _objectName.toString();
+    return objectName.toString();
   }
 
   /**
    * Domain name.
    */
   public String getDomain() {
-    return _domain;
+    return domain;
   }
 
   /**
    * Type.
    */
   public String getType() {
-    return _type;
+    return type;
   }
 
   /**
    * Other key-value pairs.
    */
   public String getOtherKeyValues() {
-    return _otherKeyValues;
+    return otherKeyValues;
   }
 }

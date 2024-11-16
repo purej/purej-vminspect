@@ -1,19 +1,14 @@
 // Copyright (c), 2013, adopus consulting GmbH Switzerland, all rights reserved.
 package com.purej.vminspect.data;
 
-import java.lang.management.ClassLoadingMXBean;
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
-import java.lang.management.MemoryMXBean;
 import java.lang.management.OperatingSystemMXBean;
 import java.lang.management.RuntimeMXBean;
-import java.lang.management.ThreadMXBean;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Provides information about the virtual machine currently running in.
@@ -48,25 +43,25 @@ public class SystemData {
     SUN_CLASSES_EXIST = sunexists;
   }
 
-  private final String _rtInfo;
-  private final RuntimeMXBean _rtb;
-  protected final OperatingSystemMXBean _osb;
-  private final int _threadCurrentCount;
-  private final int _clLoadedClassCount;
-  private final long _clTotalLoadedClassCount;
-  private final String _gcName;
-  private final long _gcCollectionCount;
-  private final long _gcCollectionTimeMillis;
-  private final MemoryData _memoryHeap;
-  private final MemoryData _memoryNonHeap;
+  private final String rtInfo;
+  private final RuntimeMXBean rtb;
+  protected final OperatingSystemMXBean osb;
+  private final int threadCurrentCount;
+  private final int clLoadedClassCount;
+  private final long clTotalLoadedClassCount;
+  private final String gcName;
+  private final long gcCollectionCount;
+  private final long gcCollectionTimeMillis;
+  private final MemoryData memoryHeap;
+  private final MemoryData memoryNonHeap;
   // Those values might be set by subclasses:
-  protected MemoryData _memoryPhysical;
-  protected MemoryData _memorySwap;
-  protected long _processCpuTimeMillis;
-  protected double _processCpuLoadPct;
-  protected double _systemCpuLoadPct;
-  protected long _openFileDescriptorCount;
-  protected long _maxFileDescriptorCount;
+  protected MemoryData memoryPhysical;
+  protected MemoryData memorySwap;
+  protected long processCpuTimeMillis;
+  protected double processCpuLoadPct;
+  protected double systemCpuLoadPct;
+  protected long openFileDescriptorCount;
+  protected long maxFileDescriptorCount;
 
   /**
    * Creates a new instanceof of the correct SystemData instance.
@@ -80,22 +75,22 @@ public class SystemData {
    */
   protected SystemData() {
     // Store runtime-infos:
-    _rtInfo = System.getProperty("java.runtime.name") + ", " + System.getProperty("java.runtime.version");
-    _rtb = ManagementFactory.getRuntimeMXBean();
+    rtInfo = System.getProperty("java.runtime.name") + ", " + System.getProperty("java.runtime.version");
+    rtb = ManagementFactory.getRuntimeMXBean();
 
     // Store thread-infos:
-    ThreadMXBean tb = ManagementFactory.getThreadMXBean();
-    _threadCurrentCount = tb.getThreadCount();
+    var tb = ManagementFactory.getThreadMXBean();
+    threadCurrentCount = tb.getThreadCount();
 
     // Get class-loader stuff:
-    ClassLoadingMXBean clb = ManagementFactory.getClassLoadingMXBean();
-    _clLoadedClassCount = clb.getLoadedClassCount();
-    _clTotalLoadedClassCount = clb.getTotalLoadedClassCount();
+    var clb = ManagementFactory.getClassLoadingMXBean();
+    clLoadedClassCount = clb.getLoadedClassCount();
+    clTotalLoadedClassCount = clb.getTotalLoadedClassCount();
 
     // Build gc name and collection time:
-    long tmpGcCollectionCount = 0;
-    long tmpGcCollectionTimeMillis = 0;
-    StringBuilder tmpGcName = new StringBuilder();
+    var tmpGcCollectionCount = 0L;
+    var tmpGcCollectionTimeMillis = 0L;
+    var tmpGcName = new StringBuilder();
     for (GarbageCollectorMXBean gc : ManagementFactory.getGarbageCollectorMXBeans()) {
       if (tmpGcName.length() > 0) {
         tmpGcName.append(", ");
@@ -104,46 +99,46 @@ public class SystemData {
       tmpGcCollectionCount += gc.getCollectionCount();
       tmpGcCollectionTimeMillis += gc.getCollectionTime();
     }
-    _gcName = tmpGcName.toString();
-    _gcCollectionCount = tmpGcCollectionCount;
-    _gcCollectionTimeMillis = tmpGcCollectionTimeMillis;
+    gcName = tmpGcName.toString();
+    gcCollectionCount = tmpGcCollectionCount;
+    gcCollectionTimeMillis = tmpGcCollectionTimeMillis;
 
     // Get heap / none heap memory:
-    MemoryMXBean mb = ManagementFactory.getMemoryMXBean();
-    _memoryHeap = new MemoryData(mb.getHeapMemoryUsage());
-    _memoryNonHeap = new MemoryData(mb.getNonHeapMemoryUsage());
+    var mb = ManagementFactory.getMemoryMXBean();
+    memoryHeap = new MemoryData(mb.getHeapMemoryUsage());
+    memoryNonHeap = new MemoryData(mb.getNonHeapMemoryUsage());
 
     // Physical / swap memory - Note: Most info is hidden in sun-classes, cannot check instance-of here
     // to prevent class-not-found-exception for VMs without sun-classes! See dedicated sub-class SunSystemData.
-    _osb = ManagementFactory.getOperatingSystemMXBean();
-    _memoryPhysical = MemoryData.UNKNOWN;
-    _memorySwap = MemoryData.UNKNOWN;
-    _processCpuTimeMillis = -1;
-    _processCpuLoadPct = -1;
-    _systemCpuLoadPct = -1;
-    _openFileDescriptorCount = -1;
-    _maxFileDescriptorCount = -1;
+    osb = ManagementFactory.getOperatingSystemMXBean();
+    memoryPhysical = MemoryData.UNKNOWN;
+    memorySwap = MemoryData.UNKNOWN;
+    processCpuTimeMillis = -1;
+    processCpuLoadPct = -1;
+    systemCpuLoadPct = -1;
+    openFileDescriptorCount = -1;
+    maxFileDescriptorCount = -1;
   }
 
   /**
    * Returns the java name and version.
    */
   public String getRtInfo() {
-    return _rtInfo;
+    return rtInfo;
   }
 
   /**
    * The name of the runtime process.
    */
   public String getRtProcessName() {
-    return _rtb.getName();
+    return rtb.getName();
   }
 
   /**
    * Returns the startup time of this runtime process.
    */
   public Date getRtProcessStartup() {
-    return new Date(_rtb.getStartTime());
+    return new Date(rtb.getStartTime());
   }
 
   /**
@@ -151,7 +146,7 @@ public class SystemData {
    */
   public String getRtProcessArguments() {
     StringBuilder result = new StringBuilder();
-    for (String jvmArg : _rtb.getInputArguments()) {
+    for (String jvmArg : rtb.getInputArguments()) {
       if (result.length() > 0) {
         result.append('\n');
       }
@@ -164,13 +159,13 @@ public class SystemData {
    * Returns the current system properties.
    */
   public String getRtSystemProperties() {
-    List<String> lines = new ArrayList<String>();
-    for (Map.Entry<Object, Object> entry : System.getProperties().entrySet()) {
+    var lines = new ArrayList<String>();
+    for (var entry : System.getProperties().entrySet()) {
       lines.add(entry.getKey() + "=" + entry.getValue());
     }
     Collections.sort(lines);
-    StringBuilder result = new StringBuilder();
-    for (String line : lines) {
+    var result = new StringBuilder();
+    for (var line : lines) {
       if (result.length() > 0) {
         result.append('\n');
       }
@@ -183,98 +178,98 @@ public class SystemData {
    * The VM implementation name.
    */
   public String getVmName() {
-    return _rtb.getVmName();
+    return rtb.getVmName();
   }
 
   /**
    * The VM implementation vendor.
    */
   public String getVmVendor() {
-    return _rtb.getVmVendor();
+    return rtb.getVmVendor();
   }
 
   /**
    * The VM implementation version.
    */
   public String getVmVersion() {
-    return _rtb.getVmVersion();
+    return rtb.getVmVersion();
   }
 
   /**
    * The open file descriptors.
    */
   public long getOpenFileDescriptorCount() {
-    return _openFileDescriptorCount;
+    return openFileDescriptorCount;
   }
 
   /**
    * The max file descriptors.
    */
   public long getMaxFileDescriptorCount() {
-    return _maxFileDescriptorCount;
+    return maxFileDescriptorCount;
   }
 
   /**
    * Returns the used/max heap memory.
    */
   public MemoryData getMemoryHeap() {
-    return _memoryHeap;
+    return memoryHeap;
   }
 
   /**
    * Returns the used/max none-heap memory.
    */
   public MemoryData getMemoryNonHeap() {
-    return _memoryNonHeap;
+    return memoryNonHeap;
   }
 
   /**
    * Returns the used/max physical memory.
    */
   public MemoryData getMemoryPhysical() {
-    return _memoryPhysical;
+    return memoryPhysical;
   }
 
   /**
    * Returns the used/max physical swap memory.
    */
   public MemoryData getMemorySwap() {
-    return _memorySwap;
+    return memorySwap;
   }
 
   /**
    * Returns the number of currently loaded classes.
    */
   public int getCLLoadedClassCount() {
-    return _clLoadedClassCount;
+    return clLoadedClassCount;
   }
 
   /**
    * Returns the total number of classes loaded so far.
    */
   public long getCLTotalLoadedClassCount() {
-    return _clTotalLoadedClassCount;
+    return clTotalLoadedClassCount;
   }
 
   /**
    * Returns the Java class path that is used by the system class loader.
    */
   public String getCLClassPath() {
-    return _rtb.getClassPath();
+    return rtb.getClassPath();
   }
 
   /**
    * Returns the boot class path that is used by the bootstrap class loader.
    */
   public String getCLBootClassPath() {
-    return _rtb.isBootClassPathSupported() ? _rtb.getBootClassPath() : null;
+    return rtb.isBootClassPathSupported() ? rtb.getBootClassPath() : null;
   }
 
   /**
    * Returns the java library path.
    */
   public String getCLLibraryPath() {
-    return _rtb.getLibraryPath();
+    return rtb.getLibraryPath();
   }
 
   /**
@@ -288,28 +283,28 @@ public class SystemData {
    * Returns the operating system name.
    */
   public String getOsName() {
-    return _osb.getName();
+    return osb.getName();
   }
 
   /**
    * Returns the operating system architecture.
    */
   public String getOsArchitecture() {
-    return _osb.getArch();
+    return osb.getArch();
   }
 
   /**
    * Returns the operating system version.
    */
   public String getOsVersion() {
-    return _osb.getVersion();
+    return osb.getVersion();
   }
 
   /**
    * Returns the number of processors (cores).
    */
   public int getOsAvailableProcessors() {
-    return _osb.getAvailableProcessors();
+    return osb.getAvailableProcessors();
   }
 
   /**
@@ -322,7 +317,7 @@ public class SystemData {
    * If the system recent cpu usage is not available, the method returns -1.
    */
   public double getSystemCpuLoadPct() {
-    return _systemCpuLoadPct;
+    return systemCpuLoadPct;
   }
 
   /**
@@ -336,7 +331,7 @@ public class SystemData {
    * If the Java Virtual Machine recent CPU usage is not available, the method returns -1.
    */
   public double getProcessCpuLoadPct() {
-    return _processCpuLoadPct;
+    return processCpuLoadPct;
   }
 
   /**
@@ -345,34 +340,34 @@ public class SystemData {
    * This method returns -1 if the the platform does not support this operation.
    */
   public long getProcessCpuTimeMillis() {
-    return _processCpuTimeMillis;
+    return processCpuTimeMillis;
   }
   
   /**
    * Returns the name of the garbage collector.
    */
   public String getGcName() {
-    return _gcName;
+    return gcName;
   }
 
   /**
    * Returns the number of times garbage collection occurred.
    */
   public long getGcCollectionCount() {
-    return _gcCollectionCount;
+    return gcCollectionCount;
   }
 
   /**
    * Returns the sum of times of all garbage collection.
    */
   public long getGcCollectionTimeMillis() {
-    return _gcCollectionTimeMillis;
+    return gcCollectionTimeMillis;
   }
 
   /**
    * Returns the current number of threads.
    */
   public int getThreadCurrentCount() {
-    return _threadCurrentCount;
+    return threadCurrentCount;
   }
 }

@@ -7,55 +7,54 @@ package com.purej.vminspect.data;
  * @author Stefan Mueller
  */
 public class MBeanAttribute {
-  private final String _name;
-  private final Object _value;
-  private final String _description;
-  private final String _type;
-  private final boolean _writable;
+  private final String name;
+  private final Object value;
+  private final String description;
+  private final String type;
+  private final boolean writable;
 
   /**
    * Creates a new instance of this class.
    */
   public MBeanAttribute(String name, Object value, String description, String type, boolean writable) {
-    _name = name;
-    _value = value;
-    _description = description;
-    _type = type;
-    _writable = writable;
+    this.name = name;
+    this.value = value;
+    this.description = description;
+    this.type = type;
+    this.writable = writable;
   }
-
   /**
    * @return the MBean attribute name
    */
   public String getName() {
-    return _name;
+    return name;
   }
 
   /**
    * @return the MBean attribute value
    */
   public Object getValue() {
-    return _value;
+    return value;
   }
 
   /**
    * @return the MBean attribute description
    */
   public String getDescription() {
-    return _description;
+    return description;
   }
 
   /**
    * @return the MBean attribute type
    */
   public String getType() {
-    return _type;
+    return type;
   }
 
   /**
    * @return if the MBean attribute is writable
    */
   public boolean isWritable() {
-    return _writable;
+    return writable;
   }
 }

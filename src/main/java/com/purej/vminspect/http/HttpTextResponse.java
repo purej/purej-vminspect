@@ -9,7 +9,7 @@ import java.io.IOException;
  * @author Stefan Mueller
  */
 public class HttpTextResponse extends HttpResponse {
-  private final StringBuilder _output = new StringBuilder(4096);
+  private final StringBuilder output = new StringBuilder(4096);
 
   /**
    * Creates a new instance of this class.
@@ -24,11 +24,11 @@ public class HttpTextResponse extends HttpResponse {
    * Returns the output to append data to.
    */
   public StringBuilder getOutput() {
-    return _output;
+    return output;
   }
 
   @Override
   public byte[] getContentBytes() throws IOException {
-    return _output.toString().getBytes("UTF-8");
+    return output.toString().getBytes("UTF-8");
   }
 }

@@ -12,18 +12,18 @@ import com.purej.vminspect.util.Utils;
  * @author Stefan Mueller
  */
 public class MBeansMainView extends AbstractMBeansView {
-  private final String _domainFilter;
-  private final String _typeFilter;
-  private final List<MBeanName> _mbeans;
+  private final String domainFilter;
+  private final String typeFilter;
+  private final List<MBeanName> mbeans;
 
   /**
    * Creates a new instance of this view.
    */
   public MBeansMainView(StringBuilder output, String domainFilter, String typeFilter, List<MBeanName> mbeans) {
     super(output);
-    _domainFilter = domainFilter != null ? domainFilter : "";
-    _typeFilter = typeFilter != null ? typeFilter : "";
-    _mbeans = mbeans;
+    this.domainFilter = domainFilter != null ? domainFilter : "";
+    this.typeFilter = typeFilter != null ? typeFilter : "";
+    this.mbeans = mbeans;
   }
 
   @Override
@@ -33,9 +33,9 @@ public class MBeansMainView extends AbstractMBeansView {
     // Write the filter row:
     writeln("<form name='mbeansFilter' method='get' action=''>");
     writeln("<br/><b>&nbsp;Domain Filter</b>&nbsp;&nbsp;");
-    writeln("<input type='text' size='30' name='mbDomainFilter' value='" + _domainFilter + "'/>");
+    writeln("<input type='text' size='30' name='mbDomainFilter' value='" + domainFilter + "'/>");
     writeln("&nbsp;&nbsp;<b>Type Filter</b>&nbsp;&nbsp;");
-    writeln("<input type='text' size='30' name='mbTypeFilter' value='" + _typeFilter + "'/>");
+    writeln("<input type='text' size='30' name='mbTypeFilter' value='" + typeFilter + "'/>");
     writeln("&nbsp;&nbsp;(Use wild cards = *)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
     writeln("<input type='submit' value='Ok'/><br/><br/>");
     writeln("<input type='hidden' name='page' value='mbeans'/>");
@@ -44,11 +44,11 @@ public class MBeansMainView extends AbstractMBeansView {
     // Write the table:
     CandyHtmlTable table = new CandyHtmlTable("MBeans", "Domain", "Type", "Properties", "Details");
     int filterMatchingCount = 0;
-    for (MBeanName mbean : _mbeans) {
-      if (!Utils.wildCardMatch(mbean.getDomain(), _domainFilter)) {
+    for (MBeanName mbean : mbeans) {
+      if (!Utils.wildCardMatch(mbean.getDomain(), domainFilter)) {
         continue;
       }
-      if (!Utils.wildCardMatch(mbean.getType(), _typeFilter)) {
+      if (!Utils.wildCardMatch(mbean.getType(), typeFilter)) {
         continue;
       }
       filterMatchingCount++;
@@ -60,6 +60,6 @@ public class MBeansMainView extends AbstractMBeansView {
       table.addValueCenter(mBeanLnk(mbean.getServerIdx(), mbean.getObjectName(), img("icons/bean-view-16.png", "Details")));
     }
     table.endTable();
-    writeln("Filter matched " + filterMatchingCount + "/" + _mbeans.size() + " MBeans<br/>");
+    writeln("Filter matched " + filterMatchingCount + "/" + mbeans.size() + " MBeans<br/>");
   }
 }

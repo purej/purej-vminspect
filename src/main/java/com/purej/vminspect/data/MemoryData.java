@@ -14,9 +14,9 @@ public final class MemoryData {
    */
   public static final MemoryData UNKNOWN = new MemoryData(-1, -1, -1);
 
-  private final long _used;
-  private final long _committed;
-  private final long _max;
+  private final long used;
+  private final long committed;
+  private final long max;
 
   /**
    * Creates a new instance of this class.
@@ -30,29 +30,29 @@ public final class MemoryData {
    */
   public MemoryData(long used, long commited, long max) {
     super();
-    _used = used;
-    _committed = commited;
-    _max = max;
+    this.used = used;
+    this.committed = commited;
+    this.max = max;
   }
 
   /**
    * Returns the used memory in bytes.
    */
   public long getUsed() {
-    return _used;
+    return used;
   }
 
   /**
    * Returns the commited memory in bytes.
    */
   public long getCommitted() {
-    return _committed;
+    return committed;
   }
 
   /**
    * Returns the max memory in bytes. The max memory might not be guaranteed.
    */
   public long getMax() {
-    return _max;
+    return max;
   }
 }

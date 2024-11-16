@@ -10,33 +10,33 @@ import com.purej.vminspect.data.statistics.Range;
  * @author Stefan Mueller
  */
 public final class StatisticsDetailView extends AbstractStatisticsView {
-  private final String _statsName;
-  private final int _statsWidth;
-  private final int _statsHeight;
+  private final String statsName;
+  private final int statsWidth;
+  private final int statsHeight;
 
   /**
    * Creates a new instance of this view.
    */
   public StatisticsDetailView(StringBuilder output, Range range, String statsName, int statsWidth, int statsHeight) {
     super(output, range);
-    _statsName = statsName;
-    _statsWidth = statsWidth;
-    _statsHeight = statsHeight;
+    this.statsName = statsName;
+    this.statsWidth = statsWidth;
+    this.statsHeight = statsHeight;
   }
 
   @Override
   public void render() throws IOException {
     writeln("<h3>" + img("icons/charts-24.png", "Statistics") + "&nbsp;Statistics Detail</h3>");
     writeln("<div align='center'>");
-    writeChoosePeriodLinks(_statsName, _statsWidth, _statsHeight);
+    writeChoosePeriodLinks(statsName, statsWidth, statsHeight);
     writeln("</div><br/>");
-    String params = statisticsGraphParams(_statsName, _statsWidth, _statsHeight);
+    String params = statisticsGraphParams(statsName, statsWidth, statsHeight);
     writeln("<div align='center'>");
     writeln("<img class='synthese' id='img' src='?" + params + "' alt='zoom'/><br/><br/>");
-    String paramsOut = addRangeParams(statisticsPageParams("statsDetail=" + _statsName, "statsWidth=" + (int) (_statsWidth / 1.5d), "statsHeight="
-        + (int) (_statsHeight / 1.2)));
-    String paramsIn = addRangeParams(statisticsPageParams("statsDetail=" + _statsName, "statsWidth=" + (int) (_statsWidth * 1.5d), "statsHeight="
-        + (int) (_statsHeight * 1.2)));
+    String paramsOut = addRangeParams(statisticsPageParams("statsDetail=" + statsName, "statsWidth=" + (int) (statsWidth / 1.5d), "statsHeight="
+        + (int) (statsHeight / 1.2)));
+    String paramsIn = addRangeParams(statisticsPageParams("statsDetail=" + statsName, "statsWidth=" + (int) (statsWidth * 1.5d), "statsHeight="
+        + (int) (statsHeight * 1.2)));
     writeln(lnk(paramsOut, img("icons/zoom-out-24.png", "Zoom Out")));
     writeln(lnk(paramsIn, img("icons/zoom-in-24.png", "Zoom In")));
     writeln("</div>");

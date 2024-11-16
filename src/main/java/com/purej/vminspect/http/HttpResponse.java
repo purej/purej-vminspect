@@ -18,20 +18,20 @@ import java.util.Map;
  * @author Stefan Mueller
  */
 public abstract class HttpResponse {
-  private final Map<String, String> _cookies = new HashMap<String, String>(7);
-  private final String _contentType;
-  private final int _cacheSeconds;
+  private final Map<String, String> cookies = new HashMap<String, String>(7);
+  private final String contentType;
+  private final int cacheSeconds;
 
   protected HttpResponse(String contentType, int cacheSeconds) {
-    _contentType = contentType;
-    _cacheSeconds = cacheSeconds;
+    this.contentType = contentType;
+    this.cacheSeconds = cacheSeconds;
   }
 
   /**
    * Returns the content type of this response.
    */
   public String getContentType() {
-    return _contentType;
+    return contentType;
   }
 
   /**
@@ -39,14 +39,14 @@ public abstract class HttpResponse {
    * in the client-side.
    */
   public int getCacheSeconds() {
-    return _cacheSeconds;
+    return cacheSeconds;
   }
 
   /**
    * Returns the cookies to be set.
    */
   public Map<String, String> getCookies() {
-    return _cookies;
+    return cookies;
   }
 
   /**

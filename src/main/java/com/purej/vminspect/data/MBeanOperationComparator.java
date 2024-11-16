@@ -12,11 +12,11 @@ import com.purej.vminspect.util.Utils;
 public final class MBeanOperationComparator implements Comparator<MBeanOperation> {
   @Override
   public int compare(MBeanOperation o1, MBeanOperation o2) {
-    int result = Utils.compareTo(o1.getName(), o2.getName());
+    var result = Utils.compareTo(o1.getName(), o2.getName());
     if (result == 0) { // Same name
       result = Integer.valueOf(o1.getParameters().length).compareTo(Integer.valueOf(o2.getParameters().length));
       if (result == 0) { // Same # of parameters
-        for (int i = 0; i < o1.getParameters().length; i++) {
+        for (var i = 0; i < o1.getParameters().length; i++) {
           result = Utils.compareTo(o1.getParameters()[i].getType(), o2.getParameters()[i].getType());
           if (result != 0) {
             return result;

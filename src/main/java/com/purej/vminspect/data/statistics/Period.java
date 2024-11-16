@@ -32,18 +32,18 @@ public enum Period {
    */
   CUSTOM(-1, "icons/calendar-custom-16.png", "Custom", "Custom");
 
-  private final int _durationSeconds;
-  private final String _iconName;
-  private final String _label;
-  private final String _linkLabel;
-  private final String _code;
+  private final int durationSeconds;
+  private final String iconName;
+  private final String label;
+  private final String linkLabel;
+  private final String code;
 
   private Period(int durationDays, String iconName, String label, String linkLabel) {
-    _durationSeconds = durationDays * 24 * 60 * 60;
-    _iconName = iconName;
-    _label = label;
-    _linkLabel = linkLabel;
-    _code = toString().toLowerCase();
+    this.durationSeconds = durationDays * 24 * 60 * 60;
+    this.iconName = iconName;
+    this.label = label;
+    this.linkLabel = linkLabel;
+    this.code = toString().toLowerCase();
   }
 
   /**
@@ -57,34 +57,34 @@ public enum Period {
    * Returns the lower case name of this enum.
    */
   public String getCode() {
-    return _code;
+    return code;
   }
 
   /**
    * Returns the label to be displayed.
    */
   public String getLabel() {
-    return _label;
+    return label;
   }
 
   /**
    * Returns the link label to be displayed.
    */
   public String getLinkLabel() {
-    return _linkLabel;
+    return linkLabel;
   }
 
   /**
    * Returns the duration in seconds of this period.
    */
   public int getDurationSeconds() {
-    return _durationSeconds;
+    return durationSeconds;
   }
 
   /**
    * Returns the icon name to be displayed.
    */
   public String getIconName() {
-    return _iconName;
+    return iconName;
   }
 }

@@ -20,23 +20,23 @@ public final class SystemMainView extends AbstractHtmlView {
    * Stores a memory bar picture and it's width.
    */
   private static class MemoryBarPic {
-    private final String _pic;
-    private int _width;
+    private final String pic;
+    private int width;
 
     public MemoryBarPic(String pic, int width) {
-      _pic = pic;
-      _width = width;
+      this.pic = pic;
+      this.width = width;
     }
   }
 
-  private final SystemData _sysData;
+  private final SystemData sysData;
 
   /**
    * Creates a new instance of this view.
    */
   public SystemMainView(StringBuilder output, SystemData sysData) {
     super(output);
-    _sysData = sysData;
+    this.sysData = sysData;
   }
 
   @Override
@@ -49,40 +49,40 @@ public final class SystemMainView extends AbstractHtmlView {
 
   private void writeMemoryTable() throws IOException {
     writeln("<h3>" + img("icons/battery-24.png", "Memory") + "&nbsp;Memory</h3>");
-    CandyHtmlTable table = new CandyHtmlTable("Memory", "Name", "Value", "Status");
-    writeMemoryRow(table, "Heap Memory", _sysData.getMemoryHeap());
-    writeMemoryRow(table, "NonHeap Memory", _sysData.getMemoryNonHeap());
-    writeMemoryRow(table, "Physical Memory", _sysData.getMemoryPhysical());
-    writeMemoryRow(table, "Swap Memory", _sysData.getMemorySwap());
+    var table = new CandyHtmlTable("Memory", "Name", "Value", "Status");
+    writeMemoryRow(table, "Heap Memory", sysData.getMemoryHeap());
+    writeMemoryRow(table, "NonHeap Memory", sysData.getMemoryNonHeap());
+    writeMemoryRow(table, "Physical Memory", sysData.getMemoryPhysical());
+    writeMemoryRow(table, "Swap Memory", sysData.getMemorySwap());
     table.endTable();
     writeln("<br/>");
   }
 
   private void writeRuntimeTable() throws IOException {
     writeln("<h3>" + img("icons/cup-24.png", "Runtime") + "&nbsp;Runtime</h3>");
-    CandyHtmlTable table = new CandyHtmlTable("Runtime", "Name", "Value");
-    table.nextRow("Host", _sysData.getOsHostIp());
-    table.nextRow("OS", _sysData.getOsName() + ", Architecture: " + _sysData.getOsArchitecture() + ", Version: " + _sysData.getOsVersion()
-        + ", Processors: " + _sysData.getOsAvailableProcessors());
-    table.nextRow("Java", _sysData.getRtInfo());
-    table.nextRow("Virtual Machine", _sysData.getVmName() + ", Vendor: " + _sysData.getVmVendor() + ", Version: " + _sysData.getVmVersion());
-    table.nextRow("VM Process Name", _sysData.getRtProcessName());
-    table.nextRow("VM Startup Time", formatDateTime(_sysData.getRtProcessStartup()));
-    table.nextRow("VM Startup Arguments", toShowLinkWithHiddenDiv("vmArgs", _sysData.getRtProcessArguments()));
-    table.nextRow("VM System Properties", toShowLinkWithHiddenDiv("sProps", _sysData.getRtSystemProperties()));
-    if (_sysData.getMaxFileDescriptorCount() < 0) {
+    var table = new CandyHtmlTable("Runtime", "Name", "Value");
+    table.nextRow("Host", sysData.getOsHostIp());
+    table.nextRow("OS", sysData.getOsName() + ", Architecture: " + sysData.getOsArchitecture() + ", Version: " + sysData.getOsVersion()
+        + ", Processors: " + sysData.getOsAvailableProcessors());
+    table.nextRow("Java", sysData.getRtInfo());
+    table.nextRow("Virtual Machine", sysData.getVmName() + ", Vendor: " + sysData.getVmVendor() + ", Version: " + sysData.getVmVersion());
+    table.nextRow("VM Process Name", sysData.getRtProcessName());
+    table.nextRow("VM Startup Time", formatDateTime(sysData.getRtProcessStartup()));
+    table.nextRow("VM Startup Arguments", toShowLinkWithHiddenDiv("vmArgs", sysData.getRtProcessArguments()));
+    table.nextRow("VM System Properties", toShowLinkWithHiddenDiv("sProps", sysData.getRtSystemProperties()));
+    if (sysData.getMaxFileDescriptorCount() < 0) {
       table.nextRow("VM File Descriptors", "n/a");
     } else {
       table.nextRow("VM File Descriptors",
-          "Open: " + formatNumber(_sysData.getOpenFileDescriptorCount()) + " / Max: " + formatNumber(_sysData.getMaxFileDescriptorCount()));
+          "Open: " + formatNumber(sysData.getOpenFileDescriptorCount()) + " / Max: " + formatNumber(sysData.getMaxFileDescriptorCount()));
     }
-    if (_sysData.getProcessCpuLoadPct() < 0) {
+    if (sysData.getProcessCpuLoadPct() < 0) {
       table.nextRow("VM CPU Load", "n/a");
     } else {
-      String processCpuPct = formatPct(_sysData.getProcessCpuLoadPct());
-      table.nextRow("VM CPU Load", processCpuPct + ", Total CPU Time: " + formatNumber(_sysData.getProcessCpuTimeMillis() / 1000) + "s");
+      var processCpuPct = formatPct(sysData.getProcessCpuLoadPct());
+      table.nextRow("VM CPU Load", processCpuPct + ", Total CPU Time: " + formatNumber(sysData.getProcessCpuTimeMillis() / 1000) + "s");
     }
-    String systemCpuPct = _sysData.getSystemCpuLoadPct() < 0 ? "n/a" : formatPct(_sysData.getSystemCpuLoadPct());
+    var systemCpuPct = sysData.getSystemCpuLoadPct() < 0 ? "n/a" : formatPct(sysData.getSystemCpuLoadPct());
     table.nextRow("System CPU Load", systemCpuPct);
     table.endTable();
     writeln("<br/>");
@@ -90,22 +90,22 @@ public final class SystemMainView extends AbstractHtmlView {
 
   private void writeGcTable() throws IOException {
     writeln("<h3>" + img("icons/garbage-24.png", "Garbage Collector") + "&nbsp;Garbage Collector</h3>");
-    CandyHtmlTable table = new CandyHtmlTable("Garbage Collector", "Name", "Value");
-    table.nextRow("Names", _sysData.getGcName());
-    table.nextRow("Number of Collections", formatNumber(_sysData.getGcCollectionCount()));
-    table.nextRow("Total Collection Time", formatDecimal(_sysData.getGcCollectionTimeMillis() / 1000d) + "s");
+    var table = new CandyHtmlTable("Garbage Collector", "Name", "Value");
+    table.nextRow("Names", sysData.getGcName());
+    table.nextRow("Number of Collections", formatNumber(sysData.getGcCollectionCount()));
+    table.nextRow("Total Collection Time", formatDecimal(sysData.getGcCollectionTimeMillis() / 1000d) + "s");
     table.endTable();
     writeln("<br/>");
   }
 
   private void writeClassloaderTable() throws IOException {
     writeln("<h3>" + img("icons/box-24.png", "Class Loading") + "&nbsp;Class Loading</h3>");
-    CandyHtmlTable table = new CandyHtmlTable("Class Loading", "Name", "Value");
-    table.nextRow("Currently Loaded Classes", formatNumber(_sysData.getCLLoadedClassCount()));
-    table.nextRow("Total Loaded Classes", formatNumber(_sysData.getCLTotalLoadedClassCount()));
-    table.nextRow("Class Path", toShowLinkWithHiddenDiv("clCp", _sysData.getCLClassPath()));
-    table.nextRow("Boot Classpath", toShowLinkWithHiddenDiv("clBp", _sysData.getCLBootClassPath()));
-    table.nextRow("Library Path", toShowLinkWithHiddenDiv("clLp", _sysData.getCLLibraryPath()));
+    var table = new CandyHtmlTable("Class Loading", "Name", "Value");
+    table.nextRow("Currently Loaded Classes", formatNumber(sysData.getCLLoadedClassCount()));
+    table.nextRow("Total Loaded Classes", formatNumber(sysData.getCLTotalLoadedClassCount()));
+    table.nextRow("Class Path", toShowLinkWithHiddenDiv("clCp", sysData.getCLClassPath()));
+    table.nextRow("Boot Classpath", toShowLinkWithHiddenDiv("clBp", sysData.getCLBootClassPath()));
+    table.nextRow("Library Path", toShowLinkWithHiddenDiv("clLp", sysData.getCLLibraryPath()));
     table.endTable();
     writeln("<br/>");
   }
@@ -115,12 +115,12 @@ public final class SystemMainView extends AbstractHtmlView {
     if (memory == MemoryData.UNKNOWN) {
       value = "n/a";
     } else {
-      String used = "Used: " + formatMb(memory.getUsed() / 1024d / 1024d);
-      String commited = memory.getCommitted() > 0 ? " / Alloc: " + formatMb(memory.getCommitted() / 1024d / 1024d) : "";
-      String max = memory.getMax() > 0 ? " / Max: " + formatMb(memory.getMax() / 1024d / 1024d) : "";
+      var used = "Used: " + formatMb(memory.getUsed() / 1024d / 1024d);
+      var commited = memory.getCommitted() > 0 ? " / Alloc: " + formatMb(memory.getCommitted() / 1024d / 1024d) : "";
+      var max = memory.getMax() > 0 ? " / Max: " + formatMb(memory.getMax() / 1024d / 1024d) : "";
       value = used + commited + max;
     }
-    String bar = toMemoryBar(memory);
+    var bar = toMemoryBar(memory);
     table.nextRow(label, value, bar);
   }
 
@@ -130,42 +130,42 @@ public final class SystemMainView extends AbstractHtmlView {
 
   private static String toMemoryBar(MemoryData memory) {
     // Create the basic pics (start, middle, end):
-    List<MemoryBarPic> pics = new ArrayList<MemoryBarPic>();
+    var pics = new ArrayList<MemoryBarPic>();
     pics.add(new MemoryBarPic("grey-start", 3));
     pics.add(new MemoryBarPic("grey", BAR_PIXELS));
     pics.add(new MemoryBarPic("grey-end", 3));
 
     // Note: commited and/or max might be missing!
-    String title = "0%";
+    var title = "0%";
     if (memory.getUsed() > 0) {
       if (memory.getMax() > 0) {
         // Calc against max:
         if (memory.getCommitted() > 0) {
-          double pct = pct(memory.getCommitted(), memory.getMax());
+          var pct = pct(memory.getCommitted(), memory.getMax());
           title = " / " + formatPct(pct);
           overlayBarPics(pics, "blue", pct);
         } else {
           title = "";
         }
-        double pct = pct(memory.getUsed(), memory.getMax());
+        var pct = pct(memory.getUsed(), memory.getMax());
         title = formatPct(pct) + title;
         overlayBarPics(pics, "violet", pct);
       } else if (memory.getCommitted() > 0) {
         // Calc against commited:
-        double pct = pct(memory.getUsed(), memory.getCommitted());
+        var pct = pct(memory.getUsed(), memory.getCommitted());
         title = formatPct(pct);
         overlayBarPics(pics, "violet", pct);
       }
     }
 
     // Now render the complete bar:
-    StringBuilder result = new StringBuilder();
-    for (MemoryBarPic pic : pics) {
-      if (pic._width > 0) {
+    var result = new StringBuilder();
+    for (var pic : pics) {
+      if (pic.width > 0) {
         result.append("<img src='?resource=bar/");
-        result.append(pic._pic);
+        result.append(pic.pic);
         result.append(".gif' width='");
-        result.append(pic._width);
+        result.append(pic.width);
         result.append("' height='10' alt='+' title='");
         result.append(title);
         result.append("' />");
@@ -186,7 +186,7 @@ public final class SystemMainView extends AbstractHtmlView {
 
       // Add middle pic:
       pics.add(1, new MemoryBarPic(color, pixels));
-      pics.get(2)._width -= pixels; // follower width must be reduced...
+      pics.get(2).width -= pixels; // follower width must be reduced...
 
       // Replace end if 100%:
       if (pixels == BAR_PIXELS) {

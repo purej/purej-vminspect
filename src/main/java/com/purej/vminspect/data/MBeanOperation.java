@@ -22,55 +22,55 @@ public class MBeanOperation {
     Unknown
   }
 
-  private final String _name;
-  private final MBeanParameter[] _parameters;
-  private final String _returnType;
-  private final Impact _impact;
-  private final String _description;
+  private final String name;
+  private final MBeanParameter[] parameters;
+  private final String returnType;
+  private final Impact impact;
+  private final String description;
 
   /**
    * Creates a new instance of this class.
    */
   public MBeanOperation(String name, MBeanParameter[] parameters, String returnType, Impact impact, String description) {
-    _name = name;
-    _parameters = parameters;
-    _returnType = returnType;
-    _impact = impact;
-    _description = description;
+    this.name = name;
+    this.parameters = parameters;
+    this.returnType = returnType;
+    this.impact = impact;
+    this.description = description;
   }
 
   /**
    * Returns the operation name.
    */
   public String getName() {
-    return _name;
+    return name;
   }
 
   /**
    * Returns the list of parameters.
    */
   public MBeanParameter[] getParameters() {
-    return _parameters;
+    return parameters;
   }
 
   /**
    * Returns the return type of this operation.
    */
   public String getReturnType() {
-    return _returnType;
+    return returnType;
   }
 
   /**
    * Returns the displayable impact of this operation (Info, Action or Info/Action).
    */
   public Impact getImpact() {
-    return _impact;
+    return impact;
   }
 
   /**
    * Returns the description of this operation.
    */
   public String getDescription() {
-    return _description;
+    return description;
   }
 }

@@ -46,8 +46,8 @@ public final class Utils {
    * Creates an exception info string from the given throwable.
    */
   public static String getExceptionInfo(Throwable t) {
-    StringBuilder builder = new StringBuilder();
-    Throwable th = t;
+    var builder = new StringBuilder();
+    var th = t;
     while (th != null) {
       if (builder.length() > 0) {
         builder.append("\nCaused by: ");
@@ -62,8 +62,8 @@ public final class Utils {
    * Creates an exception info string from the given throwable.
    */
   public static String getHtmlExceptionInfo(Throwable t) {
-    StringBuilder builder = new StringBuilder();
-    Throwable th = t;
+    var builder = new StringBuilder();
+    var th = t;
     boolean isFirst = true;
     while (th != null) {
       if (!isFirst) {
@@ -144,7 +144,7 @@ public final class Utils {
 
     int patternIdx = 0;
     int txtIdx = 0;
-    StringBuilder matchTag = new StringBuilder();
+    var matchTag = new StringBuilder();
     boolean isFirst = true;
     while (true) {
       matchTag.setLength(0);
@@ -157,7 +157,7 @@ public final class Utils {
         isFirst = false;
         continue;
       }
-      String matchTagString = matchTag.toString();
+      var matchTagString = matchTag.toString();
       if (isFirst && patternIdx == -1) {
         // First pattern equals last pattern <> *, txt must be equals:
         return text.equals(matchTagString);
@@ -182,8 +182,8 @@ public final class Utils {
   }
 
   private static int nextMatchTag(String pattern, int fromIdx, StringBuilder tag) {
-    for (int i = fromIdx; i < pattern.length(); i++) {
-      char c = pattern.charAt(i);
+    for (var i = fromIdx; i < pattern.length(); i++) {
+      var c = pattern.charAt(i);
       if (c == '*') {
         return i + 1;
       } else {

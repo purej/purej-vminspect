@@ -12,20 +12,20 @@ import com.purej.vminspect.data.ThreadData;
  * @author Stefan Mueller
  */
 public final class ThreadsDumpView extends AbstractHtmlView {
-  private final List<ThreadData> _threads;
+  private final List<ThreadData> threads;
 
   /**
    * Creates a new instance of this view.
    */
   public ThreadsDumpView(StringBuilder output, List<ThreadData> threads) {
     super(output);
-    _threads = threads;
+    this.threads = threads;
   }
 
   @Override
   public void render() throws IOException {
     write("===== THREADS DUMP (" + formatDateTime(new Date()) + ") =====\n\n");
-    for (ThreadData thread : _threads) {
+    for (var thread : threads) {
       write("\"");
       write(thread.getName());
       write("\" daemon=");
@@ -34,9 +34,9 @@ public final class ThreadsDumpView extends AbstractHtmlView {
       write(String.valueOf(thread.getPriority()));
       write(" state=");
       write(String.valueOf(thread.getState()));
-      StackTraceElement[] stackTrace = thread.getStackTrace();
+      var stackTrace = thread.getStackTrace();
       if (stackTrace != null) {
-        for (StackTraceElement element : stackTrace) {
+        for (var element : stackTrace) {
           write("\n\t");
           write(element.toString());
         }

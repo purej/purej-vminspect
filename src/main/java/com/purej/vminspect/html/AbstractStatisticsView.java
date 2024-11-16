@@ -11,38 +11,38 @@ import com.purej.vminspect.data.statistics.Range;
  * @author Stefan Mueller
  */
 abstract class AbstractStatisticsView extends AbstractHtmlView {
-  private final Range _range;
+  private final Range range;
 
   /**
    * Creates a new instance of this view.
    */
   public AbstractStatisticsView(StringBuilder output, Range range) {
     super(output);
-    _range = range;
+    this.range = range;
   }
 
   protected String statisticsGraphParams(String graphName, int width, int height) {
-    return addRangeParams(params("statsGraph=" + graphName, "statsWidth=" + width, "statsHeight=" + height), _range);
+    return addRangeParams(params("statsGraph=" + graphName, "statsWidth=" + width, "statsHeight=" + height), range);
   }
 
   protected static String statisticsPageParams(String... additionalParams) {
-    StringBuilder builder = new StringBuilder();
+    var builder = new StringBuilder();
     builder.append("page=statistics");
-    for (String param : additionalParams) {
+    for (var param : additionalParams) {
       builder.append(PARAMS_SEPARATOR).append(param);
     }
     return builder.toString();
   }
 
   protected String addRangeParams(String otherParams) {
-    return addRangeParams(otherParams, _range);
+    return addRangeParams(otherParams, range);
   }
 
   protected static String addRangeParams(String otherParams, Range range) {
     if (range.getPeriod() == Period.CUSTOM) {
       if (range.getStartDate() != null && range.getEndDate() != null) {
-        String from = urlEncode(formatDate(range.getStartDate()));
-        String to = urlEncode(formatDate(range.getEndDate()));
+        var from = urlEncode(formatDate(range.getStartDate()));
+        var to = urlEncode(formatDate(range.getEndDate()));
         return params(otherParams, "statsPeriod=custom", "statsFromDate=" + from, "statsToDate=" + to);
       }
       return params(otherParams, "statsPeriod=custom");
@@ -54,8 +54,8 @@ abstract class AbstractStatisticsView extends AbstractHtmlView {
 
   protected void writeChoosePeriodLinks(String statsDetailName, int width, int height) throws IOException {
     writeln("<div>");
-    String separator = "&nbsp;&nbsp;&nbsp;&nbsp;";
-    String addParams = statsDetailName != null ? params("statsDetail=" + statsDetailName, "statsWidth=" + width, "statsHeight=" + height) : null;
+    var separator = "&nbsp;&nbsp;&nbsp;&nbsp;";
+    var addParams = statsDetailName != null ? params("statsDetail=" + statsDetailName, "statsWidth=" + width, "statsHeight=" + height) : null;
     writeln(separator);
     writeln("Choice of period :&nbsp;");
     for (Period myPeriod : Period.values()) {
@@ -65,8 +65,8 @@ abstract class AbstractStatisticsView extends AbstractHtmlView {
         writeln(img(myPeriod.getIconName(), "Customized") + "&nbsp;Customized</a>");
       }
       else {
-        String periodParam = "statsPeriod=" + myPeriod.getCode();
-        String params = statsDetailName != null ? statisticsPageParams(addParams, periodParam) : statisticsPageParams(periodParam);
+        var periodParam = "statsPeriod=" + myPeriod.getCode();
+        var params = statsDetailName != null ? statisticsPageParams(addParams, periodParam) : statisticsPageParams(periodParam);
         write(lnk(params, img(myPeriod.getIconName(), "Choice of period " + myPeriod.getLabel()) + "&nbsp;" + myPeriod.getLinkLabel()));
         write("&nbsp;&nbsp;&nbsp;");
       }
@@ -80,13 +80,13 @@ abstract class AbstractStatisticsView extends AbstractHtmlView {
     writeln("<br/><br/>");
     writeln("<form name='customPeriodForm' method='get' action=''>");
     write("<br/><b>From</b>&nbsp;&nbsp;<input type='text' size='10' name='statsFromDate' ");
-    if (_range.getStartDate() != null) {
-      write("value='" + formatDate(_range.getStartDate()) + "'");
+    if (range.getStartDate() != null) {
+      write("value='").write(formatDate(range.getStartDate())).write("'");
     }
     writeln("/>&nbsp;&nbsp;");
     write("<b>To</b>&nbsp;&nbsp;<input type='text' size='10' name='statsToDate' ");
-    if (_range.getEndDate() != null) {
-      write("value='" + formatDate(_range.getEndDate()) + "'");
+    if (range.getEndDate() != null) {
+      write("value='").write(formatDate(range.getEndDate())).write("'");
     }
     writeln("/>&nbsp;&nbsp;");
     write("(dd.MM.yyyy)");
@@ -94,9 +94,9 @@ abstract class AbstractStatisticsView extends AbstractHtmlView {
     writeln("<input type='hidden' name='page' value='statistics'/>");
     writeln("<input type='hidden' name='statsPeriod' value='custom'/>");
     if (graphDetailName != null) {
-      writeln("<input type='hidden' name='statsDetail' value='" + graphDetailName + "'/>");
-      writeln("<input type='hidden' name='statsWidth' value='" + statsWidth + "'/>");
-      writeln("<input type='hidden' name='statsHeight' value='" + statsHeight + "'/>");
+      write("<input type='hidden' name='statsDetail' value='").write(graphDetailName).writeln("'/>");
+      write("<input type='hidden' name='statsWidth' value='").write(statsWidth).writeln("'/>");
+      write("<input type='hidden' name='statsHeight' value='").write(statsHeight).writeln("'/>");
     }
     writeln("</form><br/>");
     writeln("</div>");

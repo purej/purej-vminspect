@@ -10,24 +10,24 @@ import java.util.Date;
  * @author Stefan Mueller
  */
 public class HtmlPageView extends AbstractHtmlView {
-  private final long _startTimestamp;
-  private final String _reloadParameters;
-  private final AbstractHtmlView _bodyView;
+  private final long startTimestamp;
+  private final String reloadParameters;
+  private final AbstractHtmlView bodyView;
 
   /**
    * Creates a new instance of this view.
    */
   public HtmlPageView(StringBuilder output, String reloadParameters, long startTimestamp, AbstractHtmlView bodyView) {
     super(output);
-    _reloadParameters = reloadParameters;
-    _startTimestamp = startTimestamp;
-    _bodyView = bodyView;
+    this.reloadParameters = reloadParameters;
+    this.startTimestamp = startTimestamp;
+    this.bodyView = bodyView;
   }
 
   @Override
   public void render() throws IOException {
     writeHtmlHeader();
-    _bodyView.render();
+    bodyView.render();
     writeHtmlFooter();
   }
 
@@ -42,7 +42,7 @@ public class HtmlPageView extends AbstractHtmlView {
     writeln("<script type='text/javascript' src='?resource=vminspect.js'></script>");
     writeln("</head>");
     writeln("<body>");
-    writeln("<div id='title'><h2>PureJ VM Inspection " + lnk(_reloadParameters, img("icons/refresh-24.png", "Refresh")) + " </h2>");
+    writeln("<div id='title'><h2>PureJ VM Inspection " + lnk(reloadParameters, img("icons/refresh-24.png", "Refresh")) + " </h2>");
     writeln("</div><div id='menu'>");
     writeln("<ul>");
     writeln("<li>" + lnk("page=statistics", img("icons/charts-24.png", "Statistics") + "Statistics") + "</li>");
@@ -55,8 +55,8 @@ public class HtmlPageView extends AbstractHtmlView {
 
   private void writeHtmlFooter() throws IOException {
     writeln("<br/><div class='footer'>");
-    writeln("Display date: " + formatDateTime(new Date(_startTimestamp)) + "<br/>");
-    writeln("Display duration: " + formatNumber(System.currentTimeMillis() - _startTimestamp) + "ms<br/>");
+    writeln("Display date: " + formatDateTime(new Date(startTimestamp)) + "<br/>");
+    writeln("Display duration: " + formatNumber(System.currentTimeMillis() - startTimestamp) + "ms<br/>");
     writeln("</div>");
     writeln("</body></html>");
   }

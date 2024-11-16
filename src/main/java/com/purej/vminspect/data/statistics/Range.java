@@ -14,15 +14,15 @@ import com.purej.vminspect.util.Utils;
 public final class Range {
   private static final char CUSTOM_PERIOD_SEPARATOR = '|';
 
-  private final Period _period;
-  private final Date _startDate;
-  private final Date _endDate;
+  private final Period period;
+  private final Date startDate;
+  private final Date endDate;
 
   private Range(Period period, Date startDate, Date endDate) {
     super();
-    _period = Utils.checkNotNull(period);
-    _startDate = startDate;
-    _endDate = endDate;
+    this.period = Utils.checkNotNull(period);
+    this.startDate = startDate;
+    this.endDate = endDate;
   }
 
   /**
@@ -36,12 +36,12 @@ public final class Range {
    * Creates a custom period.
    */
   public static Range createCustomRange(Date startDate, Date endDate) {
-    Date normalizedStartDate = startOfDay(startDate);
-    Date normalizedEndDate = endOfDay(endDate);
-    Calendar cal = Calendar.getInstance();
+    var normalizedStartDate = startOfDay(startDate);
+    var normalizedEndDate = endOfDay(endDate);
+    var cal = Calendar.getInstance();
     cal.add(Calendar.YEAR, -5);
-    Date minDate = startOfDay(cal.getTime());
-    Date maxDate = endOfDay(new Date());
+    var minDate = startOfDay(cal.getTime());
+    var maxDate = endOfDay(new Date());
     if (normalizedStartDate.before(minDate)) {
       normalizedStartDate = minDate;
     }
@@ -55,7 +55,7 @@ public final class Range {
   }
 
   private static Date startOfDay(Date date) {
-    Calendar calendar = Calendar.getInstance();
+    var calendar = Calendar.getInstance();
     calendar.setTime(date);
     calendar.set(Calendar.HOUR_OF_DAY, 0);
     calendar.set(Calendar.MINUTE, 0);
@@ -64,7 +64,7 @@ public final class Range {
   }
 
   private static Date endOfDay(Date date) {
-    Calendar calendar = Calendar.getInstance();
+    var calendar = Calendar.getInstance();
     calendar.setTime(date);
     calendar.set(Calendar.HOUR_OF_DAY, 23);
     calendar.set(Calendar.MINUTE, 59);
@@ -89,30 +89,30 @@ public final class Range {
    * Returns the {@link Period} of this range.
    */
   public Period getPeriod() {
-    return _period;
+    return period;
   }
 
   /**
    * Returns the start date or null if standard period.
    */
   public Date getStartDate() {
-    return _startDate;
+    return startDate;
   }
 
   /**
    * Returns the end date or null if standard period.
    */
   public Date getEndDate() {
-    return _endDate;
+    return endDate;
   }
 
   /**
    * Returns this range as s string (which might be parsed again).
    */
   public String asString() {
-    if (_period.equals(Period.CUSTOM)) {
-      return Utils.formatDate(_startDate) + CUSTOM_PERIOD_SEPARATOR + Utils.formatDate(_endDate);
+    if (period.equals(Period.CUSTOM)) {
+      return Utils.formatDate(startDate) + CUSTOM_PERIOD_SEPARATOR + Utils.formatDate(endDate);
     }
-    return _period.getCode();
+    return period.getCode();
   }
 }

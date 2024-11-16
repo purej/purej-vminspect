@@ -16,34 +16,34 @@ public class SunSystemData extends SystemData {
    * Creates a new instance of this class.
    */
   public SunSystemData() {
-    if (_osb instanceof com.sun.management.OperatingSystemMXBean) {
-      com.sun.management.OperatingSystemMXBean osb = (com.sun.management.OperatingSystemMXBean) _osb;
+    if (osb instanceof com.sun.management.OperatingSystemMXBean) {
+      var ssb = (com.sun.management.OperatingSystemMXBean)osb;
 
-      long memPhysTotal = osb.getTotalMemorySize();
-      long memPhysFree = osb.getFreeMemorySize();
-      _memoryPhysical = new MemoryData(memPhysTotal != -1 ? memPhysTotal - memPhysFree : -1, -1, memPhysTotal);
-      long memSwapTotal = osb.getTotalSwapSpaceSize();
-      long memSwapFree = osb.getFreeSwapSpaceSize();
-      _memorySwap = new MemoryData(memSwapTotal != -1 ? memSwapTotal - memSwapFree : -1, -1, memSwapTotal);
+      var memPhysTotal = ssb.getTotalMemorySize();
+      var memPhysFree = ssb.getFreeMemorySize();
+      memoryPhysical = new MemoryData(memPhysTotal != -1 ? memPhysTotal - memPhysFree : -1, -1, memPhysTotal);
+      var memSwapTotal = ssb.getTotalSwapSpaceSize();
+      var memSwapFree = ssb.getFreeSwapSpaceSize();
+      memorySwap = new MemoryData(memSwapTotal != -1 ? memSwapTotal - memSwapFree : -1, -1, memSwapTotal);
 
       // Process Cpu time - value is in nanoseconds:
-      long cpuTime = osb.getProcessCpuTime();
-      _processCpuTimeMillis = cpuTime > 0 ? cpuTime / 1000000 : -1;
+      var cpuTime = ssb.getProcessCpuTime();
+      processCpuTimeMillis = cpuTime > 0 ? cpuTime / 1000000 : -1;
 
       // Process Cpu load - value is a double between 0..1:
-      double cpuLoad = osb.getProcessCpuLoad();
-      _processCpuLoadPct = cpuLoad < 0 ? cpuLoad : cpuLoad * 100;
+      var cpuLoad = ssb.getProcessCpuLoad();
+      processCpuLoadPct = cpuLoad < 0 ? cpuLoad : cpuLoad * 100;
 
       // System Cpu load - value is a double between 0..1:
-      double systemLoad = osb.getCpuLoad();
-      _systemCpuLoadPct = systemLoad < 0 ? systemLoad : systemLoad * 100;
+      var systemLoad = ssb.getCpuLoad();
+      systemCpuLoadPct = systemLoad < 0 ? systemLoad : systemLoad * 100;
     }
 
     // Open/Max file descriptor count:
-    if (_osb instanceof UnixOperatingSystemMXBean) {
-      UnixOperatingSystemMXBean usb = (UnixOperatingSystemMXBean) _osb;
-      _openFileDescriptorCount = usb.getOpenFileDescriptorCount();
-      _maxFileDescriptorCount = usb.getMaxFileDescriptorCount();
+    if (osb instanceof UnixOperatingSystemMXBean) {
+      var usb = (UnixOperatingSystemMXBean)osb;
+      openFileDescriptorCount = usb.getOpenFileDescriptorCount();
+      maxFileDescriptorCount = usb.getMaxFileDescriptorCount();
     }
   }
 }

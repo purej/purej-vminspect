@@ -23,10 +23,10 @@ public abstract class AbstractHtmlView {
    * Creates a new instance of this HTML table.
    */
   public class HtmlTable {
-    private boolean _firstRow = true;
+    private boolean firstRow = true;
 
     protected HtmlTable(boolean firstRow) {
-      _firstRow = firstRow;
+      this.firstRow = firstRow;
     }
 
     /**
@@ -43,9 +43,9 @@ public abstract class AbstractHtmlView {
      * Writes new row tags including optional values.
      */
     public void nextRow(String... values) throws IOException {
-      if (_firstRow) {
+      if (firstRow) {
         write("<tr>");
-        _firstRow = false;
+        firstRow = false;
       } else {
         write("</tr>\n<tr>");
       }
@@ -85,7 +85,7 @@ public abstract class AbstractHtmlView {
      * Writes the table end tags.
      */
     public void endTable() throws IOException {
-      if (!_firstRow) {
+      if (!firstRow) {
         write("</tr>");
       }
       write("</table>\n");
@@ -96,7 +96,7 @@ public abstract class AbstractHtmlView {
    * A beautify HTML table with alternated colored rows.
    */
   public class CandyHtmlTable extends HtmlTable {
-    private boolean _oddRow;
+    private boolean oddRow;
 
     /**
      * Creates a new instance and writes start tags including column names.
@@ -107,7 +107,7 @@ public abstract class AbstractHtmlView {
       write(summary);
       write("'>\n");
       write("<tr class='header'>");
-      for (int i = 0; i < columnNames.length; i++) {
+      for (var i = 0; i < columnNames.length; i++) {
         write("<td>");
         write(columnNames[i]);
         write("</td>");
@@ -117,7 +117,7 @@ public abstract class AbstractHtmlView {
     @Override
     public void nextRow(String... values) throws IOException {
       nextRowWithClz("");
-      for (String value : values) {
+      for (var value : values) {
         addValue(value);
       }
     }
@@ -134,14 +134,14 @@ public abstract class AbstractHtmlView {
       } else {
         write("<tr>");
       }
-      _oddRow = !_oddRow;
+      oddRow = !oddRow;
     }
   }
 
-  private final StringBuilder _output;
+  private final StringBuilder output;
 
   protected AbstractHtmlView(StringBuilder output) {
-    _output = output;
+    this.output = output;
   }
 
   /**
@@ -152,16 +152,26 @@ public abstract class AbstractHtmlView {
   /**
    * Writes the given html to the writer.
    */
-  protected final void write(String html) throws IOException {
-    _output.append(html == null ? "" : html);
+  protected final AbstractHtmlView write(String html) throws IOException {
+    output.append(html == null ? "" : html);
+    return this;
+  }
+
+  /**
+   * Writes the given number to the writer.
+   */
+  protected final AbstractHtmlView write(int nr) throws IOException {
+    output.append(nr);
+    return this;
   }
 
   /**
    * Writes the given html to the writer.
    */
-  protected final void writeln(String html) throws IOException {
+  protected final AbstractHtmlView writeln(String html) throws IOException {
     write(html);
-    _output.append('\n');
+    output.append('\n');
+    return this;
   }
 
   /**
@@ -224,8 +234,8 @@ public abstract class AbstractHtmlView {
   }
 
   protected static String params(String... params) {
-    StringBuilder result = new StringBuilder();
-    for (String param : params) {
+    var result = new StringBuilder();
+    for (var param : params) {
       if (result.length() > 0) {
         result.append(PARAMS_SEPARATOR);
       }
@@ -239,7 +249,7 @@ public abstract class AbstractHtmlView {
   }
 
   protected static final String tooltip(String label, String txt) {
-    StringBuilder builder = new StringBuilder();
+    var builder = new StringBuilder();
     builder.append("<a class='tooltip'><em>\n");
     builder.append(htmlEncode(txt)).append("</em>").append(htmlEncode(label)).append("</a>\n");
     return builder.toString();

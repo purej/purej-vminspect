@@ -24,17 +24,17 @@ abstract class AbstractMBeansView extends AbstractHtmlView {
   @SuppressWarnings("unchecked")
   protected void writeMBeanValue(Object object, boolean tryShowMBeanLinks) throws IOException {
     if (object instanceof List) {
-      List<Object> list = (List<Object>) object;
-      for (int i = 0; i < list.size(); i++) {
+      var list = (List<Object>) object;
+      for (var i = 0; i < list.size(); i++) {
         write(i == 0 ? "[" : "<br/>[");
         writeMBeanValue(list.get(i), tryShowMBeanLinks);
         write("]");
       }
     }
     else if (object instanceof Map) {
-      Map<?, ?> map = (Map<?, ?>) object;
-      boolean first = true;
-      for (Map.Entry<?, ?> entry : map.entrySet()) {
+      var map = (Map<?, ?>) object;
+      var first = true;
+      for (var entry : map.entrySet()) {
         write(first ? "[" : "<br/>[");
         writeMBeanValue(entry.getKey(), tryShowMBeanLinks);
         write("=");
@@ -44,12 +44,12 @@ abstract class AbstractMBeansView extends AbstractHtmlView {
       }
     }
     else {
-      String value = object != null ? object.toString() : null;
-      boolean written = false;
+      var value = object != null ? object.toString() : null;
+      var written = false;
       if (value != null && tryShowMBeanLinks && value.indexOf(":type=") > 0) {
         // Try to resolve as MBean object name and display as link:
         try {
-          ObjectName objectName = new ObjectName(value);
+          var objectName = new ObjectName(value);
           int serverIdx = MBeanUtils.getMBeanServerIdx(objectName);
           if (serverIdx > -1) {
             write(mBeanLnk(serverIdx, objectName, htmlEncode(value)));
@@ -68,17 +68,17 @@ abstract class AbstractMBeansView extends AbstractHtmlView {
   }
 
   protected static String mBeanParams(String... additionalParams) {
-    StringBuilder builder = new StringBuilder();
+    var builder = new StringBuilder();
     builder.append("page").append("=mbeans");
-    for (String param : additionalParams) {
+    for (var param : additionalParams) {
       builder.append(PARAMS_SEPARATOR).append(param);
     }
     return builder.toString();
   }
 
   protected static String mBeanLnk(int serverIdx, ObjectName objectName, String value) {
-    String mbSrvIdx = "mbSrvIdx=" + serverIdx;
-    String mbName = "mbName=" + urlEncode(objectName.toString());
+    var mbSrvIdx = "mbSrvIdx=" + serverIdx;
+    var mbName = "mbName=" + urlEncode(objectName.toString());
     return lnk(mBeanParams(mbSrvIdx, mbName), value);
   }
 }

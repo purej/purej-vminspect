@@ -3,7 +3,6 @@ package com.purej.vminspect.html;
 
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
-import java.lang.management.ThreadMXBean;
 import java.util.List;
 import com.purej.vminspect.data.ThreadData;
 
@@ -13,28 +12,28 @@ import com.purej.vminspect.data.ThreadData;
  * @author Stefan Mueller
  */
 public final class ThreadsMainView extends AbstractHtmlView {
-  private final List<ThreadData> _threads;
+  private final List<ThreadData> threads;
 
   /**
    * Creates a new instance of this view.
    */
   public ThreadsMainView(StringBuilder output, List<ThreadData> threads) {
     super(output);
-    _threads = threads;
+    this.threads = threads;
   }
 
   @Override
   public void render() throws IOException {
     writeln("<h3>" + img("icons/threads-24.png", "Threads") + "&nbsp;Threads</h3>");
 
-    ThreadMXBean mxBean = ManagementFactory.getThreadMXBean();
+    var mxBean = ManagementFactory.getThreadMXBean();
     writeln("<div align='left'>");
-    writeln("Total live threads: " + _threads.size() + " (peek: " + mxBean.getPeakThreadCount() + ")<br/>");
+    writeln("Total live threads: " + threads.size() + " (peek: " + mxBean.getPeakThreadCount() + ")<br/>");
     writeln("Total started threads: " + mxBean.getTotalStartedThreadCount());
     writeln("</div><br/>");
 
-    CandyHtmlTable table = new CandyHtmlTable("Threads", "Thread", "Demon", "Priority", "State", "Executing Method", "CPU Time Ms", "User Time Ms");
-    for (ThreadData thread : _threads) {
+    var table = new CandyHtmlTable("Threads", "Thread", "Demon", "Priority", "State", "Executing Method", "CPU Time Ms", "User Time Ms");
+    for (var thread : threads) {
       table.nextRowWithClz(thread.isDeadlocked() ? "deadlock" : "");
       table.addValue(htmlEncode(thread.getName()));
       table.addValueCenter(thread.isDaemon() ? "Yes" : "No");
@@ -46,7 +45,7 @@ public final class ThreadsMainView extends AbstractHtmlView {
     }
     table.endTable();
     writeln("<div align='right'>");
-    String threadsDumpParam = "page=threadsDump";
+    var threadsDumpParam = "page=threadsDump";
     writeln("<br/>" + lnk(threadsDumpParam, img("icons/text-16.png", "Dump threads as text") + "&nbsp;Dump threads as text"));
     writeln("</div>");
   }
