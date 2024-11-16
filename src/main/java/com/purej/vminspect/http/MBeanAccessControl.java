@@ -13,6 +13,13 @@ import com.purej.vminspect.data.MBeanOperation;
 public interface MBeanAccessControl {
 
   /**
+   * Returns an optional default domain filter if no cookie value overwrites it.
+   */
+  default String getDefaultDomainFilter() {
+    return null;
+  }
+  
+  /**
    * Returns if changing the given attribute is allowed.
    */
   boolean isChangeAllowed(MBeanData mbean, MBeanAttribute attribute);

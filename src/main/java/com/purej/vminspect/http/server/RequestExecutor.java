@@ -15,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.purej.vminspect.http.HttpRequest;
 import com.purej.vminspect.http.HttpResponse;
-import com.purej.vminspect.http.MBeanAccessControl;
 import com.purej.vminspect.http.RequestController;
 import com.purej.vminspect.util.Utils;
 
@@ -31,18 +30,16 @@ import com.purej.vminspect.util.Utils;
  */
 final class RequestExecutor implements Runnable {
   private static final Logger LOGGER = LoggerFactory.getLogger(VmInspectionServer.class);
-  private final Socket _socket;
-  private final RequestController _controller;
-  private final MBeanAccessControl _mBeanAccessControl;
+  private final Socket socket;
+  private final RequestController controller;
 
   /**
    * Creates a new instance of this class that executes the sockets request.
    */
-  RequestExecutor(Socket socket, RequestController controller, MBeanAccessControl mBeanAccessControl) {
+  RequestExecutor(Socket socket, RequestController controller) {
     super();
-    _socket = socket;
-    _controller = controller;
-    _mBeanAccessControl = mBeanAccessControl;
+    this.socket = socket;
+    this.controller = controller;
   }
 
   /**
@@ -52,18 +49,18 @@ final class RequestExecutor implements Runnable {
   public void run() {
     try {
       try {
-        InputStream in = _socket.getInputStream();
-        OutputStream out = _socket.getOutputStream();
+        var in = socket.getInputStream();
+        var out = socket.getOutputStream();
         try {
           // Create the request, process it and write the response:
           HttpRequest request = parseRequest(in);
           if (request == null) {
-            LOGGER.debug("Non valid HTTP request from {}, will be ignored", _socket.getRemoteSocketAddress());
+            LOGGER.debug("Non valid HTTP request from {}, will be ignored", socket.getRemoteSocketAddress());
           }
           else {
-            LOGGER.debug("HTTP request from {} with parameters {}", _socket.getRemoteSocketAddress(), request.getParameters());
+            LOGGER.debug("HTTP request from {} with parameters {}", socket.getRemoteSocketAddress(), request.getParameters());
             try {
-              HttpResponse httpResponse = _controller.process(request, _mBeanAccessControl);
+              var httpResponse = controller.process(request);
               writeResponse(httpResponse, out);
             }
             catch (SocketException e) {
@@ -82,7 +79,7 @@ final class RequestExecutor implements Runnable {
         }
       }
       finally {
-        _socket.close();
+        socket.close();
       }
     }
     catch (Exception e) {
@@ -91,22 +88,22 @@ final class RequestExecutor implements Runnable {
   }
 
   private static HttpRequest parseRequest(InputStream input) throws Exception {
-    BufferedReader in = new BufferedReader(new InputStreamReader(input, "UTF-8"));
-    List<String> header = readHttpHeader(in);
+    var in = new BufferedReader(new InputStreamReader(input, "UTF-8"));
+    var header = readHttpHeader(in);
     if (header.size() > 0) {
-      String firstLine = header.get(0);
+      var firstLine = header.get(0);
       if (firstLine.startsWith("GET ")) {
         // HTTP GET request, parse it and search for optional cookies:
-        HttpRequest request = new HttpRequest();
+        var request = new HttpRequest();
         parseGet(firstLine, request);
-        String cookies = getLine(header, "Cookie: ");
+        var cookies = getLine(header, "Cookie: ");
         if (cookies != null) {
           parseCookies(cookies, request);
         }
         return request;
       }
       else if (firstLine.startsWith("POST ")) {
-        String length = getLine(header, "Content-Length: ");
+        var length = getLine(header, "Content-Length: ");
         if (length != null) {
           int contentLength = Integer.parseInt(length.substring("Content-Length: ".length()));
           char[] data = new char[contentLength];
@@ -124,9 +121,9 @@ final class RequestExecutor implements Runnable {
   }
 
   private static List<String> readHttpHeader(BufferedReader in) throws IOException {
-    List<String> result = new ArrayList<String>();
+    var result = new ArrayList<String>();
     while (true) {
-      String line = in.readLine();
+      var line = in.readLine();
       line = line != null ? line.trim() : line;
       if (line == null || line.length() == 0) {
         break; // End of header or no more data...
@@ -137,7 +134,7 @@ final class RequestExecutor implements Runnable {
   }
 
   private static String getLine(List<String> lines, String prefix) {
-    for (String line : lines) {
+    for (var line : lines) {
       if (line.startsWith(prefix)) {
         return line;
       }
@@ -149,29 +146,29 @@ final class RequestExecutor implements Runnable {
     // Format is: GET[space]Request-URI[space]HTTP-Version
     int idx = line.indexOf('?');
     if (idx > 0) {
-      String[] params = line.substring(idx + 1, line.lastIndexOf(' ')).split("&");
+      var params = line.substring(idx + 1, line.lastIndexOf(' ')).split("&");
       splitKeyValues(params, request.getParameters());
     }
   }
 
   private static void parsePost(String line, HttpRequest request) throws Exception {
     // Format is: list of parameters=values (all encoded)
-    String[] params = line.split("&");
+    var params = line.split("&");
     splitKeyValues(params, request.getParameters());
   }
 
   private static void parseCookies(String line, HttpRequest request) throws Exception {
     // Format is: Cookies:[space]name=value;[space]name=value;[space]...
-    String[] cookies = line.substring("Cookie: ".length()).split("; ");
+    var cookies = line.substring("Cookie: ".length()).split("; ");
     splitKeyValues(cookies, request.getCookies());
   }
 
   private static void splitKeyValues(String[] keyValues, Map<String, String> map) {
-    for (String keyValue : keyValues) {
+    for (var keyValue : keyValues) {
       int idx = keyValue.indexOf('=');
       if (idx > 0) {
-        String key = keyValue.substring(0, idx);
-        String value = keyValue.substring(idx + 1);
+        var key = keyValue.substring(0, idx);
+        var value = keyValue.substring(idx + 1);
         int length = value.length();
         value = length > 2 && value.charAt(0) == '"' && value.charAt(length - 1) == '"' ? value.substring(1, length - 1) : value;
         map.put(key, Utils.urlDecode(value));
@@ -181,18 +178,18 @@ final class RequestExecutor implements Runnable {
 
   private static void writeResponse(HttpResponse response, OutputStream out) throws IOException {
     // Sanity check first:
-    byte[] data = response.getContentBytes();
+    var data = response.getContentBytes();
     if (data == null || data.length == 0) {
       writeErrorResponse(null, "", out);
       return;
     }
 
     // Write in correct order: a) Status
-    StringBuilder builder = new StringBuilder(512);
+    var builder = new StringBuilder(512);
     appendResponseStatus("200 OK", builder);
 
     // b) Cookies:
-    for (Map.Entry<String, String> entry : response.getCookies().entrySet()) {
+    for (var entry : response.getCookies().entrySet()) {
       builder.append("\r\nSet-Cookie: ").append(entry.getKey()).append("=").append(Utils.urlEncode(entry.getValue()));
       builder.append("; Max-Age=").append(30 * 24 * 60 * 60); // 30 days
     }
@@ -216,9 +213,9 @@ final class RequestExecutor implements Runnable {
   }
 
   private static void writeErrorResponse(Exception e, String errorPart, OutputStream out) throws IOException {
-    StringBuilder builder = new StringBuilder(100);
+    var builder = new StringBuilder(100);
     appendResponseStatus(errorPart, builder);
-    String details = Utils.getHtmlExceptionInfo(e);
+    var details = Utils.getHtmlExceptionInfo(e);
     builder.append("\r\nCache-Control: no-cache");
     builder.append("\r\nContent-Type: text/html; charset=utf-8");
     builder.append("\r\n\r\n<html><head><title>Error ").append(errorPart).append("</title>");

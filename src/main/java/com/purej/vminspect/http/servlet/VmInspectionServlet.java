@@ -2,17 +2,13 @@
 package com.purej.vminspect.http.servlet;
 
 import java.io.IOException;
-import java.util.Enumeration;
-import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.purej.vminspect.data.statistics.StatisticsCollector;
-import com.purej.vminspect.http.DefaultMBeanAccessControl;
 import com.purej.vminspect.http.HttpRequest;
 import com.purej.vminspect.http.HttpResponse;
 import com.purej.vminspect.http.MBeanAccessControl;
 import com.purej.vminspect.http.RequestController;
-import com.purej.vminspect.http.RequestParams;
 import com.purej.vminspect.util.Utils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -21,8 +17,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 /**
- * This servlet allows PureJ VM Inspection to be used in servlet-containers / JEE containers. This servlet is implemented
- * against servlet-spec version 2.5 but should also run with newer versions.
+ * This servlet allows PureJ VM Inspection to be used in servlet-containers / JEE containers.
  * <p/>
  * The following servlet init parameters are supported (all optional):
  * <ul>
@@ -41,15 +36,14 @@ public class VmInspectionServlet extends HttpServlet {
   private static final long serialVersionUID = 1L;
 
   // Members that get set in the init method:
-  private StatisticsCollector _collector;
-  private RequestController _controller;
-  private MBeanAccessControlFactory _mbeanAccessControlFactory;
+  private StatisticsCollector collector;
+  private RequestController controller;
 
   /**
    * Returns if this servlet is already initalized.
    */
   public boolean isInitialized() {
-    return _collector != null;
+    return collector != null;
   }
 
   /**
@@ -59,12 +53,13 @@ public class VmInspectionServlet extends HttpServlet {
   public void init() throws ServletException {
     if (!isInitialized()) {
       // Load configuration from init parameters:
-      boolean mbeansReadonly = Boolean.parseBoolean(getServletConfig().getInitParameter("vminspect.mbeans.readonly"));
-      boolean mbeansWriteConfirmation = Boolean.parseBoolean(getServletConfig().getInitParameter("vminspect.mbeans.writeConfirmation"));
-      String accessControlFactoryClz = getServletConfig().getInitParameter("vminspect.mbeans.accessControlFactory");
-      String collectionFrequency = getServletConfig().getInitParameter("vminspect.statistics.collection.frequencyMs");
-      String storageDir = getServletConfig().getInitParameter("vminspect.statistics.storage.dir");
-      init(accessControlFactoryClz, mbeansReadonly, mbeansWriteConfirmation,
+      var defaultDomainFilter = getServletConfig().getInitParameter("vminspect.mbeans.defaultDomainFilter");;
+      var mbeansReadonly = Boolean.parseBoolean(getServletConfig().getInitParameter("vminspect.mbeans.readonly"));
+      var mbeansWriteConfirmation = Boolean.parseBoolean(getServletConfig().getInitParameter("vminspect.mbeans.writeConfirmation"));
+      var accessControlFactoryClz = getServletConfig().getInitParameter("vminspect.mbeans.accessControlFactory");
+      var collectionFrequency = getServletConfig().getInitParameter("vminspect.statistics.collection.frequencyMs");
+      var storageDir = getServletConfig().getInitParameter("vminspect.statistics.storage.dir");
+      init(accessControlFactoryClz, defaultDomainFilter, mbeansReadonly, mbeansWriteConfirmation,
           collectionFrequency != null ? Integer.parseInt(collectionFrequency) : 60000, storageDir);
     }
   }
@@ -74,12 +69,13 @@ public class VmInspectionServlet extends HttpServlet {
    * Note: Initialize can only be called once for this instance!
    *
    * @param mbeanAccessControlFactoryClz the optional {@link MBeanAccessControl} class, if null a default instance will be used
+   * @param defaultDomainFilter the default MBean domain filter if no cookie value is found
    * @param mbeansReadonly if MBeans should be readonly
    * @param mbeansWriteConfirmation if MBean operation calls need a confirmation
    * @param statisticsCollectionFrequencyMs the statistics collection frequency in milliseconds (60'000 recommended)
    * @param statisticsStorageDir the optional statistics storage directory
    */
-  public void init(String mbeanAccessControlFactoryClz, boolean mbeansReadonly, boolean mbeansWriteConfirmation, int statisticsCollectionFrequencyMs,
+  public void init(String mbeanAccessControlFactoryClz, String defaultDomainFilter, boolean mbeansReadonly, boolean mbeansWriteConfirmation, int statisticsCollectionFrequencyMs,
       String statisticsStorageDir) {
     // Create the correct MBeanAccessControlFactory instance (custom or default):
     MBeanAccessControlFactory accessControlFactory;
@@ -90,14 +86,7 @@ public class VmInspectionServlet extends HttpServlet {
         throw new RuntimeException("Could not load configured MBeanAccessControlFactory class '" + mbeanAccessControlFactoryClz + "'!");
       }
     } else {
-      // Create a default static MBeanAccessControlFactory instance using the boolean attributes:
-      MBeanAccessControl accessControl = new DefaultMBeanAccessControl(mbeansReadonly, mbeansWriteConfirmation);
-      accessControlFactory = new MBeanAccessControlFactory() {
-        @Override
-        public MBeanAccessControl create(HttpServletRequest request) {
-          return accessControl;
-        }
-      };
+      accessControlFactory = new DefaultMBeanAccessControlFactory(defaultDomainFilter, mbeansReadonly, mbeansWriteConfirmation);
     }
     init(accessControlFactory, statisticsCollectionFrequencyMs, statisticsStorageDir);
   }
@@ -118,16 +107,15 @@ public class VmInspectionServlet extends HttpServlet {
       throw new IllegalArgumentException("MBeanAccessControlFactory is null!");
     }
     // Get or create collector, create controller:
-    _collector = StatisticsCollector.init(statisticsStorageDir, statisticsCollectionFrequencyMs, this);
-    _controller = new RequestController(_collector);
-    _mbeanAccessControlFactory = mbeanAccessControlFactory;
+    collector = StatisticsCollector.init(statisticsStorageDir, statisticsCollectionFrequencyMs, this);
+    controller = new RequestController(mbeanAccessControlFactory, collector);
   }
 
   @Override
   public void destroy() {
     StatisticsCollector.destroy(this); // Makes sure the collector is destroyed if this was the last reference...
-    _collector = null;
-    _controller = null;
+    collector = null;
+    controller = null;
   }
 
   @Override
@@ -140,14 +128,9 @@ public class VmInspectionServlet extends HttpServlet {
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     try {
       // Create the request, process it and render the response:
-      HttpRequest httpRequest = createHttpRequest(request);
-      MBeanAccessControl mbeanAccessControl = null;
-      if (httpRequest.getParameter(RequestParams.MBEAN_NAME) != null) {
-        // Only create an instance of the MBeanAccessControl if a single MBean is targeted:
-        mbeanAccessControl = _mbeanAccessControlFactory.create(request);
-      }
-      HttpResponse httpResponse = _controller.process(httpRequest, mbeanAccessControl);
-      
+      var httpRequest = new HttpRequest(request);
+      var httpResponse = controller.process(httpRequest);
+
       // Now write the rendered output:
       try {
         writeHttpResponse(httpResponse, request.getRequestURI(), response);
@@ -161,35 +144,17 @@ public class VmInspectionServlet extends HttpServlet {
     }
   }
 
-  private static HttpRequest createHttpRequest(HttpServletRequest req) {
-    HttpRequest request = new HttpRequest();
-
-    // Add all parameters:
-    for (Enumeration<?> e = req.getParameterNames(); e.hasMoreElements();) {
-      String name = (String) e.nextElement();
-      request.getParameters().put(name, req.getParameter(name));
-    }
-
-    // Add all cookies:
-    if (req.getCookies() != null) {
-      for (Cookie cookie : req.getCookies()) {
-        request.getCookies().put(cookie.getName(), Utils.urlDecode(cookie.getValue()));
-      }
-    }
-    return request;
-  }
-
   private static void writeHttpResponse(HttpResponse httpResponse, String requestURI, HttpServletResponse response) throws IOException {
     // Sanity check first:
-    byte[] data = httpResponse.getContentBytes();
+    var data = httpResponse.getContentBytes();
     if (data == null || data.length == 0) {
       response.sendError(HttpServletResponse.SC_NOT_FOUND);
       return;
     }
 
     // a) Cookies:
-    for (Map.Entry<String, String> entry : httpResponse.getCookies().entrySet()) {
-      Cookie cookie = new Cookie(entry.getKey(), Utils.urlEncode(entry.getValue()));
+    for (var entry : httpResponse.getCookies().entrySet()) {
+      var cookie = new Cookie(entry.getKey(), Utils.urlEncode(entry.getValue()));
       cookie.setMaxAge(30 * 24 * 60 * 60); // 30 days
       cookie.setPath(requestURI);
       response.addCookie(cookie);
@@ -209,5 +174,4 @@ public class VmInspectionServlet extends HttpServlet {
     // d) binary content:
     response.getOutputStream().write(data);
   }
-
 }

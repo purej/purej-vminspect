@@ -14,35 +14,42 @@ import com.purej.vminspect.data.MBeanOperation.Impact;
  * @author Stefan Mueller
  */
 public class DefaultMBeanAccessControl implements MBeanAccessControl {
-  private final boolean _readOnly;
-  private final boolean _needsWriteConfirmation;
+  private final String defaultDomainFilter;
+  private final boolean readOnly;
+  private final boolean needsWriteConfirmation;
 
   /**
    * Creates a new instance of this class.
    */
-  public DefaultMBeanAccessControl(boolean readOnly, boolean needsWriteConfirmation) {
-    _readOnly = readOnly;
-    _needsWriteConfirmation = needsWriteConfirmation;
+  public DefaultMBeanAccessControl(String defaultDomainFilter, boolean readOnly, boolean needsWriteConfirmation) {
+    this.defaultDomainFilter = defaultDomainFilter;
+    this.readOnly = readOnly;
+    this.needsWriteConfirmation = needsWriteConfirmation;
+  }
+
+  @Override
+  public String getDefaultDomainFilter() {
+    return defaultDomainFilter;
   }
 
   @Override
   public boolean isChangeAllowed(MBeanData mbean, MBeanAttribute attribute) {
-    return !_readOnly;
+    return !readOnly;
   }
 
   @Override
   public boolean isCallAllowed(MBeanData mbean, MBeanOperation operation) {
-    return !_readOnly || operation.getImpact() == Impact.Info;
+    return !readOnly || operation.getImpact() == Impact.Info;
   }
 
   @Override
   public boolean needsChangeConfirmation(MBeanData mbean, MBeanAttribute attribute) {
-    return _needsWriteConfirmation;
+    return needsWriteConfirmation;
   }
 
   @Override
   public boolean needsCallConfirmation(MBeanData mbean, MBeanOperation operation) {
-    return _needsWriteConfirmation;
+    return needsWriteConfirmation;
   }
 
   @Override

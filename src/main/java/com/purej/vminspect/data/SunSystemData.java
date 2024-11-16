@@ -19,8 +19,8 @@ public class SunSystemData extends SystemData {
     if (_osb instanceof com.sun.management.OperatingSystemMXBean) {
       com.sun.management.OperatingSystemMXBean osb = (com.sun.management.OperatingSystemMXBean) _osb;
 
-      long memPhysTotal = osb.getTotalPhysicalMemorySize();
-      long memPhysFree = osb.getFreePhysicalMemorySize();
+      long memPhysTotal = osb.getTotalMemorySize();
+      long memPhysFree = osb.getFreeMemorySize();
       _memoryPhysical = new MemoryData(memPhysTotal != -1 ? memPhysTotal - memPhysFree : -1, -1, memPhysTotal);
       long memSwapTotal = osb.getTotalSwapSpaceSize();
       long memSwapFree = osb.getFreeSwapSpaceSize();
@@ -35,7 +35,7 @@ public class SunSystemData extends SystemData {
       _processCpuLoadPct = cpuLoad < 0 ? cpuLoad : cpuLoad * 100;
 
       // System Cpu load - value is a double between 0..1:
-      double systemLoad = osb.getSystemCpuLoad();
+      double systemLoad = osb.getCpuLoad();
       _systemCpuLoadPct = systemLoad < 0 ? systemLoad : systemLoad * 100;
     }
 

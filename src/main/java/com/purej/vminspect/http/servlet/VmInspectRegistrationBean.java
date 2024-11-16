@@ -31,14 +31,14 @@ public class VmInspectRegistrationBean extends ServletRegistrationBean<VmInspect
   public void init() {
     if (!getServlet().isInitialized()) {
       // Load configuration from init parameters:
-      String path = env.getProperty("vminspect.path", "/inspect/*");
-      boolean mbeansReadonly = env.getProperty("vminspect.mbeans.readonly", Boolean.class, false);
-      boolean mbeansWriteConfirmation = env.getProperty("vminspect.mbeans.write-confirmation", Boolean.class, false);
-      String accessControlFactoryClz = env.getProperty("vminspect.mbeans.access-control-factory");
-      int collectionFrequency = env.getProperty("vminspect.statistics.collection.frequency-ms", Integer.class, 60000);
-      String storageDir = env.getProperty("vminspect.statistics.storage.dir");
-      addUrlMappings(path);
-      getServlet().init(accessControlFactoryClz, mbeansReadonly, mbeansWriteConfirmation, collectionFrequency, storageDir);
+      addUrlMappings(env.getProperty("vminspect.path", "/inspect/*"));
+      var defaultDomainFilter = env.getProperty("vminspect.mbeans.default-domain-filter");
+      var mbeansReadonly = env.getProperty("vminspect.mbeans.readonly", Boolean.class, false);
+      var mbeansWriteConfirmation = env.getProperty("vminspect.mbeans.write-confirmation", Boolean.class, false);
+      var accessControlFactoryClz = env.getProperty("vminspect.mbeans.access-control-factory");
+      var collectionFrequency = env.getProperty("vminspect.statistics.collection.frequency-ms", Integer.class, 60000);
+      var storageDir = env.getProperty("vminspect.statistics.storage.dir");
+      getServlet().init(accessControlFactoryClz, defaultDomainFilter, mbeansReadonly, mbeansWriteConfirmation, collectionFrequency, storageDir);
     }
   }
 
@@ -51,8 +51,7 @@ public class VmInspectRegistrationBean extends ServletRegistrationBean<VmInspect
    * @param statisticsCollectionFrequencyMs the statistics collection frequency in milliseconds (60'000 recommended)
    * @param statisticsStorageDir the optional statistics storage directory
    */
-  public void init(String path, MBeanAccessControlFactory mbeanAccessControlFactory, int statisticsCollectionFrequencyMs,
-      String statisticsStorageDir) {
+  public void init(String path, MBeanAccessControlFactory mbeanAccessControlFactory, int statisticsCollectionFrequencyMs, String statisticsStorageDir) {
     addUrlMappings(path);
     getServlet().init(mbeanAccessControlFactory, statisticsCollectionFrequencyMs, statisticsStorageDir);
   }

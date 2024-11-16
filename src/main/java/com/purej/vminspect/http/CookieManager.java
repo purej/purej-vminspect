@@ -17,7 +17,6 @@ public final class CookieManager {
   private static final String TYPE_FILTER_COOKIE_NAME = "purej.vminspect.typeFilter";
 
   private static final Range DEFAULT_RANGE = Range.createPeriodRange(Period.DAY);
-  private static final String DEFAULT_FILTER = "";
 
   private CookieManager() {
   }
@@ -27,19 +26,19 @@ public final class CookieManager {
    */
   public static Range getRange(HttpRequest request, HttpResponse response) {
     try {
-      String period = request.getParameter(RequestParams.STATS_PERIOD);
+      var period = request.getParameter(RequestParams.STATS_PERIOD);
       if (period == null) {
-        String range = getCookie(request, PERIOD_COOKIE_NAME, null);
+        var range = getCookie(request, PERIOD_COOKIE_NAME);
         return range == null ? DEFAULT_RANGE : Range.parse(range);
       }
       else {
         Period p = Period.valueOfIgnoreCase(period);
         Range range;
         if (p == Period.CUSTOM) {
-          String from = request.getParameter(RequestParams.STATS_FROM_DATE);
-          String to = request.getParameter(RequestParams.STATS_TO_DATE);
-          Date fromDate = from != null && from.length() > 0 ? Utils.parseDate(from) : new Date();
-          Date toDate = to != null && to.length() > 0 ? Utils.parseDate(to) : new Date();
+          var from = request.getParameter(RequestParams.STATS_FROM_DATE);
+          var to = request.getParameter(RequestParams.STATS_TO_DATE);
+          var fromDate = from != null && from.length() > 0 ? Utils.parseDate(from) : new Date();
+          var toDate = to != null && to.length() > 0 ? Utils.parseDate(to) : new Date();
           range = Range.createCustomRange(fromDate, toDate);
         }
         else {
@@ -58,9 +57,9 @@ public final class CookieManager {
    * Returns the MBean domain filter from the request parameters or from the cookie. Stores a cookie if the request parameter could be parsed.
    */
   public static String getDomainFilter(HttpRequest request, HttpResponse response) {
-    String param = request.getParameter(RequestParams.MBEAN_DOMAIN_FILTER);
+    var param = request.getParameter(RequestParams.MBEAN_DOMAIN_FILTER);
     if (param == null) {
-      return getCookie(request, DOMAIN_FILTER_COOKIE_NAME, DEFAULT_FILTER);
+      return getCookie(request, DOMAIN_FILTER_COOKIE_NAME);
     }
     else {
       response.getCookies().put(DOMAIN_FILTER_COOKIE_NAME, param);
@@ -72,9 +71,9 @@ public final class CookieManager {
    * Returns the MBean type filter from the request parameters or from the cookie. Stores a cookie if the request parameter could be parsed.
    */
   public static String getTypeFilter(HttpRequest request, HttpResponse response) {
-    String param = request.getParameter(RequestParams.MBEAN_TYPE_FILTER);
+    var param = request.getParameter(RequestParams.MBEAN_TYPE_FILTER);
     if (param == null) {
-      return getCookie(request, TYPE_FILTER_COOKIE_NAME, DEFAULT_FILTER);
+      return getCookie(request, TYPE_FILTER_COOKIE_NAME);
     }
     else {
       response.getCookies().put(TYPE_FILTER_COOKIE_NAME, param);
@@ -82,8 +81,7 @@ public final class CookieManager {
     }
   }
 
-  private static String getCookie(HttpRequest request, String cookieName, String defaultValue) {
-    String value = request.getCookie(cookieName);
-    return value != null ? value : defaultValue;
+  private static String getCookie(HttpRequest request, String cookieName) {
+    return request.getCookie(cookieName);
   }
 }

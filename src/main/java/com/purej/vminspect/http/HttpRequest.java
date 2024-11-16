@@ -1,45 +1,76 @@
 // Copyright (c), 2013, adopus consulting GmbH Switzerland, all rights reserved.
 package com.purej.vminspect.http;
 
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import com.purej.vminspect.util.Utils;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * Encapsulates a HTTP request. This only stores the parts of a GET request that are
  * used by VM inspection. This class allows decoupling execution logic from the concrete
- * request-implementation (eg. for example servlet-spec version, custom HTTP server etc.)
+ * request-implementation (e.g. for example servlet-spec version, custom HTTP server etc.)
  *
  * @author Stefan Mueller
  */
 public class HttpRequest {
-  private final Map<String, String> _parameters = new HashMap<String, String>();
-  private final Map<String, String> _cookies = new HashMap<String, String>();
+  private final HttpServletRequest request;
+  private final Map<String, String> parameters = new HashMap<String, String>();
+  private final Map<String, String> cookies = new HashMap<String, String>();
+
+  public HttpRequest() {
+    this.request = null;
+  }
+
+  public HttpRequest(HttpServletRequest request) {
+    this.request = request; 
+    // Add all parameters:
+    for (Enumeration<?> e = request.getParameterNames(); e.hasMoreElements();) {
+      String name = (String) e.nextElement();
+      parameters.put(name, request.getParameter(name));
+    }
+    // Add all cookies:
+    if (request.getCookies() != null) {
+      for (Cookie cookie : request.getCookies()) {
+        cookies.put(cookie.getName(), Utils.urlDecode(cookie.getValue()));
+      }
+    }
+  }
+
+  /**
+   * Returns the original request. Attention: Might be null for none-http-servlet based implementations!
+   */
+  public HttpServletRequest getHttpServletRequest() {
+    return request;
+  }
 
   /**
    * Returns the named parameter value.
    */
   public String getParameter(String name) {
-    return _parameters.get(name);
+    return parameters.get(name);
   }
 
   /**
    * Returns the map of parameter keys and values.
    */
   public Map<String, String> getParameters() {
-    return _parameters;
+    return parameters;
   }
 
   /**
    * Returns the named cookie value.
    */
   public String getCookie(String name) {
-    return _cookies.get(name);
+    return cookies.get(name);
   }
 
   /**
    * Returns the map of cookies names and values.
    */
   public Map<String, String> getCookies() {
-    return _cookies;
+    return cookies;
   }
 }

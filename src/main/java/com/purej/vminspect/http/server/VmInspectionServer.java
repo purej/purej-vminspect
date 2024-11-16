@@ -10,9 +10,9 @@ import java.util.concurrent.ThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.purej.vminspect.data.statistics.StatisticsCollector;
-import com.purej.vminspect.http.MBeanAccessControl;
 import com.purej.vminspect.http.RequestController;
-import com.purej.vminspect.http.DefaultMBeanAccessControl;
+import com.purej.vminspect.http.servlet.DefaultMBeanAccessControlFactory;
+import com.purej.vminspect.http.servlet.MBeanAccessControlFactory;
 
 /**
  * This standalone server allows PureJ VM Inspection to be used without a servlet-container or other type of
@@ -32,11 +32,11 @@ import com.purej.vminspect.http.DefaultMBeanAccessControl;
  */
 public final class VmInspectionServer {
   private static final Logger LOGGER = LoggerFactory.getLogger(VmInspectionServer.class);
-  private final ExecutorService _executor;
-  private final ServerSocket _serverSocket;
-  private final Thread _listener;
-  private final StatisticsCollector _collector;
-  private final RequestController _controller;
+  private final ExecutorService executor;
+  private final ServerSocket serverSocket;
+  private final Thread listener;
+  private final StatisticsCollector collector;
+  private final RequestController controller;
 
   /**
    * Creates a new instance of this very basic HTTP server.
@@ -44,12 +44,13 @@ public final class VmInspectionServer {
    * @throws IOException if the server socket could not be bound to the given port
    */
   public VmInspectionServer(int port) throws IOException {
-    this(false, false, 60000, null, port);
+    this(null, false, false, 60000, null, port);
   }
 
   /**
    * Creates a new instance of this very basic HTTP server. See the class javadoc for further argument details.
    *
+   * @param defaultDomainFilter the default mbeans domain filter of no cookie value is given
    * @param mbeansReadonly if MBeans should be accessed read-only
    * @param mbeansWriteConfirmation if MBeans write operations require a confirmation screen
    * @param statisticsCollectionFrequencyMs the statistics collection frequency in milliseconds (60'000 recommended)
@@ -57,24 +58,24 @@ public final class VmInspectionServer {
    * @param port the port where the server-socket listens for incoming HTTP requests
    * @throws IOException if the server socket could not be bound to the given port
    */
-  public VmInspectionServer(boolean mbeansReadonly, boolean mbeansWriteConfirmation, int statisticsCollectionFrequencyMs,
+  public VmInspectionServer(String defaultDomainFilter, boolean mbeansReadonly, boolean mbeansWriteConfirmation, int statisticsCollectionFrequencyMs,
       String statisticsStorageDir, int port) throws IOException {
-    this(new DefaultMBeanAccessControl(mbeansReadonly, mbeansWriteConfirmation), statisticsCollectionFrequencyMs, statisticsStorageDir, port);
+    this(new DefaultMBeanAccessControlFactory(defaultDomainFilter, mbeansReadonly, mbeansWriteConfirmation), statisticsCollectionFrequencyMs, statisticsStorageDir, port);
   }
 
   /**
    * Creates a new instance of this very basic HTTP server. See the class javadoc for further argument details.
    *
-   * @param mBeanAccessControl defines fine-grained access control to MBeans
+   * @param mBeanAccessControlFactory defines fine-grained access control to MBeans
    * @param statisticsCollectionFrequencyMs the statistics collection frequency in milliseconds (60'000 recommended)
    * @param statisticsStorageDir the optional statistics storage directory
    * @param port the port where the server-socket listens for incoming HTTP requests
    * @throws IOException if the server socket could not be bound to the given port
    */
-  public VmInspectionServer(MBeanAccessControl mBeanAccessControl, int statisticsCollectionFrequencyMs, String statisticsStorageDir, int port)
+  public VmInspectionServer(MBeanAccessControlFactory mBeanAccessControlFactory, int statisticsCollectionFrequencyMs, String statisticsStorageDir, int port)
       throws IOException {
     // Create the executor to handle request:
-    _executor = Executors.newFixedThreadPool(3, new ThreadFactory() {
+    executor = Executors.newFixedThreadPool(3, new ThreadFactory() {
       @Override
       public Thread newThread(Runnable target) {
         return new Thread(target, "VmInspect-Request-Executor");
@@ -82,19 +83,19 @@ public final class VmInspectionServer {
     });
 
     // Open the server-socket:
-    _serverSocket = new ServerSocket(port, 10);
+    serverSocket = new ServerSocket(port, 10);
 
     // Create the listener thread:
-    _listener = new Thread("VmInspect-Http-Listener") {
+    listener = new Thread("VmInspect-Http-Listener") {
       @Override
       public void run() {
-        while (!_serverSocket.isClosed()) {
+        while (!serverSocket.isClosed()) {
           try {
-            Socket socket = _serverSocket.accept();
-            _executor.execute(new RequestExecutor(socket, _controller, mBeanAccessControl));
+            Socket socket = serverSocket.accept();
+            executor.execute(new RequestExecutor(socket, controller));
           }
           catch (Exception e) {
-            if (_serverSocket.isClosed()) {
+            if (serverSocket.isClosed()) {
               break;
             }
             LOGGER.error("An error occurred accepting incomming HTTP connection!", e);
@@ -102,12 +103,12 @@ public final class VmInspectionServer {
         }
       }
     };
-    _listener.setDaemon(true);
+    listener.setDaemon(true);
 
     // Get or create collector, create controller and startup:
-    _collector = StatisticsCollector.init(statisticsStorageDir, statisticsCollectionFrequencyMs, this);
-    _controller = new RequestController(_collector);
-    _listener.start();
+    collector = StatisticsCollector.init(statisticsStorageDir, statisticsCollectionFrequencyMs, this);
+    controller = new RequestController(mBeanAccessControlFactory, collector);
+    listener.start();
   }
 
   /**
@@ -118,11 +119,11 @@ public final class VmInspectionServer {
   public void shutdown() {
     StatisticsCollector.destroy(this);
     try {
-      _serverSocket.close();
+      serverSocket.close();
     }
     catch (Exception e) {
       // Ignored...
     }
-    _executor.shutdown();
+    executor.shutdown();
   }
 }
