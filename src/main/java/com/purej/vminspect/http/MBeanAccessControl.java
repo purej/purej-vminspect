@@ -18,7 +18,7 @@ public interface MBeanAccessControl {
   default String getDefaultDomainFilter() {
     return null;
   }
-  
+
   /**
    * Returns if changing the given attribute is allowed.
    */

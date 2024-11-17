@@ -1,11 +1,9 @@
 // Copyright (c), 2013, adopus consulting GmbH Switzerland, all rights reserved.
 package com.purej.vminspect.http;
 
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import com.purej.vminspect.util.Utils;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
@@ -17,23 +15,23 @@ import jakarta.servlet.http.HttpServletRequest;
  */
 public class HttpRequest {
   private final HttpServletRequest request;
-  private final Map<String, String> parameters = new HashMap<String, String>();
-  private final Map<String, String> cookies = new HashMap<String, String>();
+  private final Map<String, String> parameters = new HashMap<>();
+  private final Map<String, String> cookies = new HashMap<>();
 
   public HttpRequest() {
     this.request = null;
   }
 
   public HttpRequest(HttpServletRequest request) {
-    this.request = request; 
+    this.request = request;
     // Add all parameters:
-    for (Enumeration<?> e = request.getParameterNames(); e.hasMoreElements();) {
-      String name = (String) e.nextElement();
+    for (var e = request.getParameterNames(); e.hasMoreElements();) {
+      var name = e.nextElement();
       parameters.put(name, request.getParameter(name));
     }
     // Add all cookies:
     if (request.getCookies() != null) {
-      for (Cookie cookie : request.getCookies()) {
+      for (var cookie : request.getCookies()) {
         cookies.put(cookie.getName(), Utils.urlDecode(cookie.getValue()));
       }
     }

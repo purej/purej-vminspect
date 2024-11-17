@@ -72,8 +72,8 @@ public final class ThreadData {
     }
     var result = new HashSet<Long>();
     if (deadlockedThreads != null) {
-      for (int i = 0; i < deadlockedThreads.length; i++) {
-        result.add(Long.valueOf(deadlockedThreads[i]));
+      for (var t : deadlockedThreads) {
+        result.add(Long.valueOf(t));
       }
     }
     return result;

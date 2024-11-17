@@ -342,7 +342,7 @@ public class SystemData {
   public long getProcessCpuTimeMillis() {
     return processCpuTimeMillis;
   }
-  
+
   /**
    * Returns the name of the garbage collector.
    */

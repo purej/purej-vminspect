@@ -29,10 +29,10 @@ public final class StatisticsCollector {
 
   // This static variables ensure only one collector instance per VM:
   private static StatisticsCollector instance;
-  private static Set<Object> instanceRefs = new HashSet<Object>();
+  private static Set<Object> instanceRefs = new HashSet<>();
 
   // Instance members:
-  private final List<Statistics> statistics = new ArrayList<Statistics>();
+  private final List<Statistics> statistics = new ArrayList<>();
   private final int collectionFrequencyMillis;
   private final Timer timer;
 

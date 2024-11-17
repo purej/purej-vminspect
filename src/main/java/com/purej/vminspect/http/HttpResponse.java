@@ -18,7 +18,7 @@ import java.util.Map;
  * @author Stefan Mueller
  */
 public abstract class HttpResponse {
-  private final Map<String, String> cookies = new HashMap<String, String>(7);
+  private final Map<String, String> cookies = new HashMap<>(7);
   private final String contentType;
   private final int cacheSeconds;
 

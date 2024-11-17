@@ -109,9 +109,8 @@ public final class MBeanUtils {
 
       // Create the list of operations:
       var operationInfos = mbeanInfo.getOperations();
-      List<MBeanOperation> ops = new ArrayList<MBeanOperation>(operationInfos.length);
-      for (var i = 0; i < operationInfos.length; i++) {
-        var info = operationInfos[i];
+      List<MBeanOperation> ops = new ArrayList<>(operationInfos.length);
+      for (var info : operationInfos) {
         if (!isGetter(getters, info) && !isSetter(setters, info)) {
           ops.add(createOperation(info));
         }
@@ -274,7 +273,7 @@ public final class MBeanUtils {
       return map;
     } else if (value.getClass().isArray()) {
       var length = Array.getLength(value);
-      var list = new ArrayList<Object>(length);
+      var list = new ArrayList<>(length);
       for (var i = 0; i < length; i++) {
         list.add(convertValueIfNeeded(Array.get(value, i)));
       }
@@ -283,13 +282,13 @@ public final class MBeanUtils {
       var tabularData = (TabularData) value;
       return convertValueIfNeeded(tabularData.values());
     } else if (value instanceof Collection) {
-      var list = new ArrayList<Object>();
+      var list = new ArrayList<>();
       for (var data : (Collection<?>) value) {
         list.add(convertValueIfNeeded(data));
       }
       return list;
     } else if (value instanceof Map) {
-      var map = new HashMap<Object, Object>();
+      var map = new HashMap<>();
       for (var entry : ((Map<?, ?>) value).entrySet()) {
         map.put(convertValueIfNeeded(entry.getKey()), convertValueIfNeeded(entry.getValue()));
       }

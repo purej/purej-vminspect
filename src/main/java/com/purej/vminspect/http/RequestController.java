@@ -32,7 +32,7 @@ import com.purej.vminspect.util.Utils;
  * @author Stefan Mueller
  */
 public class RequestController {
-  private static final Set<String> NO_REFRESH_PARAMS = new HashSet<String>();
+  private static final Set<String> NO_REFRESH_PARAMS = new HashSet<>();
   static {
     NO_REFRESH_PARAMS.add(RequestParams.MBEAN_DOMAIN_FILTER);
     NO_REFRESH_PARAMS.add(RequestParams.MBEAN_TYPE_FILTER);

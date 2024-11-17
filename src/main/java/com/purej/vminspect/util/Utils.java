@@ -132,10 +132,7 @@ public final class Utils {
    * @param pattern the pattern to match with or without wildcards, for example 'x*y*z'
    */
   public static boolean wildCardMatch(String text, String pattern) {
-    if (pattern == null || pattern.length() == 0) {
-      return true;
-    }
-    if (pattern.length() == 1 && pattern.charAt(0) == '*') {
+    if (pattern == null || pattern.length() == 0 || (pattern.length() == 1 && pattern.charAt(0) == '*')) {
       return true;
     }
     if (text == null || text.length() == 0) {

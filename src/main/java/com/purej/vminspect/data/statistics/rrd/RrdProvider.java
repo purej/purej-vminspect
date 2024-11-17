@@ -13,7 +13,7 @@ import org.rrd4j.core.RrdRandomAccessFileBackendFactory;
  * <p/>
  * Note: Until Mai 2019, VmInspect used JRobin as RRD implementation
  * but due to high memory usage and JRobin not maintained anymore,
- * we switched to RRD4J, see https://github.com/rrd4j/rrd4j. 
+ * we switched to RRD4J, see https://github.com/rrd4j/rrd4j.
  *
  * @author Stefan Mueller
  */

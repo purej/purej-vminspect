@@ -53,7 +53,7 @@ public class VmInspectionServlet extends HttpServlet {
   public void init() throws ServletException {
     if (!isInitialized()) {
       // Load configuration from init parameters:
-      var defaultDomainFilter = getServletConfig().getInitParameter("vminspect.mbeans.defaultDomainFilter");;
+      var defaultDomainFilter = getServletConfig().getInitParameter("vminspect.mbeans.defaultDomainFilter");
       var mbeansReadonly = Boolean.parseBoolean(getServletConfig().getInitParameter("vminspect.mbeans.readonly"));
       var mbeansWriteConfirmation = Boolean.parseBoolean(getServletConfig().getInitParameter("vminspect.mbeans.writeConfirmation"));
       var accessControlFactoryClz = getServletConfig().getInitParameter("vminspect.mbeans.accessControlFactory");

@@ -107,9 +107,9 @@ public abstract class AbstractHtmlView {
       write(summary);
       write("'>\n");
       write("<tr class='header'>");
-      for (var i = 0; i < columnNames.length; i++) {
+      for (var n : columnNames) {
         write("<td>");
-        write(columnNames[i]);
+        write(n);
         write("</td>");
       }
     }
