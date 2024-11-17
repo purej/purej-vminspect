@@ -1,6 +1,6 @@
 Version "current"
 
-Version 2.1.0 - (17.11.2023)
+Version 2.1.0 - (17.11.2024)
 - Upgraded to spring 3.3 and latest other dependencies
 - MBeanAccessControl allows setting a default domain filter
 - Adopted style-guide: changed to var, do not use _ for members anymore
