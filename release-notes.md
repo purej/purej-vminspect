@@ -1,5 +1,8 @@
 Version "current"
 
+Version 2.1.1 - (17.11.2024)
+- Fixed wrong filtering of mbeans
+
 Version 2.1.0 - (17.11.2024)
 - Upgraded to spring 3.3 and latest other dependencies
 - MBeanAccessControl allows setting a default domain filter

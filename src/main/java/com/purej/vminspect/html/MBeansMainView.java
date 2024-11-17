@@ -44,7 +44,7 @@ public class MBeansMainView extends AbstractMBeansView {
     var table = new CandyHtmlTable("MBeans", "Domain", "Type", "Properties");
     int matched = 0;
     for (var mbean : mbeans) {
-      if (Utils.wildCardMatch(mbean.getDomain(), domainFilter) || Utils.wildCardMatch(mbean.getType(), typeFilter)) {
+      if (Utils.wildCardMatch(mbean.getDomain(), domainFilter) && Utils.wildCardMatch(mbean.getType(), typeFilter)) {
         matched++;
         // Note: We want to full row to be clickable, not so easy with HTML without javascript!
         var mbSrvIdx = "mbSrvIdx=" + mbean.getServerIdx();
