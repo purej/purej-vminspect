@@ -1,7 +1,6 @@
 // Copyright (c), 2013, adopus consulting GmbH Switzerland, all rights reserved.
 package com.purej.vminspect.html;
 
-import java.io.IOException;
 import com.purej.vminspect.data.statistics.Period;
 import com.purej.vminspect.data.statistics.Range;
 
@@ -52,7 +51,7 @@ abstract class AbstractStatisticsView extends AbstractHtmlView {
     }
   }
 
-  protected void writeChoosePeriodLinks(String statsDetailName, int width, int height) throws IOException {
+  protected void writeChoosePeriodLinks(String statsDetailName, int width, int height) {
     writeln("<div>");
     var separator = "&nbsp;&nbsp;&nbsp;&nbsp;";
     var addParams = statsDetailName != null ? params("statsDetail=" + statsDetailName, "statsWidth=" + width, "statsHeight=" + height) : null;
@@ -62,12 +61,12 @@ abstract class AbstractStatisticsView extends AbstractHtmlView {
       if (myPeriod == Period.CUSTOM) {
         write("\n<a showHide='customPeriod' ");
         write("title='Choice of period Customized for charts and requests statistics'>");
-        writeln(img(myPeriod.getIconName(), "Customized") + "&nbsp;Customized</a>");
+        writeImg(myPeriod.getIconName(), "Customized").writeln("&nbsp;Customized</a>");
       }
       else {
         var periodParam = "statsPeriod=" + myPeriod.getCode();
         var params = statsDetailName != null ? statisticsPageParams(addParams, periodParam) : statisticsPageParams(periodParam);
-        write(lnk(params, img(myPeriod.getIconName(), "Choice of period " + myPeriod.getLabel()) + "&nbsp;" + myPeriod.getLinkLabel()));
+        writeImgLnk(params, myPeriod.getIconName(), myPeriod.getLabel(), "&nbsp;" + myPeriod.getLinkLabel());
         write("&nbsp;&nbsp;&nbsp;");
       }
     }
@@ -75,7 +74,7 @@ abstract class AbstractStatisticsView extends AbstractHtmlView {
     writeCustomPeriodDiv(statsDetailName, width, height);
   }
 
-  private void writeCustomPeriodDiv(String graphDetailName, int statsWidth, int statsHeight) throws IOException {
+  private void writeCustomPeriodDiv(String graphDetailName, int statsWidth, int statsHeight) {
     writeln("<div id='customPeriod' class='hidden'>");
     writeln("<br/><br/>");
     writeln("<form name='customPeriodForm' method='get' action=''>");

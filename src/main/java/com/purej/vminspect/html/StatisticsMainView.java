@@ -1,7 +1,6 @@
 // Copyright (c), 2013, adopus consulting GmbH Switzerland, all rights reserved.
 package com.purej.vminspect.html;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import com.purej.vminspect.data.statistics.Range;
@@ -25,8 +24,8 @@ public final class StatisticsMainView extends AbstractStatisticsView {
   }
 
   @Override
-  public void render() throws IOException {
-    writeln("<h3>" + img("icons/charts-24.png", "Statistics") + "&nbsp;Statistics Overview</h3>");
+  public void render() {
+    write("<h3>").writeImg("icons/charts-24.png", "Statistics").write("&nbsp;Statistics Overview</h3>");
     writeln("<div align='center'>");
     writeChoosePeriodLinks(null, -1, -1);
     writeln("<br/>");
@@ -35,13 +34,13 @@ public final class StatisticsMainView extends AbstractStatisticsView {
     writeDurationAndOverhead();
   }
 
-  private void writeGraphs(List<Statistics> statistics) throws IOException {
+  private void writeGraphs(List<Statistics> statistics) {
     for (var i = 0; i < statistics.size(); i++) {
       var stats = statistics.get(i);
       var params = statisticsGraphParams(stats.getName(), 200, 50);
       var img = "<img class='synthese' src='?" + params + "' alt='" + stats.getLabel() + "' title='" + stats.getDescription() + "'/>";
       var statsParams = addRangeParams(statisticsPageParams("statsDetail=" + stats.getName(), "statsWidth=1000", "statsHeight=400"));
-      writeln(lnk(statsParams, img));
+      writeLnk(statsParams, img).writeln();
       write("&nbsp;");
       if ((i + 1) % 3 == 0) {
         writeln("<br/><br/>");
@@ -49,18 +48,18 @@ public final class StatisticsMainView extends AbstractStatisticsView {
     }
   }
 
-  private void writeDurationAndOverhead() throws IOException {
+  private void writeDurationAndOverhead() {
     writeln("<a name='bottom'></a>");
     writeln("<br/><div class='footer'>");
-    writeln("Statistics collection frequency: " + formatNumber(statistics.getCollectionFrequencyMillis()) + "ms");
+    write("Statistics collection frequency: ").write(formatNumber(statistics.getCollectionFrequencyMillis())).writeln("ms");
     var time = statistics.getLastCollectTimestamp() > 0 ? formatDateTime(new Date(statistics.getLastCollectTimestamp())) : "-";
-    writeln("<br/>Last statistics collection time: " + time);
-    writeln("<br/>Last statistics collection duration: " + formatNumber(statistics.getLastCollectDurationMs()) + "ms");
+    write("<br/>Last statistics collection time: ").writeln(time);
+    write("<br/>Last statistics collection duration: ").write(formatNumber(statistics.getLastCollectDurationMs())).writeln("ms");
     if (statistics.getStatisticsStorageDir() == null) {
       writeln("<br/><b><font color='red'>Note: No statistics directory configured, measuring statistics in-memory without persistence!</font></b>");
     } else {
-      writeln("<br/>Statistics directory: " + statistics.getStatisticsStorageDir());
-      writeln("<br/>Statistics disk usage: " + formatMb(statistics.getDiskUsage() / 1024d / 1024d));
+      write("<br/>Statistics directory: ").writeln(statistics.getStatisticsStorageDir());
+      write("<br/>Statistics disk usage: ").write(formatDecimal(statistics.getDiskUsage() / 1024d / 1024d)).writeln(" Mb");
     }
     writeln("</div>");
   }

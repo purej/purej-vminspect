@@ -1,7 +1,6 @@
 // Copyright (c), 2013, adopus consulting GmbH Switzerland, all rights reserved.
 package com.purej.vminspect.html;
 
-import java.io.IOException;
 import java.util.List;
 import com.purej.vminspect.data.MBeanName;
 import com.purej.vminspect.util.Utils;
@@ -27,15 +26,15 @@ public class MBeansMainView extends AbstractMBeansView {
   }
 
   @Override
-  public void render() throws IOException {
-    writeln("<h3>" + img("icons/beans-24.png", "MBeans") + "&nbsp;MBeans</h3>");
+  public void render() {
+    write("<h3>").writeImg("icons/beans-24.png", "MBeans").writeln("&nbsp;MBeans</h3>");
 
     // Write the filter row:
     writeln("<form name='mbeansFilter' method='get' action=''>");
     writeln("<br/><b>&nbsp;Domain Filter</b>&nbsp;&nbsp;");
-    writeln("<input type='text' size='30' name='mbDomainFilter' value='" + domainFilter + "'/>");
+    write("<input type='text' size='30' name='mbDomainFilter' value='").write(domainFilter).write("'/>");
     writeln("&nbsp;&nbsp;<b>Type Filter</b>&nbsp;&nbsp;");
-    writeln("<input type='text' size='30' name='mbTypeFilter' value='" + typeFilter + "'/>");
+    write("<input type='text' size='30' name='mbTypeFilter' value='").write(typeFilter).write("'/>");
     writeln("&nbsp;&nbsp;(Use wild cards = *)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
     writeln("<input type='submit' value='Ok'/><br/><br/>");
     writeln("<input type='hidden' name='page' value='mbeans'/>");
@@ -60,6 +59,6 @@ public class MBeansMainView extends AbstractMBeansView {
       table.addValueCenter(mBeanLnk(mbean.getServerIdx(), mbean.getObjectName(), img("icons/bean-view-16.png", "Details")));
     }
     table.endTable();
-    writeln("Filter matched " + filterMatchingCount + "/" + mbeans.size() + " MBeans<br/>");
+    write("Filter matched ").write(filterMatchingCount).write("/").write(mbeans.size()).writeln(" MBeans<br/>");
   }
 }

@@ -1,7 +1,6 @@
 // Copyright (c), 2013, adopus consulting GmbH Switzerland, all rights reserved.
 package com.purej.vminspect.html;
 
-import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -25,13 +24,13 @@ public class HtmlPageView extends AbstractHtmlView {
   }
 
   @Override
-  public void render() throws IOException {
+  public void render() {
     writeHtmlHeader();
     bodyView.render();
     writeHtmlFooter();
   }
 
-  private void writeHtmlHeader() throws IOException {
+  private void writeHtmlHeader() {
     writeln("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
     writeln("<html xmlns=\"http://www.w3.org/1999/xhtml\">");
     writeln("<head>");
@@ -42,21 +41,21 @@ public class HtmlPageView extends AbstractHtmlView {
     writeln("<script type='text/javascript' src='?resource=vminspect.js'></script>");
     writeln("</head>");
     writeln("<body>");
-    writeln("<div id='title'><h2>PureJ VM Inspection " + lnk(reloadParameters, img("icons/refresh-24.png", "Refresh")) + " </h2>");
+    write("<div id='title'><h2>PureJ VM Inspection ").writeImgLnk(reloadParameters, "icons/refresh-24.png", "Refresh", null).writeln("</h2>");
     writeln("</div><div id='menu'>");
     writeln("<ul>");
-    writeln("<li>" + lnk("page=statistics", img("icons/charts-24.png", "Statistics") + "Statistics") + "</li>");
-    writeln("<li>" + lnk("page=threads", img("icons/threads-24.png", "Threads") + "Threads") + "</li>");
-    writeln("<li>" + lnk("page=mbeans", img("icons/beans-24.png", "MBeans") + "MBeans") + "</li>");
-    writeln("<li>" + lnk("page=system", img("icons/system-24.png", "System") + "System") + "</li>");
+    write("<li>").writeImgLnk("page=statistics", "icons/charts-24.png", "Statistics", "Statistics").writeln("</li>");
+    write("<li>").writeImgLnk("page=threads", "icons/threads-24.png", "Threads", "Threads").writeln("</li>");
+    write("<li>").writeImgLnk("page=mbeans", "icons/beans-24.png", "MBeans", "MBeans").writeln("</li>");
+    write("<li>").writeImgLnk("page=system", "icons/system-24.png", "System", "System").writeln("</li>");
     writeln("</ul>");
     writeln("</div>");
   }
 
-  private void writeHtmlFooter() throws IOException {
+  private void writeHtmlFooter() {
     writeln("<br/><div class='footer'>");
-    writeln("Display date: " + formatDateTime(new Date(startTimestamp)) + "<br/>");
-    writeln("Display duration: " + formatNumber(System.currentTimeMillis() - startTimestamp) + "ms<br/>");
+    write("Display date: ").write(formatDateTime(new Date(startTimestamp))).writeln("<br/>");
+    write("Display duration: ").write(formatNumber(System.currentTimeMillis() - startTimestamp)).writeln("ms<br/>");
     writeln("</div>");
     writeln("</body></html>");
   }

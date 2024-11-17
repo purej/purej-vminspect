@@ -1,7 +1,6 @@
 // Copyright (c), 2013, adopus consulting GmbH Switzerland, all rights reserved.
 package com.purej.vminspect.html;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import javax.management.ObjectName;
@@ -22,7 +21,7 @@ abstract class AbstractMBeansView extends AbstractHtmlView {
   }
 
   @SuppressWarnings("unchecked")
-  protected void writeMBeanValue(Object object, boolean tryShowMBeanLinks) throws IOException {
+  protected void writeMBeanValue(Object object, boolean tryShowMBeanLinks) {
     if (object instanceof List) {
       var list = (List<Object>) object;
       for (var i = 0; i < list.size(); i++) {

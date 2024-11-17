@@ -1,7 +1,6 @@
 // Copyright (c), 2013, adopus consulting GmbH Switzerland, all rights reserved.
 package com.purej.vminspect.html;
 
-import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.util.List;
 import com.purej.vminspect.data.ThreadData;
@@ -23,13 +22,13 @@ public final class ThreadsMainView extends AbstractHtmlView {
   }
 
   @Override
-  public void render() throws IOException {
-    writeln("<h3>" + img("icons/threads-24.png", "Threads") + "&nbsp;Threads</h3>");
+  public void render() {
+    write("<h3>").writeImg("icons/threads-24.png", "Threads").writeln("&nbsp;Threads</h3>");
 
     var mxBean = ManagementFactory.getThreadMXBean();
-    writeln("<div align='left'>");
-    writeln("Total live threads: " + threads.size() + " (peek: " + mxBean.getPeakThreadCount() + ")<br/>");
-    writeln("Total started threads: " + mxBean.getTotalStartedThreadCount());
+    write("<div align='left'>");
+    write("Total live threads: ").write(threads.size()).write(" (peek: ").write(mxBean.getPeakThreadCount()).write(")<br/>");
+    write("Total started threads: ").write(mxBean.getTotalStartedThreadCount());
     writeln("</div><br/>");
 
     var table = new CandyHtmlTable("Threads", "Thread", "Demon", "Priority", "State", "Executing Method", "CPU Time Ms", "User Time Ms");
@@ -46,7 +45,7 @@ public final class ThreadsMainView extends AbstractHtmlView {
     table.endTable();
     writeln("<div align='right'>");
     var threadsDumpParam = "page=threadsDump";
-    writeln("<br/>" + lnk(threadsDumpParam, img("icons/text-16.png", "Dump threads as text") + "&nbsp;Dump threads as text"));
+    write("<br/>").writeImgLnk(threadsDumpParam, "icons/text-16.png", "Dump threads as text", "&nbsp;Dump threads as text").writeln();
     writeln("</div>");
   }
 

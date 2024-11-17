@@ -1,7 +1,6 @@
 // Copyright (c), 2013, adopus consulting GmbH Switzerland, all rights reserved.
 package com.purej.vminspect.html;
 
-import java.io.IOException;
 import com.purej.vminspect.data.MBeanData;
 import com.purej.vminspect.data.MBeanUtils;
 import com.purej.vminspect.http.MBeanAccessControl;
@@ -28,16 +27,16 @@ public class MBeansDetailView extends AbstractMBeansView {
   }
 
   @Override
-  public void render() throws IOException {
+  public void render() {
     // Write the mbean title:
-    writeln("<h3>" + img("icons/beans-24.png", "MBean") + "&nbsp;MBean: <i>" + htmlEncode(mbean.getName().getObjectNameString()) + "</i></h3>");
+    write("<h3>").writeImg("icons/beans-24.png", "MBean").write("&nbsp;MBean: <i>").write(htmlEncode(mbean.getName().getObjectNameString())).writeln("</i></h3>");
 
     if (message != null) {
-      writeln("<div id='" + message.getType().getTag() + "'><br/>&nbsp;" + message.getText() + "<br/><br/></div>");
+      write("<div id='").write(message.getType().getTag()).write("'><br/>&nbsp;").write(message.getText()).writeln("<br/><br/></div>");
     }
 
     // Write the attributes table:
-    writeln("<h3>" + img("icons/books-24.png", "MBean Attributes") + "&nbsp;Attributes</h3>");
+    write("<h3>").writeImg("icons/books-24.png", "MBean Attributes").writeln("&nbsp;Attributes</h3>");
     var table = new CandyHtmlTable("MBean Attributes", "Name", "Value", "Type", "Description", "Edit");
     for (int i = 0; i < mbean.getAttributes().length; i++) {
       var attribute = mbean.getAttributes()[i];
@@ -65,7 +64,7 @@ public class MBeansDetailView extends AbstractMBeansView {
     writeln("<br/>");
 
     // Write the operations table:
-    writeln("<h3>" + img("icons/flash-24.png", "MBean Operations") + "&nbsp;Operations</h3>");
+    write("<h3>").writeImg("icons/flash-24.png", "MBean Operations").writeln("&nbsp;Operations</h3>");
     table = new CandyHtmlTable("MBean Operations", "Name", "Impact", "Return", "Parameters", "Description", "Invoke");
     for (var i = 0; i < mbean.getOperations().length; i++) {
       var operation = mbean.getOperations()[i];

@@ -17,7 +17,8 @@ class VmInspectionServerTest {
    * Starts the {@link VmInspectionServer} on port 8080 for testing with a browser.
    */
   public static void main(String[] args) throws Exception {
-    var server = new VmInspectionServer("purej.*", false, true, 60000, null, 8080);
+    var dir = "C://Temp//vm-inspection-statistics";
+    var server = new VmInspectionServer("purej.*", false, true, 60000, dir, 8080);
 
     ManagementFactory.getPlatformMBeanServer().registerMBean(new MySample(false), new ObjectName("purej.vminspect", "id", "1"));
     ManagementFactory.getPlatformMBeanServer().registerMBean(new MySample(true), new ObjectName("purej.vminspect", "id", "2"));

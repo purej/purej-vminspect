@@ -1,7 +1,6 @@
 // Copyright (c), 2013, adopus consulting GmbH Switzerland, all rights reserved.
 package com.purej.vminspect.html;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import com.purej.vminspect.data.ThreadData;
@@ -23,7 +22,7 @@ public final class ThreadsDumpView extends AbstractHtmlView {
   }
 
   @Override
-  public void render() throws IOException {
+  public void render() {
     write("===== THREADS DUMP (" + formatDateTime(new Date()) + ") =====\n\n");
     for (var thread : threads) {
       write("\"");

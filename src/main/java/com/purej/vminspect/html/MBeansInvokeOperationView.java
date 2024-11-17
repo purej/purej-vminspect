@@ -1,7 +1,6 @@
 // Copyright (c), 2013, adopus consulting GmbH Switzerland, all rights reserved.
 package com.purej.vminspect.html;
 
-import java.io.IOException;
 import com.purej.vminspect.data.MBeanData;
 import com.purej.vminspect.data.MBeanOperation;
 import com.purej.vminspect.data.MBeanUtils;
@@ -32,9 +31,9 @@ public class MBeansInvokeOperationView extends AbstractMBeansView {
   }
 
   @Override
-  public void render() throws IOException {
+  public void render() {
     // Write the mbean title:
-    writeln("<h3>" + img("icons/beans-24.png", "MBean") + "&nbsp;MBean: <i>" + htmlEncode(mbean.getName().getObjectNameString()) + "</i></h3>");
+    write("<h3>").writeImg("icons/beans-24.png", "MBean").write("&nbsp;MBean: <i>").write(htmlEncode(mbean.getName().getObjectNameString())).writeln("</i></h3>");
     if (confirm.isNow()) {
       writeln("<div id='warnMsg' style='font-size:12pt;font-weight:bold;padding:10px;'>Please confirm the MBeans operation invocation!</div><br/>");
     }
@@ -67,9 +66,9 @@ public class MBeansInvokeOperationView extends AbstractMBeansView {
     table.addValueRight("<input type='submit' name='" + okAction + "' value='Ok'/><input type='submit' name='mbOpCancel' value='Cancel'/>");
     table.endTable();
     writeln("<input type='hidden' name='page' value='mbeans'/>");
-    writeln("<input type='hidden' name='mbSrvIdx' value='" + mbean.getName().getServerIdx() + "'/>");
-    writeln("<input type='hidden' name='mbName' value='" + htmlEncode(mbean.getName().getObjectNameString()) + "'/>");
-    writeln("<input type='hidden' name='mbOpIdx' value='" + mbOpIdx + "'/>");
+    write("<input type='hidden' name='mbSrvIdx' value='").write(mbean.getName().getServerIdx()).writeln("'/>");
+    write("<input type='hidden' name='mbName' value='").write(htmlEncode(mbean.getName().getObjectNameString())).writeln("'/>");
+    write("<input type='hidden' name='mbOpIdx' value='").write(mbOpIdx).writeln("'/>");
     writeln("<br/></form>");
   }
 }

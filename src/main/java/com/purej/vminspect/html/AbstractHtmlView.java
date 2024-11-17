@@ -1,7 +1,6 @@
 // Copyright (c), 2013, adopus consulting GmbH Switzerland, all rights reserved.
 package com.purej.vminspect.html;
 
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -32,17 +31,15 @@ public abstract class AbstractHtmlView {
     /**
      * Creates a new instance and writes the table start tags.
      */
-    public HtmlTable(String summary) throws IOException {
+    public HtmlTable(String summary) {
       this(true);
-      write("<table summary='");
-      write(summary);
-      write("'>\n");
+      write("<table summary='").write(summary).write("'>\n");
     }
 
     /**
      * Writes new row tags including optional values.
      */
-    public void nextRow(String... values) throws IOException {
+    public void nextRow(String... values) {
       if (firstRow) {
         write("<tr>");
         firstRow = false;
@@ -57,34 +54,28 @@ public abstract class AbstractHtmlView {
     /**
      * Writes the column value tags.
      */
-    public void addValue(String value) throws IOException {
-      write("<td>");
-      write(value);
-      write("</td>");
+    public void addValue(String value) {
+      write("<td>").write(value).write("</td>");
     }
 
     /**
      * Writes the column value tags.
      */
-    public void addValueCenter(String value) throws IOException {
-      write("<td align='center'>");
-      write(value);
-      write("</td>");
+    public void addValueCenter(String value) {
+      write("<td align='center'>").write(value).write("</td>");
     }
 
     /**
      * Writes the column value tags.
      */
-    public void addValueRight(String value) throws IOException {
-      write("<td align='right'>");
-      write(value);
-      write("</td>");
+    public void addValueRight(String value) {
+      write("<td align='right'>").write(value).write("</td>");
     }
 
     /**
      * Writes the table end tags.
      */
-    public void endTable() throws IOException {
+    public void endTable() {
       if (!firstRow) {
         write("</tr>");
       }
@@ -101,21 +92,17 @@ public abstract class AbstractHtmlView {
     /**
      * Creates a new instance and writes start tags including column names.
      */
-    public CandyHtmlTable(String summary, String... columnNames) throws IOException {
+    public CandyHtmlTable(String summary, String... columnNames) {
       super(false);
       write("<table width='100%' border='1' cellspacing='0' cellpadding='2' summary='");
-      write(summary);
-      write("'>\n");
-      write("<tr class='header'>");
+      write(summary).write("'>\n").write("<tr class='header'>");
       for (var n : columnNames) {
-        write("<td>");
-        write(n);
-        write("</td>");
+        write("<td>").write(n).write("</td>");
       }
     }
 
     @Override
-    public void nextRow(String... values) throws IOException {
+    public void nextRow(String... values) {
       nextRowWithClz("");
       for (var value : values) {
         addValue(value);
@@ -125,12 +112,10 @@ public abstract class AbstractHtmlView {
     /**
      * Writes new row tags with a custom CSS class.
      */
-    public void nextRowWithClz(String cssClass) throws IOException {
+    public void nextRowWithClz(String cssClass) {
       write("</tr>\n");
       if (cssClass != null) {
-        write("<tr class='");
-        write(cssClass);
-        write("'>");
+        write("<tr class='").write(cssClass).write("'>");
       } else {
         write("<tr>");
       }
@@ -147,29 +132,77 @@ public abstract class AbstractHtmlView {
   /**
    * Renders this HMTL view by writing the content to the underlying writer.
    */
-  public abstract void render() throws IOException;
+  public abstract void render();
 
   /**
-   * Writes the given html to the writer.
+   * Writes the given html to the output.
    */
-  protected final AbstractHtmlView write(String html) throws IOException {
+  protected final AbstractHtmlView write(String html) {
     output.append(html == null ? "" : html);
     return this;
   }
 
   /**
-   * Writes the given number to the writer.
+   * Writes the given number to the output.
    */
-  protected final AbstractHtmlView write(int nr) throws IOException {
+  protected final AbstractHtmlView write(int nr) {
     output.append(nr);
     return this;
   }
 
   /**
-   * Writes the given html to the writer.
+   * Writes the given number to the output.
    */
-  protected final AbstractHtmlView writeln(String html) throws IOException {
-    write(html);
+  protected final AbstractHtmlView write(long nr) {
+    output.append(nr);
+    return this;
+  }
+
+  /**
+   * Writes a link to the output.
+   */
+  protected final AbstractHtmlView writeLnk(String parameters, String txt) {
+    output.append("<a href='?").append(parameters).append("'>").append(txt).append("</a>");
+    return this;
+  }
+
+  /**
+   * Writes a link to the output.
+   */
+  protected final AbstractHtmlView writeImg(String img, String title) {
+    output.append("<img src='?resource=").append(img);
+    output.append("' alt='").append(title).append("' title='").append(title).append("'/>");
+    return this;
+  }
+
+  /**
+   * Writes an image link to the output.
+   */
+  protected final AbstractHtmlView writeImgLnk(String parameters, String img, String title, String txt) {
+    output.append("<a href='?").append(parameters).append("'>");
+    output.append("<img src='?resource=").append(img).append("' alt='").append(title).append("' title='").append(title).append("'/>");
+    if (txt != null) {
+      output.append(txt);
+    }
+    output.append("</a>");
+    return this;
+  }
+
+  /**
+   * Writes the given html to the output.
+   */
+  protected final AbstractHtmlView writeln(String html) {
+    if (html != null) {
+      output.append(html);
+    }
+    output.append('\n');
+    return this;
+  }
+
+  /**
+   * Writes a new line to the output.
+   */
+  protected final AbstractHtmlView writeln() {
     output.append('\n');
     return this;
   }
@@ -179,13 +212,6 @@ public abstract class AbstractHtmlView {
    */
   protected static String formatNumber(long value) {
     return new DecimalFormat(NUMBER_FORMAT).format(value);
-  }
-
-  /**
-   * Formats the given Megabytes 2 fraction digits.
-   */
-  protected static String formatMb(double mbs) {
-    return new DecimalFormat(DECIMAL_FORMAT).format(mbs) + " Mb";
   }
 
   /**
@@ -216,9 +242,8 @@ public abstract class AbstractHtmlView {
     return new SimpleDateFormat(DATETIME_FORMAT).format(date);
   }
 
-  protected static final String img(String img, String title) throws IOException {
-    String t = title != null ? title : "";
-    return "<img src='?resource=" + img + "' alt='" + t + "' title='" + t + "'/>";
+  protected static final String img(String img, String title) {
+    return "<img src='?resource=" + img + "' alt='" + title + "' title='" + title + "'/>";
   }
 
   protected static final String lnk(String parameters, String txt) {

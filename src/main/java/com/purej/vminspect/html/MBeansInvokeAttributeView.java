@@ -1,7 +1,6 @@
 // Copyright (c), 2013, adopus consulting GmbH Switzerland, all rights reserved.
 package com.purej.vminspect.html;
 
-import java.io.IOException;
 import com.purej.vminspect.data.MBeanAttribute;
 import com.purej.vminspect.data.MBeanData;
 import com.purej.vminspect.data.MBeanUtils;
@@ -29,16 +28,16 @@ public class MBeansInvokeAttributeView extends AbstractMBeansView {
   }
 
   @Override
-  public void render() throws IOException {
+  public void render() {
     // Write the mbean title:
-    writeln("<h3>" + img("icons/beans-24.png", "MBean") + "&nbsp;MBean: <i>" + htmlEncode(mbean.getName().getObjectNameString()) + "</i></h3>");
+    write("<h3>").writeImg("icons/beans-24.png", "MBean").write("&nbsp;MBean: <i>").write(htmlEncode(mbean.getName().getObjectNameString())).writeln("</i></h3>");
     if (confirm.isNow()) {
       writeln("<div id='warnMsg' style='font-size:12pt;font-weight:bold;padding:10px;'>Please confirm the MBeans attribute change!</div><br/>");
     }
 
     // Write the form with a table:
     writeln("<form name='mbeanAttribute' method='post' action=''><br/>");
-    HtmlTable table = new HtmlTable("MBean Attribute");
+    var table = new HtmlTable("MBean Attribute");
     table.nextRow();
     table.addValue(img("icons/books-16.png", "MBean Attribute") + "<b>&nbsp;Attribute</b>");
     table.addValue("<b>" + htmlEncode(attribute.getName()) + "</b>");
@@ -57,13 +56,13 @@ public class MBeansInvokeAttributeView extends AbstractMBeansView {
     }
     table.nextRow("<br/>", "");
     table.nextRow("");
-    String okAction = confirm.isNext() ? "mbAtrInvokeConfirm" : "mbAtrInvoke";
+    var okAction = confirm.isNext() ? "mbAtrInvokeConfirm" : "mbAtrInvoke";
     table.addValueRight("<input type='submit' name='" + okAction + "' value='Ok'/><input type='submit' name='mbAtrCancel' value='Cancel'/>");
     table.endTable();
     writeln("<input type='hidden' name='page' value='mbeans'/>");
-    writeln("<input type='hidden' name='mbSrvIdx' value='" + mbean.getName().getServerIdx() + "'/>");
-    writeln("<input type='hidden' name='mbName' value='" + htmlEncode(mbean.getName().getObjectNameString()) + "'/>");
-    writeln("<input type='hidden' name='mbAtrName' value='" + htmlEncode(attribute.getName()) + "'/>");
+    write("<input type='hidden' name='mbSrvIdx' value='").write(mbean.getName().getServerIdx()).write("'/>");
+    write("<input type='hidden' name='mbName' value='").write(htmlEncode(mbean.getName().getObjectNameString())).write("'/>");
+    write("<input type='hidden' name='mbAtrName' value='").write(htmlEncode(attribute.getName())).write("'/>");
     writeln("<br/></form>");
   }
 }

@@ -1,7 +1,6 @@
 // Copyright (c), 2013, adopus consulting GmbH Switzerland, all rights reserved.
 package com.purej.vminspect.html;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import com.purej.vminspect.data.MemoryData;
@@ -40,15 +39,15 @@ public final class SystemMainView extends AbstractHtmlView {
   }
 
   @Override
-  public void render() throws IOException {
+  public void render() {
     writeMemoryTable();
     writeRuntimeTable();
     writeGcTable();
     writeClassloaderTable();
   }
 
-  private void writeMemoryTable() throws IOException {
-    writeln("<h3>" + img("icons/battery-24.png", "Memory") + "&nbsp;Memory</h3>");
+  private void writeMemoryTable() {
+    write("<h3>").writeImg("icons/battery-24.png", "Memory").write("&nbsp;Memory</h3>");
     var table = new CandyHtmlTable("Memory", "Name", "Value", "Status");
     writeMemoryRow(table, "Heap Memory", sysData.getMemoryHeap());
     writeMemoryRow(table, "NonHeap Memory", sysData.getMemoryNonHeap());
@@ -58,8 +57,8 @@ public final class SystemMainView extends AbstractHtmlView {
     writeln("<br/>");
   }
 
-  private void writeRuntimeTable() throws IOException {
-    writeln("<h3>" + img("icons/cup-24.png", "Runtime") + "&nbsp;Runtime</h3>");
+  private void writeRuntimeTable() {
+    write("<h3>").writeImg("icons/cup-24.png", "Runtime").writeln("&nbsp;Runtime</h3>");
     var table = new CandyHtmlTable("Runtime", "Name", "Value");
     table.nextRow("Host", sysData.getOsHostIp());
     table.nextRow("OS", sysData.getOsName() + ", Architecture: " + sysData.getOsArchitecture() + ", Version: " + sysData.getOsVersion()
@@ -88,8 +87,8 @@ public final class SystemMainView extends AbstractHtmlView {
     writeln("<br/>");
   }
 
-  private void writeGcTable() throws IOException {
-    writeln("<h3>" + img("icons/garbage-24.png", "Garbage Collector") + "&nbsp;Garbage Collector</h3>");
+  private void writeGcTable() {
+    write("<h3>").writeImg("icons/garbage-24.png", "Garbage Collector").write("&nbsp;Garbage Collector</h3>");
     var table = new CandyHtmlTable("Garbage Collector", "Name", "Value");
     table.nextRow("Names", sysData.getGcName());
     table.nextRow("Number of Collections", formatNumber(sysData.getGcCollectionCount()));
@@ -98,8 +97,8 @@ public final class SystemMainView extends AbstractHtmlView {
     writeln("<br/>");
   }
 
-  private void writeClassloaderTable() throws IOException {
-    writeln("<h3>" + img("icons/box-24.png", "Class Loading") + "&nbsp;Class Loading</h3>");
+  private void writeClassloaderTable() {
+    write("<h3>").writeImg("icons/box-24.png", "Class Loading").writeln("&nbsp;Class Loading</h3>");
     var table = new CandyHtmlTable("Class Loading", "Name", "Value");
     table.nextRow("Currently Loaded Classes", formatNumber(sysData.getCLLoadedClassCount()));
     table.nextRow("Total Loaded Classes", formatNumber(sysData.getCLTotalLoadedClassCount()));
@@ -110,14 +109,14 @@ public final class SystemMainView extends AbstractHtmlView {
     writeln("<br/>");
   }
 
-  private static void writeMemoryRow(CandyHtmlTable table, String label, MemoryData memory) throws IOException {
+  private static void writeMemoryRow(CandyHtmlTable table, String label, MemoryData memory) {
     String value;
     if (memory == MemoryData.UNKNOWN) {
       value = "n/a";
     } else {
-      var used = "Used: " + formatMb(memory.getUsed() / 1024d / 1024d);
-      var commited = memory.getCommitted() > 0 ? " / Alloc: " + formatMb(memory.getCommitted() / 1024d / 1024d) : "";
-      var max = memory.getMax() > 0 ? " / Max: " + formatMb(memory.getMax() / 1024d / 1024d) : "";
+      var used = "Used: " + formatDecimal(memory.getUsed() / 1024d / 1024d) + " Mb";
+      var commited = memory.getCommitted() > 0 ? " / Alloc: " + formatDecimal(memory.getCommitted() / 1024d / 1024d) + " Mb" : "";
+      var max = memory.getMax() > 0 ? " / Max: " + formatDecimal(memory.getMax() / 1024d / 1024d) + " Mb" : "";
       value = used + commited + max;
     }
     var bar = toMemoryBar(memory);

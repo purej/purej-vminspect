@@ -1,7 +1,6 @@
 // Copyright (c), 2013, adopus consulting GmbH Switzerland, all rights reserved.
 package com.purej.vminspect.html;
 
-import java.io.IOException;
 import com.purej.vminspect.data.statistics.Range;
 
 /**
@@ -25,8 +24,8 @@ public final class StatisticsDetailView extends AbstractStatisticsView {
   }
 
   @Override
-  public void render() throws IOException {
-    writeln("<h3>" + img("icons/charts-24.png", "Statistics") + "&nbsp;Statistics Detail</h3>");
+  public void render() {
+    write("<h3>").writeImg("icons/charts-24.png", "Statistics").write("&nbsp;Statistics Detail</h3>");
     writeln("<div align='center'>");
     writeChoosePeriodLinks(statsName, statsWidth, statsHeight);
     writeln("</div><br/>");
@@ -37,8 +36,8 @@ public final class StatisticsDetailView extends AbstractStatisticsView {
         + (int) (statsHeight / 1.2)));
     String paramsIn = addRangeParams(statisticsPageParams("statsDetail=" + statsName, "statsWidth=" + (int) (statsWidth * 1.5d), "statsHeight="
         + (int) (statsHeight * 1.2)));
-    writeln(lnk(paramsOut, img("icons/zoom-out-24.png", "Zoom Out")));
-    writeln(lnk(paramsIn, img("icons/zoom-in-24.png", "Zoom In")));
+    writeImgLnk(paramsOut, "icons/zoom-out-24.png", "Zoom Out", null).writeln();
+    writeImgLnk(paramsIn, "icons/zoom-in-24.png", "Zoom In", null).writeln();
     writeln("</div>");
   }
 }
