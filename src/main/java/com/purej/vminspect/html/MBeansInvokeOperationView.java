@@ -64,11 +64,11 @@ public class MBeansInvokeOperationView extends AbstractMBeansView {
     table.nextRow("<br/>", "");
     table.nextRow("");
     var okAction = confirm.isNext() ? "mbOpInvokeConfirm" : "mbOpInvoke";
-    table.addValueRight("<input type='submit' name='mbOpCancel' value='Cancel'/><input type='submit' name='" + okAction + "' value='Ok'/>");
+    table.addValueRight("<input type='submit' name='" + okAction + "' value='Ok'/><input type='submit' name='mbOpCancel' value='Cancel'/>");
     table.endTable();
     writeln("<input type='hidden' name='page' value='mbeans'/>");
     writeln("<input type='hidden' name='mbSrvIdx' value='" + mbean.getName().getServerIdx() + "'/>");
-    writeln("<input type='hidden' name='mbName' value='" + mbean.getName().getObjectNameString() + "'/>");
+    writeln("<input type='hidden' name='mbName' value='" + htmlEncode(mbean.getName().getObjectNameString()) + "'/>");
     writeln("<input type='hidden' name='mbOpIdx' value='" + mbOpIdx + "'/>");
     writeln("<br/></form>");
   }

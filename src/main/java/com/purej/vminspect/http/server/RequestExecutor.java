@@ -151,9 +151,9 @@ final class RequestExecutor implements Runnable {
     }
   }
 
-  private static void parsePost(String line, HttpRequest request) throws Exception {
+  private static void parsePost(String body, HttpRequest request) throws Exception {
     // Format is: list of parameters=values (all encoded)
-    var params = line.split("&");
+    var params = body.split("&");
     splitKeyValues(params, request.getParameters());
   }
 

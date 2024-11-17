@@ -58,12 +58,12 @@ public class MBeansInvokeAttributeView extends AbstractMBeansView {
     table.nextRow("<br/>", "");
     table.nextRow("");
     String okAction = confirm.isNext() ? "mbAtrInvokeConfirm" : "mbAtrInvoke";
-    table.addValueRight("<input type='submit' name='mbAtrCancel' value='Cancel'/><input type='submit' name='" + okAction + "' value='Ok'/>");
+    table.addValueRight("<input type='submit' name='" + okAction + "' value='Ok'/><input type='submit' name='mbAtrCancel' value='Cancel'/>");
     table.endTable();
     writeln("<input type='hidden' name='page' value='mbeans'/>");
     writeln("<input type='hidden' name='mbSrvIdx' value='" + mbean.getName().getServerIdx() + "'/>");
-    writeln("<input type='hidden' name='mbName' value='" + mbean.getName().getObjectNameString() + "'/>");
-    writeln("<input type='hidden' name='mbAtrName' value='" + attribute.getName() + "'/>");
+    writeln("<input type='hidden' name='mbName' value='" + htmlEncode(mbean.getName().getObjectNameString()) + "'/>");
+    writeln("<input type='hidden' name='mbAtrName' value='" + htmlEncode(attribute.getName()) + "'/>");
     writeln("<br/></form>");
   }
 }

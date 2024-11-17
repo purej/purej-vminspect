@@ -16,7 +16,7 @@ public class UtilsTest {
    */
   @Test
   public void testCheckNotNull() throws Exception {
-	  Assertions.assertEquals("x", Utils.checkNotNull("x"));
+    Assertions.assertEquals("x", Utils.checkNotNull("x"));
     try {
       Utils.checkNotNull(null);
       Assertions.fail();
@@ -30,20 +30,20 @@ public class UtilsTest {
    */
   @Test
   public void testUrlEncodeDecode() throws Exception {
-	Assertions.assertEquals("", Utils.urlEncode(null));
-	Assertions.assertEquals("", Utils.urlEncode(""));
-	Assertions.assertEquals("ja%26va", Utils.urlEncode("ja&va"));
-	Assertions.assertEquals("ja%3Dva", Utils.urlEncode("ja=va"));
-	Assertions.assertEquals("ja%3D%22%3Bva", Utils.urlEncode("ja=\";va"));
-	Assertions.assertEquals("ja+v-%3C%3Ea.*", Utils.urlEncode("ja v-<>a.*"));
+    Assertions.assertEquals("", Utils.urlEncode(null));
+    Assertions.assertEquals("", Utils.urlEncode(""));
+    Assertions.assertEquals("ja%26va", Utils.urlEncode("ja&va"));
+    Assertions.assertEquals("ja%3Dva", Utils.urlEncode("ja=va"));
+    Assertions.assertEquals("ja%3D%22%3Bva", Utils.urlEncode("ja=\";va"));
+    Assertions.assertEquals("ja+v-%3C%3Ea.*", Utils.urlEncode("ja v-<>a.*"));
 
-	Assertions.assertEquals(null, Utils.urlDecode(null));
-	Assertions.assertEquals("", Utils.urlDecode(""));
-	Assertions.assertEquals("ja&va", Utils.urlDecode("ja%26va"));
-	Assertions.assertEquals("ja=va", Utils.urlDecode("ja%3Dva"));
-	Assertions.assertEquals("ja=\";va", Utils.urlDecode("ja%3D%22%3Bva"));
-	Assertions.assertEquals("ja v-<>a.*", Utils.urlDecode("ja+v-%3C%3Ea.*")); // produced by encoder
-	Assertions.assertEquals("ja v-<>a.*", Utils.urlDecode("ja+v-<>a.*")); // produced by html forms with get
+    Assertions.assertEquals(null, Utils.urlDecode(null));
+    Assertions.assertEquals("", Utils.urlDecode(""));
+    Assertions.assertEquals("ja&va", Utils.urlDecode("ja%26va"));
+    Assertions.assertEquals("ja=va", Utils.urlDecode("ja%3Dva"));
+    Assertions.assertEquals("ja=\";va", Utils.urlDecode("ja%3D%22%3Bva"));
+    Assertions.assertEquals("ja v-<>a.*", Utils.urlDecode("ja+v-%3C%3Ea.*")); // produced by encoder
+    Assertions.assertEquals("ja v-<>a.*", Utils.urlDecode("ja+v-<>a.*")); // produced by html forms with get
   }
 
   /**
