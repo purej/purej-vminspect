@@ -41,9 +41,9 @@ For **non-webapps**, VM inspection can be enabled using the internal lightweight
 Alternatively, **non-webapps**, can also use the VM inspection servlet with an embeddable web-server such as for example [Jetty](http://www.eclipse.org/jetty):
 
 ```
-  Server server = new Server(8080);
-  ServletContextHandler handler = new ServletContextHandler(server, "/inspect");
-  ServletHolder servletHolder = new ServletHolder(VmInspectionServlet.class);
+  var server = new Server(8080);
+  var handler = new ServletContextHandler(server, "/inspect");
+  var servletHolder = new ServletHolder(VmInspectionServlet.class);
   servletHolder.setInitOrder(1);
   handler.addServlet(servletHolder, "/*");
   server.start();
@@ -71,7 +71,7 @@ Maven users just need to add the following dependency:
   <dependency>
     <groupId>com.purej</groupId>
     <artifactId>purej-vminspect</artifactId>
-    <version>2.0.0</version>
+    <version>2.1.0</version>
   </dependency>
 ```
 
