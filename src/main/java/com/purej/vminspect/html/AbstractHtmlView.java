@@ -103,7 +103,7 @@ public abstract class AbstractHtmlView {
 
     @Override
     public void nextRow(String... values) {
-      nextRowWithClz("");
+      nextRowWithClz(null);
       for (var value : values) {
         addValue(value);
       }

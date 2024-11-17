@@ -1,9 +1,13 @@
 Version "current"
+
+Version 2.1.0 - (17.11.2023)
 - Upgraded to spring 3.3 and latest other dependencies
 - MBeanAccessControl allows setting a default domain filter
 - Adopted style-guide: changed to var, do not use _ for members anymore
 - Make Ok button default for pressing enter on Mbean forms
 - Write html pages with less string concats using direct output appends
+- The full row might be clicked for MBean details on MBean overview to simplify showing details
+- Slightly bigger font-size for better readability
 
 Version 2.0.0 - (04.03.2023)
 - Upgraded to jakarta-servlet 6.0.0 which renames javax.servlet to jakarta.servlet packages

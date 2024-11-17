@@ -41,24 +41,24 @@ public class MBeansMainView extends AbstractMBeansView {
     writeln("</form><br/>");
 
     // Write the table:
-    CandyHtmlTable table = new CandyHtmlTable("MBeans", "Domain", "Type", "Properties", "Details");
-    int filterMatchingCount = 0;
-    for (MBeanName mbean : mbeans) {
-      if (!Utils.wildCardMatch(mbean.getDomain(), domainFilter)) {
-        continue;
-      }
-      if (!Utils.wildCardMatch(mbean.getType(), typeFilter)) {
-        continue;
-      }
-      filterMatchingCount++;
+    var table = new CandyHtmlTable("MBeans", "Domain", "Type", "Properties");
+    int matched = 0;
+    for (var mbean : mbeans) {
+      if (Utils.wildCardMatch(mbean.getDomain(), domainFilter) || Utils.wildCardMatch(mbean.getType(), typeFilter)) {
+        matched++;
+        // Note: We want to full row to be clickable, not so easy with HTML without javascript!
+        var mbSrvIdx = "mbSrvIdx=" + mbean.getServerIdx();
+        var mbName = "mbName=" + urlEncode(mbean.getObjectName().toString());
+        var prefix = "<a href='?" + mBeanParams(mbSrvIdx, mbName) + "'>";
 
-      table.nextRow();
-      table.addValue(mbean.getDomain());
-      table.addValue(htmlEncode(mbean.getType()));
-      table.addValue(htmlEncode(mbean.getOtherKeyValues()));
-      table.addValueCenter(mBeanLnk(mbean.getServerIdx(), mbean.getObjectName(), img("icons/bean-view-16.png", "Details")));
+        table.nextRowWithClz("clickable-row");
+        table.addValue(prefix + mbean.getDomain() + "</a>");
+        table.addValue(prefix + htmlEncode(mbean.getType()) + "</a>");
+        var props = htmlEncode(mbean.getOtherKeyValues()); // Might be empty
+        table.addValue(prefix + (props == null || props.length() == 0 ? "&nbsp;" : props) + "</a>");
+      }
     }
     table.endTable();
-    write("Filter matched ").write(filterMatchingCount).write("/").write(mbeans.size()).writeln(" MBeans<br/>");
+    write("Filter matched ").write(matched).write("/").write(mbeans.size()).writeln(" MBeans<br/>");
   }
 }

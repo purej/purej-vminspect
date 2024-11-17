@@ -4,12 +4,12 @@ body {
   background-color:white;
   background: url(?resource=background.png) bottom left fixed repeat-x;
   font-family: Helvetica, Arial, sans-serif;
-  font-size: 10pt;
+  font-size: 9pt;
 }
 
 a {text-decoration:none; color:#0000BB;}
 a:hover {text-decoration:underline; color:#0000BB;}
-a:visited {color: #6600BB;}
+a:visited {color: #6600BB;} 
 
 img {border : 0px; vertical-align : middle;}
 
@@ -25,12 +25,18 @@ table {
 	-webkit-border-radius:5px;
 	border-radius:5px
 }
-td {font-size: 8pt;}
+
 table tr.header td {background-color: #BDDAEE; font-size: 10pt; font-weight:bold;}
 table tr:nth-child(even) {background-color: #FFFFFF;}
 table tr:nth-child(odd) {background-color: #E7F4FD;}
 table tr.deadlock {background-color: #FAB8BB;}
 table tr:hover {background-color: #BDDAEE;}
+
+table tr.clickable-row a {
+  text-decoration: none;
+  color: black;
+  display: block;
+}
 
 .tooltip em {
   display:none;
