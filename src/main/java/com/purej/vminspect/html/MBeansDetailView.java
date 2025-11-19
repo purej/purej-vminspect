@@ -38,7 +38,7 @@ public class MBeansDetailView extends AbstractMBeansView {
     // Write the attributes table:
     write("<h3>").writeImg("icons/books-24.png", "MBean Attributes").writeln("&nbsp;Attributes</h3>");
     var table = new CandyHtmlTable("MBean Attributes", "Name", "Value", "Type", "Description", "Edit");
-    for (int i = 0; i < mbean.getAttributes().length; i++) {
+    for (var i = 0; i < mbean.getAttributes().length; i++) {
       var attribute = mbean.getAttributes()[i];
       table.nextRow();
       table.addValue(htmlEncode(attribute.getName()));

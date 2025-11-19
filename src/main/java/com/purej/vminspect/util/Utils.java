@@ -3,6 +3,7 @@ package com.purej.vminspect.util;
 
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -87,7 +88,7 @@ public final class Utils {
    */
   public static String urlEncode(String value) {
     try {
-      return value != null ? URLEncoder.encode(value, "UTF-8") : "";
+      return value != null ? URLEncoder.encode(value, StandardCharsets.UTF_8) : "";
     } catch (Exception e) {
       throw new RuntimeException("Encoding '" + value + "' failed!", e);
     }
@@ -98,7 +99,7 @@ public final class Utils {
    */
   public static String urlDecode(String value) {
     try {
-      return value != null ? URLDecoder.decode(value, "UTF-8") : value;
+      return value != null ? URLDecoder.decode(value, StandardCharsets.UTF_8) : value;
     } catch (Exception e) {
       throw new RuntimeException("Decoding '" + value + "' failed!", e);
     }

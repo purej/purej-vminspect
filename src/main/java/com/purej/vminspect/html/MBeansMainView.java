@@ -32,9 +32,9 @@ public class MBeansMainView extends AbstractMBeansView {
     // Write the filter row:
     writeln("<form name='mbeansFilter' method='get' action=''>");
     writeln("<br/><b>&nbsp;Domain Filter</b>&nbsp;&nbsp;");
-    write("<input type='text' size='30' name='mbDomainFilter' value='").write(domainFilter).write("'/>");
+    write("<input type='text' size='30' name='mbDomainFilter' value='").write(htmlEncode(domainFilter)).write("'/>");
     writeln("&nbsp;&nbsp;<b>Type Filter</b>&nbsp;&nbsp;");
-    write("<input type='text' size='30' name='mbTypeFilter' value='").write(typeFilter).write("'/>");
+    write("<input type='text' size='30' name='mbTypeFilter' value='").write(htmlEncode(typeFilter)).write("'/>");
     writeln("&nbsp;&nbsp;(Use wild cards = *)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
     writeln("<input type='submit' value='Ok'/><br/><br/>");
     writeln("<input type='hidden' name='page' value='mbeans'/>");
@@ -52,7 +52,7 @@ public class MBeansMainView extends AbstractMBeansView {
         var prefix = "<a href='?" + mBeanParams(mbSrvIdx, mbName) + "'>";
 
         table.nextRowWithClz("clickable-row");
-        table.addValue(prefix + mbean.getDomain() + "</a>");
+        table.addValue(prefix + htmlEncode(mbean.getDomain()) + "</a>");
         table.addValue(prefix + htmlEncode(mbean.getType()) + "</a>");
         var props = htmlEncode(mbean.getOtherKeyValues()); // Might be empty
         table.addValue(prefix + (props == null || props.length() == 0 ? "&nbsp;" : props) + "</a>");

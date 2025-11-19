@@ -38,7 +38,7 @@ public final class ThreadsMainView extends AbstractHtmlView {
       table.addValueCenter(thread.isDaemon() ? "Yes" : "No");
       table.addValueRight(formatNumber(thread.getPriority()));
       table.addValueCenter(img("bullets/" + getStateIcon(thread), String.valueOf(thread.getState())));
-      table.addValue(getExecutingMethodWithStacktrace(thread));
+      table.addValue(getExecutingMethodWithStacktrace(thread)); // Note: Content is already html-encoded
       table.addValueRight(formatNumber(thread.getCpuTimeMillis()));
       table.addValueRight(formatNumber(thread.getUserTimeMillis()));
     }

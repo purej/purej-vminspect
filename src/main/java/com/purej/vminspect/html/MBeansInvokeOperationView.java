@@ -50,9 +50,9 @@ public class MBeansInvokeOperationView extends AbstractMBeansView {
     for (var i = 0; i < operation.getParameters().length; i++) {
       table.nextRow("<br/>", "");
       var parameter = operation.getParameters()[i];
-      table.nextRow("<b>Parameter</b>", "<b>" + parameter.getName() + "</b>");
-      table.nextRow("Description", parameter.getDescription());
-      table.nextRow("Type", MBeanUtils.toDisplayType(parameter.getType()));
+      table.nextRow("<b>Parameter</b>", "<b>" + htmlEncode(parameter.getName()) + "</b>");
+      table.nextRow("Description", htmlEncode(parameter.getDescription()));
+      table.nextRow("Type", htmlEncode(MBeanUtils.toDisplayType(parameter.getType())));
       if (confirm.isNow()) {
         table.nextRow("Value", parameters[i] + "<input type='hidden' name='mbOpValue" + i + "' value='" + htmlEncode(parameters[i]) + "'/>");
       }

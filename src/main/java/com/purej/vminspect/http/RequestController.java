@@ -192,7 +192,7 @@ public class RequestController {
 
         // Reload state & show MBean page:
         reloaded = MBeanUtils.getMBean(mbean.getName());
-        msg = new Message("Attribute <b>" + attribute.getName() + "</b> successfully set to value <b>"
+        msg = new Message("Attribute <b>" + Utils.htmlEncode(attribute.getName()) + "</b> successfully set to value <b>"
             + Utils.htmlEncode(result != null ? result.toString() : "null") + "</b>.", MessageType.OK);
       }
       catch (Exception e) {
@@ -207,7 +207,7 @@ public class RequestController {
     }
     else if (request.getParameter(RequestParams.MBEAN_ATTRIBUTE_CANCEL) != null) {
       // Show MBean page:
-      Message warnMsg = new Message("Canceled, attribute <b>" + attribute.getName() + "</b> not set!", MessageType.WARN);
+      Message warnMsg = new Message("Canceled, attribute <b>" + Utils.htmlEncode(attribute.getName()) + "</b> not set!", MessageType.WARN);
       return new MBeansDetailView(response.getOutput(), mbean, warnMsg, mbeanAccessControl);
     }
     else {

@@ -57,7 +57,7 @@ public final class Message {
   }
 
   /**
-   * Return the message text.
+   * Return the message text. Note: Is already encoded!
    */
   public String getText() {
     return text;

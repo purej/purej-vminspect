@@ -18,7 +18,7 @@ public final class StatisticsDetailView extends AbstractStatisticsView {
    */
   public StatisticsDetailView(StringBuilder output, Range range, String statsName, int statsWidth, int statsHeight) {
     super(output, range);
-    this.statsName = statsName;
+    this.statsName = htmlEncode(statsName); // Important: Sanitize to prevent XSS attacks over manual URL manipulation
     this.statsWidth = statsWidth;
     this.statsHeight = statsHeight;
   }
@@ -29,12 +29,12 @@ public final class StatisticsDetailView extends AbstractStatisticsView {
     writeln("<div align='center'>");
     writeChoosePeriodLinks(statsName, statsWidth, statsHeight);
     writeln("</div><br/>");
-    String params = statisticsGraphParams(statsName, statsWidth, statsHeight);
+    var params = statisticsGraphParams(statsName, statsWidth, statsHeight);
     writeln("<div align='center'>");
     writeln("<img class='synthese' id='img' src='?" + params + "' alt='zoom'/><br/><br/>");
-    String paramsOut = addRangeParams(statisticsPageParams("statsDetail=" + statsName, "statsWidth=" + (int) (statsWidth / 1.5d), "statsHeight="
+    var paramsOut = addRangeParams(statisticsPageParams("statsDetail=" + statsName, "statsWidth=" + (int) (statsWidth / 1.5d), "statsHeight="
         + (int) (statsHeight / 1.2)));
-    String paramsIn = addRangeParams(statisticsPageParams("statsDetail=" + statsName, "statsWidth=" + (int) (statsWidth * 1.5d), "statsHeight="
+    var paramsIn = addRangeParams(statisticsPageParams("statsDetail=" + statsName, "statsWidth=" + (int) (statsWidth * 1.5d), "statsHeight="
         + (int) (statsHeight * 1.2)));
     writeImgLnk(paramsOut, "icons/zoom-out-24.png", "Zoom Out", null).writeln();
     writeImgLnk(paramsIn, "icons/zoom-in-24.png", "Zoom In", null).writeln();
