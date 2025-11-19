@@ -71,7 +71,7 @@ Maven users just need to add the following dependency:
   <dependency>
     <groupId>com.purej</groupId>
     <artifactId>purej-vminspect</artifactId>
-    <version>2.1.0</version>
+    <version>2.1.1</version>
   </dependency>
 ```
 
