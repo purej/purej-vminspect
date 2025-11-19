@@ -1,5 +1,10 @@
 Version "current"
 
+Version 2.2.0 - (todo)
+- Upgraded parent with latest plugins
+- Updated dependencies
+
+
 Version 2.1.1 - (17.11.2024)
 - Fixed wrong filtering of mbeans
 
