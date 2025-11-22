@@ -1,42 +1,59 @@
 /* style sheet */
 
 body {
-  background-color:white;
-  background: url(?resource=background.png) bottom left fixed repeat-x;
-  font-family: Helvetica, Arial, sans-serif;
-  font-size: 9pt;
+  background:#f8fafc;
+  font-family:Helvetica, Arial, sans-serif;
+  font-size:10pt;
 }
 
-a {text-decoration:none; color:#0000BB;}
-a:hover {text-decoration:underline; color:#0000BB;}
-a:visited {color: #6600BB;} 
-
-img {border : 0px; vertical-align : middle;}
-
-.synthese {
-	-moz-box-shadow: 2px 2px 3px #888;
-	-webkit-box-shadow: 2px 2px 3px #888;
-	filter:progid:DXImageTransform.Microsoft.Shadow(color=#888888, direction=135, strength=3);
+a {
+  text-decoration:none;
+  color:#4a90e2;
 }
+a:hover {
+  text-decoration:underline;
+  color:#2f75c8;
+}
+a:visited {
+  color: #7040b5;
+}
+
+img {border:0px; vertical-align:middle;}
 
 table {
-	border-color:gray;
-	-moz-border-radius:5px;
-	-webkit-border-radius:5px;
-	border-radius:5px
+  border-collapse: collapse;
+  border-color: gray;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  width: 100%;
 }
-
-table tr.header td {background-color: #BDDAEE; font-size: 10pt; font-weight:bold;}
-table tr:nth-child(even) {background-color: #FFFFFF;}
-table tr:nth-child(odd) {background-color: #E7F4FD;}
-table tr.deadlock {background-color: #FAB8BB;}
-table tr:hover {background-color: #BDDAEE;}
-
+table tr.header td {
+  background-color: #4a90e2;
+  color: white;
+  font-weight: bold;
+  padding: 6px;
+}
+table td {
+  padding: 4px 6px;
+}
+table tr:nth-child(even) {
+  background-color: #ffffff;
+}
+table tr:nth-child(odd) {
+  background-color: #f0f7ff;
+}
+table tr.deadlock {
+  background-color: #f7c8ca;
+}
+table tr:hover {
+  background-color: #d7e9fb;
+}
 table tr.clickable-row a {
   text-decoration: none;
-  color: black;
+  color: inherit;
   display: block;
 }
+
 
 .tooltip em {
   display:none;
@@ -59,14 +76,18 @@ table tr.clickable-row a {
   background: #ffc;
 }
 
-div#title {
-  padding-top: 1px;
-  padding-left: 10px;
-  background-color: #5DA2D4;
+#title {
+  background: #4a90e2;
+  color: white;
+  padding: 0px 16px 1px;
   height: 60px;
+  display: flex;
+  align-items: center;
 }
-div#menu {
-  position:absolute; right:10px; top:25px;
+
+
+#menu {
+  position:absolute; right:10px; top:18px;
   background-color: #5DA2D4;
   font-size: 12pt;
 }
@@ -106,5 +127,8 @@ div#okMsg {background-color:#99FF99;}
 div#warnMsg {background-color:#FFFF99;}
 div#errorMsg {background-color:#FF6666;}
 
-.footer {font-size:8pt;}
+.footer {
+  font-size:8pt;
+  opacity: 0.7;
+}
 .hidden {display:none;}

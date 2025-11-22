@@ -4,6 +4,7 @@ Version 2.2.0 - (22.11.2025)
 - Upgraded parent with latest plugins
 - Updated dependencies
 - Sanitize all user-inputs or URL manipulations to prevent XSS attacks
+- Modernize stylesheet
 
 Version 2.1.1 - (17.11.2024)
 - Fixed wrong filtering of mbeans
