@@ -54,7 +54,7 @@ public class MBeansInvokeOperationView extends AbstractMBeansView {
       table.nextRow("Description", htmlEncode(parameter.getDescription()));
       table.nextRow("Type", htmlEncode(MBeanUtils.toDisplayType(parameter.getType())));
       if (confirm.isNow()) {
-        table.nextRow("Value", parameters[i] + "<input type='hidden' name='mbOpValue" + i + "' value='" + htmlEncode(parameters[i]) + "'/>");
+        table.nextRow("Value", htmlEncode(parameters[i]) + "<input type='hidden' name='mbOpValue" + i + "' value='" + htmlEncode(parameters[i]) + "'/>");
       }
       else {
         table.nextRow("Value", "<input type='text' size='50' name='mbOpValue" + i + "' value=''/>");

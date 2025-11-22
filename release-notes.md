@@ -1,6 +1,6 @@
 Version "current"
 
-Version 2.2.0 - (19.11.2025)
+Version 2.2.0 - (22.11.2025)
 - Upgraded parent with latest plugins
 - Updated dependencies
 - Sanitize all user-inputs or URL manipulations to prevent XSS attacks

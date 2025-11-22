@@ -49,7 +49,7 @@ public class MBeansInvokeAttributeView extends AbstractMBeansView {
     write("</td>");
     table.nextRow("<br/>", "");
     if (confirm.isNow()) {
-      table.nextRow("New Value", newValue + "<input type='hidden' name='mbAtrValue' value='" + htmlEncode(newValue) + "'/>");
+      table.nextRow("New Value", htmlEncode(newValue) + "<input type='hidden' name='mbAtrValue' value='" + htmlEncode(newValue) + "'/>");
     }
     else {
       table.nextRow("New Value", "<input type='text' size='50' name='mbAtrValue' value=''/>");
