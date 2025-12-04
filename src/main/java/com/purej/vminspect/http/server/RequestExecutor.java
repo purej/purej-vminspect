@@ -180,7 +180,9 @@ final class RequestExecutor implements Runnable {
     // Sanity check first:
     var data = response.getContentBytes();
     if (data == null || data.length == 0) {
-      writeErrorResponse(null, "", out);
+      var builder = new StringBuilder(512);
+      appendResponseStatus("404 Not Found", builder);
+      out.write(builder.toString().getBytes("UTF-8"));
       return;
     }
 
