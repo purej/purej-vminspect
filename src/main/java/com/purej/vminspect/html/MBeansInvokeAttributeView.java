@@ -4,6 +4,7 @@ package com.purej.vminspect.html;
 import com.purej.vminspect.data.MBeanAttribute;
 import com.purej.vminspect.data.MBeanData;
 import com.purej.vminspect.data.MBeanUtils;
+import com.purej.vminspect.http.RequestParams;
 
 /**
  * Displays the view to edit an attribute of an MBean.
@@ -36,7 +37,7 @@ public class MBeansInvokeAttributeView extends AbstractMBeansView {
     }
 
     // Write the form with a table:
-    writeln("<form name='mbeanAttribute' method='post' action=''><br/>");
+    writeln("<form name='mbeanAttribute' method='POST' action=''><br/>");
     var table = new HtmlTable("MBean Attribute");
     table.nextRow();
     table.addValue(img("icons/books-16.png", "MBean Attribute") + "<b>&nbsp;Attribute</b>");
@@ -56,7 +57,7 @@ public class MBeansInvokeAttributeView extends AbstractMBeansView {
     }
     table.nextRow("<br/>", "");
     table.nextRow("");
-    var okAction = confirm.isNext() ? "mbAtrInvokeConfirm" : "mbAtrInvoke";
+    var okAction = confirm.isNext() ? RequestParams.MBEAN_ATTRIBUTE_INVOKE_CONFIRM : RequestParams.MBEAN_ATTRIBUTE_INVOKE;
     table.addValueRight("<input type='submit' name='" + okAction + "' value='Ok'/><input type='submit' name='mbAtrCancel' value='Cancel'/>");
     table.endTable();
     writeln("<input type='hidden' name='page' value='mbeans'/>");

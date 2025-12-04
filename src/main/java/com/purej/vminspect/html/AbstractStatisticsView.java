@@ -77,7 +77,7 @@ abstract class AbstractStatisticsView extends AbstractHtmlView {
   private void writeCustomPeriodDiv(String graphDetailName, int statsWidth, int statsHeight) {
     writeln("<div id='customPeriod' class='hidden'>");
     writeln("<br/><br/>");
-    writeln("<form name='customPeriodForm' method='get' action=''>");
+    writeln("<form name='customPeriodForm' method='GET' action=''>");
     write("<br/><b>From</b>&nbsp;&nbsp;<input type='text' size='10' name='statsFromDate' ");
     if (range.getStartDate() != null) {
       write("value='").write(formatDate(range.getStartDate())).write("'");

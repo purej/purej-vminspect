@@ -177,11 +177,11 @@ public class RequestController {
       MBeanAccessControl mbeanAccessControl) throws IOException {
     // MBean Attribute specified:
     var attribute = mbean.getAttribute(mbAtrName);
-    var newValue = request.getParameter(RequestParams.MBEAN_ATTRIBUTE_VALUE);
     if (request.getParameter(RequestParams.MBEAN_ATTRIBUTE_INVOKE) != null) {
       if (!mbeanAccessControl.isChangeAllowed(mbean, attribute)) {
         throw new UnsupportedOperationException("Not allowed to edit the attribute according to MBeanAccessControl!");
       }
+      var newValue = request.getSaveParameter(RequestParams.MBEAN_ATTRIBUTE_VALUE);
 
       Message msg;
       var reloaded = mbean;
@@ -203,6 +203,7 @@ public class RequestController {
     }
     else if (request.getParameter(RequestParams.MBEAN_ATTRIBUTE_INVOKE_CONFIRM) != null) {
       // Show edit attribute confirmation:
+      var newValue = request.getSaveParameter(RequestParams.MBEAN_ATTRIBUTE_VALUE);
       return new MBeansInvokeAttributeView(response.getOutput(), mbean, attribute, ConfirmState.NOW, newValue);
     }
     else if (request.getParameter(RequestParams.MBEAN_ATTRIBUTE_CANCEL) != null) {
@@ -227,13 +228,13 @@ public class RequestController {
 
     // Get operation and extract parameters:
     var operation = mbean.getOperations()[opIdx];
-    var params = new String[operation.getParameters().length];
-    for (var i = 0; i < params.length; i++) {
-      params[i] = request.getParameter(RequestParams.MBEAN_OPERATION_VALUE + i);
-    }
     if (request.getParameter(RequestParams.MBEAN_OPERATION_INVOKE) != null) {
       if (!mbeanAccessControl.isCallAllowed(mbean, operation)) {
         throw new UnsupportedOperationException("Not allowed to invoke the operation according to MBeanAccessControl!");
+      }
+      var params = new String[operation.getParameters().length];
+      for (var i = 0; i < params.length; i++) {
+        params[i] = request.getSaveParameter(RequestParams.MBEAN_OPERATION_VALUE + i);
       }
 
       Message msg;
@@ -264,6 +265,10 @@ public class RequestController {
       return new MBeansDetailView(response.getOutput(), reloaded, msg, mbeanAccessControl);
     }
     else if (request.getParameter(RequestParams.MBEAN_OPERATION_INVOKE_CONFIRM) != null) {
+      var params = new String[operation.getParameters().length];
+      for (var i = 0; i < params.length; i++) {
+        params[i] = request.getSaveParameter(RequestParams.MBEAN_OPERATION_VALUE + i);
+      }
       return new MBeansInvokeOperationView(response.getOutput(), mbean, opIdx, operation, ConfirmState.NOW, params);
     }
     else if (request.getParameter(RequestParams.MBEAN_OPERATION_CANCEL) != null) {
@@ -274,6 +279,7 @@ public class RequestController {
     else {
       // Show page to call the operation:
       ConfirmState confirmState = mbeanAccessControl.needsCallConfirmation(mbean, operation) ? ConfirmState.NEXT : ConfirmState.OFF;
+      var params = new String[operation.getParameters().length];
       return new MBeansInvokeOperationView(response.getOutput(), mbean, opIdx, operation, confirmState, params);
     }
   }

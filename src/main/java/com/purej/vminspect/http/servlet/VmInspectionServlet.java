@@ -140,7 +140,8 @@ public class VmInspectionServlet extends HttpServlet {
       }
     } catch (Exception e) {
       LOGGER.warn("An error occurred processing request!", e);
-      response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, Utils.getExceptionInfo(e));
+      var code = e instanceof SecurityException ? 401 : 500;
+      response.sendError(code, Utils.getExceptionInfo(e));
     }
   }
 

@@ -30,7 +30,7 @@ public class MBeansMainView extends AbstractMBeansView {
     write("<h3>").writeImg("icons/beans-24.png", "MBeans").writeln("&nbsp;MBeans</h3>");
 
     // Write the filter row:
-    writeln("<form name='mbeansFilter' method='get' action=''>");
+    writeln("<form name='mbeansFilter' method='GET' action=''>");
     writeln("<br/><b>&nbsp;Domain Filter</b>&nbsp;&nbsp;");
     write("<input type='text' size='30' name='mbDomainFilter' value='").write(htmlEncode(domainFilter)).write("'/>");
     writeln("&nbsp;&nbsp;<b>Type Filter</b>&nbsp;&nbsp;");

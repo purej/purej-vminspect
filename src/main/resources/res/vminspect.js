@@ -1,5 +1,6 @@
 window.addEventListener('load', () => {
   registerShowHide();
+  xsrfToForm();
 });
 
 // Register the show/hide links
@@ -29,4 +30,28 @@ function showHide(id) {
       }
     }
   }
+}
+
+function xsrfToForm() {
+  const cookie = getCookie('XSRF-TOKEN');
+  if (cookie) {
+    for (const form of document.getElementsByTagName('form')) {
+      if (form.method && form.method.toUpperCase() === 'POST') {
+        const xsrfField = document.createElement('input');
+        xsrfField.setAttribute('type', 'hidden');
+        xsrfField.setAttribute('name', 'X-XSRF-TOKEN');
+        xsrfField.setAttribute('value', cookie);
+        form.appendChild(xsrfField);
+      }
+    }
+  }
+}
+
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) {
+    return parts.pop().split(';').shift();
+  }
+  return undefined;
 }

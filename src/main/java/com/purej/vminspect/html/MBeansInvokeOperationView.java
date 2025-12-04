@@ -39,7 +39,7 @@ public class MBeansInvokeOperationView extends AbstractMBeansView {
     }
 
     // Write the form with a table:
-    writeln("<form name='mbeanOperation' method='post' action=''><br/>");
+    writeln("<form name='mbeanOperation' method='POST' action=''><br/>");
     var table = new HtmlTable("MBean Operation");
     table.nextRow();
     table.addValue(img("icons/flash-16.png", "MBean Operation") + "<b>&nbsp;Operation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>");

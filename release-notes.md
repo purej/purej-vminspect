@@ -1,5 +1,11 @@
 Version "current"
 
+Version 2.3.0 - (04.12.2025)
+- Updated all dependencies
+- Support for UTF-8 input parameters
+- Handle security-exception with 401
+- Save parameter handling for post-request
+
 Version 2.2.0 - (22.11.2025)
 - Upgraded parent with latest plugins
 - Updated dependencies
