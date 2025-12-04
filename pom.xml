@@ -20,7 +20,7 @@
     <!-- Jdk Version - Jakarta-EE and spring-boot 3 requires java 17 minimum! -->
     <jdkVersion>17</jdkVersion>
     <module.name>purej.vminspect</module.name>
-    <jetty.version>12.0.29</jetty.version>
+    <jetty.version>12.0.30</jetty.version>
   </properties>
 
   <scm>
@@ -94,7 +94,7 @@
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.5.20</version>
+      <version>1.5.21</version>
       <scope>test</scope>
     </dependency>
 
