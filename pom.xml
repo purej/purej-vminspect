@@ -20,7 +20,7 @@
     <!-- Jdk Version - Jakarta-EE and spring-boot 3 requires java 17 minimum! -->
     <jdkVersion>17</jdkVersion>
     <module.name>purej.vminspect</module.name>
-    <jetty.version>12.0.30</jetty.version>
+    <jetty.version>12.0.32</jetty.version>
   </properties>
 
   <scm>
